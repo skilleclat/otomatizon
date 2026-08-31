@@ -9305,10 +9305,10 @@ var _BrandLogo = require('@/components/BrandLogo');
     _react2.default.createElement(_react2.default.Fragment, null
       /* 1. TOP FULL-WIDTH DESKTOP & TABLET HEADER */
       , _react2.default.createElement('header', { className: "sticky top-0 z-40 w-full bg-[#FAF9F5]/90 backdrop-blur-xl border-b border-[#EAE7DF] shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all"         ,}
-        , _react2.default.createElement('div', { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3"         ,}
+        , _react2.default.createElement('div', { className: "w-full max-w-[1480px] mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4"           ,}
 
           /* Left: Brand Identity & Workspace Environment */
-          , _react2.default.createElement('div', { className: "flex items-center gap-3 shrink-0"   ,}
+          , _react2.default.createElement('div', { className: "flex items-center gap-2 sm:gap-3 shrink-0"    ,}
             , _react2.default.createElement('div', { 
               onClick: () => {
                 if (onNavigateHome) {
@@ -9323,17 +9323,17 @@ var _BrandLogo = require('@/components/BrandLogo');
               , _react2.default.createElement(_BrandLogo.BrandLogo, { variant: "full", size: "md",} )
             )
 
-            , _react2.default.createElement('div', { className: "h-5 w-px bg-[#EAE7DF] hidden sm:block"    ,} )
+            , _react2.default.createElement('div', { className: "h-5 w-px bg-[#EAE7DF] hidden 2xl:block"    ,} )
 
             /* Location & Live Status Pill */
-            , _react2.default.createElement('div', { className: "hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F4F2EB] border border-[#E2DED5] text-[11px] font-mono text-[#5A5C63] select-none shadow-2xs"              ,}
+            , _react2.default.createElement('div', { className: "hidden 2xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F4F2EB] border border-[#E2DED5] text-[11px] font-mono text-[#5A5C63] select-none shadow-2xs"              ,}
               , _react2.default.createElement('span', { className: "relative flex h-2 w-2"   ,}
                 , _react2.default.createElement('span', { className: "animate-ping absolute inline-flex h-full w-full rounded-full bg-[#15803D] opacity-75"       ,})
                 , _react2.default.createElement('span', { className: "relative inline-flex rounded-full h-2 w-2 bg-[#15803D]"     ,})
               )
               , _react2.default.createElement('span', { className: "font-semibold text-[#121316]" ,}, state.businessProfile.city || "Nairobi")
               , _react2.default.createElement('span', { className: "text-[#A1A1AA]",}, "·")
-              , _react2.default.createElement('span', { className: "text-[#15803D] font-bold tracking-wider"  ,}, _optionalChain([state, 'access', _2 => _2.stats, 'optionalAccess', _3 => _3.currentPlanId, 'optionalAccess', _4 => _4.toUpperCase, 'call', _5 => _5()]) || "PRO")
+              , _react2.default.createElement('span', { className: "text-[#15803D] font-bold tracking-wider"  ,}, _optionalChain([state, 'access', _2 => _2.stats, 'optionalAccess', _3 => _3.currentPlanId, 'optionalAccess', _4 => _4.toUpperCase, 'call', _5 => _5()]) || "GROWTH")
             )
 
             /* Quick Link to Public Website */
@@ -9341,7 +9341,7 @@ var _BrandLogo = require('@/components/BrandLogo');
               _react2.default.createElement('button', {
                 onClick: onNavigateHome,
                 title: "Return to Public Website"   ,
-                className: "hidden xl:inline-flex items-center gap-1.5 text-[11px] font-mono font-medium text-[#75777E] hover:text-[#121316] px-2.5 py-1 rounded-full bg-transparent hover:bg-[#F4F2EB] border border-transparent hover:border-[#EAE7DF] transition-all cursor-pointer"                  ,}
+                className: "hidden 2xl:inline-flex items-center gap-1.5 text-[11px] font-mono font-medium text-[#75777E] hover:text-[#121316] px-2.5 py-1 rounded-full bg-transparent hover:bg-[#F4F2EB] border border-transparent hover:border-[#EAE7DF] transition-all cursor-pointer"                  ,}
 
                 , _react2.default.createElement(_lucidereact.ArrowLeft, { className: "w-3 h-3" ,} )
                 , _react2.default.createElement('span', null, "Public Site" )
@@ -9350,23 +9350,32 @@ var _BrandLogo = require('@/components/BrandLogo');
           )
 
           /* Center: Desktop Segmented Navigation Tabs */
-          , _react2.default.createElement('nav', { className: "hidden lg:flex items-center gap-1 bg-[#EFECE6]/80 p-1 rounded-full border border-[#E2DED5] shadow-2xs"         ,}
+          , _react2.default.createElement('nav', { className: "hidden lg:flex items-center gap-0.5 xl:gap-1 bg-[#EFECE6]/80 p-1 rounded-full border border-[#E2DED5] shadow-2xs overflow-x-auto"           ,}
             , navItems.map((item) => {
               const isActive = currentTab === item.id;
               const IconComponent = item.icon;
+
+              // Streamlined label for compact screens
+              const compactLabel = 
+                item.id === "home" ? "Overview" :
+                item.id === "report" ? "Report" :
+                item.id === "apps" ? "Apps" :
+                item.id === "activity" ? "Activity" :
+                item.label;
 
               return (
                 _react2.default.createElement('button', {
                   key: item.id,
                   onClick: () => onSelectTab(item.id),
-                  className: `px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer select-none ${
+                  className: `px-2.5 xl:px-3.5 py-1.5 rounded-full text-[11px] xl:text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer select-none ${
                     isActive
                       ? "bg-white text-[#121316] font-bold shadow-xs border border-[#EAE7DF] scale-[1.01]"
                       : "text-[#5A5C63] hover:text-[#121316] hover:bg-white/60"
                   }`,}
 
                   , _react2.default.createElement(IconComponent, { className: `w-3.5 h-3.5 ${isActive ? "text-[#15803D]" : "text-[#75777E]"}`,} )
-                  , _react2.default.createElement('span', null, item.label)
+                  , _react2.default.createElement('span', { className: "hidden 2xl:inline" ,}, item.label)
+                  , _react2.default.createElement('span', { className: "2xl:hidden",}, compactLabel)
                   , item.badge
                 )
               );
@@ -9374,17 +9383,16 @@ var _BrandLogo = require('@/components/BrandLogo');
           )
 
           /* Right: Quick Action & User Profile Workspace */
-          , _react2.default.createElement('div', { className: "flex items-center gap-2.5 shrink-0"   ,}
+          , _react2.default.createElement('div', { className: "flex items-center gap-2 sm:gap-2.5 shrink-0 pl-1"     ,}
 
-            /* Quick Simulate Lead Action */
+            /* Quick Simulate Lead Action (Dark Green / Black Pill) */
             , _react2.default.createElement('button', {
               onClick: onTriggerSimulation,
               title: "Simulate a live WhatsApp student inquiry"     ,
-              className: "inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold font-mono bg-[#002E25] hover:bg-[#15803D] text-white transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer whitespace-nowrap border border-[#002E25]"                   ,}
+              className: "inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold font-mono bg-[#002E25] hover:bg-[#15803D] text-white transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer whitespace-nowrap border border-[#002E25]"                    ,}
 
-              , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5 text-emerald-300 fill-emerald-300"   ,} )
-              , _react2.default.createElement('span', { className: "hidden sm:inline" ,}, "Simulate Lead" )
-              , _react2.default.createElement('span', { className: "sm:hidden",}, "Simulate")
+              , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5 text-emerald-300 fill-emerald-300 shrink-0"    ,} )
+              , _react2.default.createElement('span', null, "Simulate Lead" )
             )
 
             , _react2.default.createElement('div', { className: "h-5 w-px bg-[#EAE7DF] hidden sm:block"    ,} )
@@ -9394,21 +9402,21 @@ var _BrandLogo = require('@/components/BrandLogo');
               _react2.default.createElement('div', { className: "relative",}
                 , _react2.default.createElement('button', {
                   onClick: () => setIsUserMenuOpen(!isUserMenuOpen),
-                  className: "flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-full hover:bg-[#F4F2EB] border border-transparent hover:border-[#EAE7DF] transition-all text-xs text-[#121316] cursor-pointer group select-none"                ,
+                  className: "flex items-center gap-1.5 sm:gap-2 p-1 sm:px-2 sm:py-1 rounded-full hover:bg-[#F4F2EB] border border-transparent hover:border-[#EAE7DF] transition-all text-xs text-[#121316] cursor-pointer group select-none"                 ,
                   title: "Open Account Menu"  ,}
 
-                  , _react2.default.createElement('div', { className: "w-7 h-7 rounded-full bg-[#002E25] border border-[#15803D]/40 text-emerald-300 flex items-center justify-center font-bold font-mono text-xs shadow-2xs"             ,}
+                  , _react2.default.createElement('div', { className: "w-7 h-7 rounded-full bg-[#002E25] border border-[#15803D]/40 text-emerald-300 flex items-center justify-center font-bold font-mono text-xs shadow-2xs shrink-0"              ,}
                     , _optionalChain([user, 'optionalAccess', _7 => _7.fullName]) ? user.fullName[0] : "J"
                   )
-                  , _react2.default.createElement('div', { className: "hidden sm:block text-left"  ,}
-                    , _react2.default.createElement('span', { className: "block text-xs font-bold text-[#121316] leading-none group-hover:text-[#15803D] transition-colors"      ,}
+                  , _react2.default.createElement('div', { className: "hidden xl:block text-left"  ,}
+                    , _react2.default.createElement('span', { className: "block text-xs font-bold text-[#121316] leading-none group-hover:text-[#15803D] transition-colors truncate max-w-[100px]"        ,}
                       , _optionalChain([user, 'optionalAccess', _8 => _8.fullName]) || "James Kamau"
                     )
                     , _react2.default.createElement('span', { className: "block text-[10px] font-mono text-[#75777E] leading-none mt-0.5"     ,}
-                      , state.businessProfile.city || "Nairobi", " · "  , _optionalChain([state, 'access', _9 => _9.stats, 'optionalAccess', _10 => _10.currentPlanId, 'optionalAccess', _11 => _11.toUpperCase, 'call', _12 => _12()]) || "PRO"
+                      , state.businessProfile.city || "Nairobi"
                     )
                   )
-                  , _react2.default.createElement(_lucidereact.ChevronDown, { className: "w-3 h-3 text-[#75777E] hidden sm:block group-hover:text-[#121316] transition-transform"      ,} )
+                  , _react2.default.createElement(_lucidereact.ChevronDown, { className: "w-3 h-3 text-[#75777E] hidden xl:block group-hover:text-[#121316] transition-transform"      ,} )
                 )
 
                 /* Dropdown Menu */
@@ -9420,11 +9428,11 @@ var _BrandLogo = require('@/components/BrandLogo');
                     )
                     , _react2.default.createElement('div', { className: "absolute right-0 mt-2 w-56 bg-white rounded-2xl border border-[#EAE7DF] shadow-xl z-50 p-2 text-xs animate-fadeIn"            ,}
                       , _react2.default.createElement('div', { className: "px-3 py-2 border-b border-[#EAE7DF] mb-1"    ,}
-                        , _react2.default.createElement('p', { className: "font-bold text-[#121316] truncate"  ,}, _optionalChain([user, 'optionalAccess', _13 => _13.fullName]) || "James Kamau")
-                        , _react2.default.createElement('p', { className: "text-[11px] font-mono text-[#75777E] truncate"   ,}, _optionalChain([user, 'optionalAccess', _14 => _14.email]) || "james@otomatizon.co.ke")
+                        , _react2.default.createElement('p', { className: "font-bold text-[#121316] truncate"  ,}, _optionalChain([user, 'optionalAccess', _9 => _9.fullName]) || "James Kamau")
+                        , _react2.default.createElement('p', { className: "text-[11px] font-mono text-[#75777E] truncate"   ,}, _optionalChain([user, 'optionalAccess', _10 => _10.email]) || "james@otomatizon.co.ke")
                         , _react2.default.createElement('div', { className: "mt-1.5 flex items-center gap-1.5"   ,}
                           , _react2.default.createElement('span', { className: "px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] text-[9px] font-bold font-mono"         ,}
-                            , _optionalChain([state, 'access', _15 => _15.stats, 'optionalAccess', _16 => _16.currentPlanId, 'optionalAccess', _17 => _17.toUpperCase, 'call', _18 => _18()]) || "PRO", " TIER"
+                            , _optionalChain([state, 'access', _11 => _11.stats, 'optionalAccess', _12 => _12.currentPlanId, 'optionalAccess', _13 => _13.toUpperCase, 'call', _14 => _14()]) || "PRO", " TIER"
                           )
                           , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#75777E]"  ,}, "Nairobi, Kenya" )
                         )

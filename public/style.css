@@ -911,6 +911,12 @@ video {
 .max-w-7xl {
   max-width: 80rem;
 }
+.max-w-\[100px\] {
+  max-width: 100px;
+}
+.max-w-\[1480px\] {
+  max-width: 1480px;
+}
 .max-w-\[160px\] {
   max-width: 160px;
 }
@@ -2781,12 +2787,20 @@ body {
     justify-content: space-between;
   }
 
+  .sm\:gap-2 {
+    gap: 0.5rem;
+  }
+
   .sm\:gap-2\.5 {
     gap: 0.625rem;
   }
 
   .sm\:gap-3 {
     gap: 0.75rem;
+  }
+
+  .sm\:gap-4 {
+    gap: 1rem;
   }
 
   .sm\:space-y-14 > :not([hidden]) ~ :not([hidden]) {
@@ -2829,9 +2843,14 @@ body {
     padding: 2rem;
   }
 
-  .sm\:px-2\.5 {
-    padding-left: 0.625rem;
-    padding-right: 0.625rem;
+  .sm\:px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .sm\:px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   .sm\:px-6 {
@@ -3113,8 +3132,45 @@ body {
 
 @media (min-width: 1280px) {
 
-  .xl\:inline-flex {
+  .xl\:block {
+    display: block;
+  }
+
+  .xl\:gap-1 {
+    gap: 0.25rem;
+  }
+
+  .xl\:px-3\.5 {
+    padding-left: 0.875rem;
+    padding-right: 0.875rem;
+  }
+
+  .xl\:text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+}
+
+@media (min-width: 1536px) {
+
+  .\32xl\:block {
+    display: block;
+  }
+
+  .\32xl\:inline {
+    display: inline;
+  }
+
+  .\32xl\:flex {
+    display: flex;
+  }
+
+  .\32xl\:inline-flex {
     display: inline-flex;
+  }
+
+  .\32xl\:hidden {
+    display: none;
   }
 }
 

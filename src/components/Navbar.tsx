@@ -104,10 +104,10 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       {/* 1. TOP FULL-WIDTH DESKTOP & TABLET HEADER */}
       <header className="sticky top-0 z-40 w-full bg-[#FAF9F5]/90 backdrop-blur-xl border-b border-[#EAE7DF] shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+        <div className="w-full max-w-[1480px] mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
           
           {/* Left: Brand Identity & Workspace Environment */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <div 
               onClick={() => {
                 if (onNavigateHome) {
@@ -122,17 +122,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               <BrandLogo variant="full" size="md" />
             </div>
 
-            <div className="h-5 w-px bg-[#EAE7DF] hidden sm:block" />
+            <div className="h-5 w-px bg-[#EAE7DF] hidden 2xl:block" />
 
             {/* Location & Live Status Pill */}
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F4F2EB] border border-[#E2DED5] text-[11px] font-mono text-[#5A5C63] select-none shadow-2xs">
+            <div className="hidden 2xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F4F2EB] border border-[#E2DED5] text-[11px] font-mono text-[#5A5C63] select-none shadow-2xs">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#15803D] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#15803D]"></span>
               </span>
               <span className="font-semibold text-[#121316]">{state.businessProfile.city || "Nairobi"}</span>
               <span className="text-[#A1A1AA]">&middot;</span>
-              <span className="text-[#15803D] font-bold tracking-wider">{state.stats?.currentPlanId?.toUpperCase() || "PRO"}</span>
+              <span className="text-[#15803D] font-bold tracking-wider">{state.stats?.currentPlanId?.toUpperCase() || "GROWTH"}</span>
             </div>
 
             {/* Quick Link to Public Website */}
@@ -140,7 +140,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={onNavigateHome}
                 title="Return to Public Website"
-                className="hidden xl:inline-flex items-center gap-1.5 text-[11px] font-mono font-medium text-[#75777E] hover:text-[#121316] px-2.5 py-1 rounded-full bg-transparent hover:bg-[#F4F2EB] border border-transparent hover:border-[#EAE7DF] transition-all cursor-pointer"
+                className="hidden 2xl:inline-flex items-center gap-1.5 text-[11px] font-mono font-medium text-[#75777E] hover:text-[#121316] px-2.5 py-1 rounded-full bg-transparent hover:bg-[#F4F2EB] border border-transparent hover:border-[#EAE7DF] transition-all cursor-pointer"
               >
                 <ArrowLeft className="w-3 h-3" />
                 <span>Public Site</span>
@@ -149,23 +149,32 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Center: Desktop Segmented Navigation Tabs */}
-          <nav className="hidden lg:flex items-center gap-1 bg-[#EFECE6]/80 p-1 rounded-full border border-[#E2DED5] shadow-2xs">
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 bg-[#EFECE6]/80 p-1 rounded-full border border-[#E2DED5] shadow-2xs overflow-x-auto">
             {navItems.map((item) => {
               const isActive = currentTab === item.id;
               const IconComponent = item.icon;
+
+              // Streamlined label for compact screens
+              const compactLabel = 
+                item.id === "home" ? "Overview" :
+                item.id === "report" ? "Report" :
+                item.id === "apps" ? "Apps" :
+                item.id === "activity" ? "Activity" :
+                item.label;
 
               return (
                 <button
                   key={item.id}
                   onClick={() => onSelectTab(item.id)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer select-none ${
+                  className={`px-2.5 xl:px-3.5 py-1.5 rounded-full text-[11px] xl:text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer select-none ${
                     isActive
                       ? "bg-white text-[#121316] font-bold shadow-xs border border-[#EAE7DF] scale-[1.01]"
                       : "text-[#5A5C63] hover:text-[#121316] hover:bg-white/60"
                   }`}
                 >
                   <IconComponent className={`w-3.5 h-3.5 ${isActive ? "text-[#15803D]" : "text-[#75777E]"}`} />
-                  <span>{item.label}</span>
+                  <span className="hidden 2xl:inline">{item.label}</span>
+                  <span className="2xl:hidden">{compactLabel}</span>
                   {item.badge}
                 </button>
               );
@@ -173,17 +182,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right: Quick Action & User Profile Workspace */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 pl-1">
             
-            {/* Quick Simulate Lead Action */}
+            {/* Quick Simulate Lead Action (Dark Green / Black Pill) */}
             <button
               onClick={onTriggerSimulation}
               title="Simulate a live WhatsApp student inquiry"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold font-mono bg-[#002E25] hover:bg-[#15803D] text-white transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer whitespace-nowrap border border-[#002E25]"
+              className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold font-mono bg-[#002E25] hover:bg-[#15803D] text-white transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer whitespace-nowrap border border-[#002E25]"
             >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-300 fill-emerald-300" />
-              <span className="hidden sm:inline">Simulate Lead</span>
-              <span className="sm:hidden">Simulate</span>
+              <Sparkles className="w-3.5 h-3.5 text-emerald-300 fill-emerald-300 shrink-0" />
+              <span>Simulate Lead</span>
             </button>
 
             <div className="h-5 w-px bg-[#EAE7DF] hidden sm:block" />
@@ -193,21 +201,21 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-full hover:bg-[#F4F2EB] border border-transparent hover:border-[#EAE7DF] transition-all text-xs text-[#121316] cursor-pointer group select-none"
+                  className="flex items-center gap-1.5 sm:gap-2 p-1 sm:px-2 sm:py-1 rounded-full hover:bg-[#F4F2EB] border border-transparent hover:border-[#EAE7DF] transition-all text-xs text-[#121316] cursor-pointer group select-none"
                   title="Open Account Menu"
                 >
-                  <div className="w-7 h-7 rounded-full bg-[#002E25] border border-[#15803D]/40 text-emerald-300 flex items-center justify-center font-bold font-mono text-xs shadow-2xs">
+                  <div className="w-7 h-7 rounded-full bg-[#002E25] border border-[#15803D]/40 text-emerald-300 flex items-center justify-center font-bold font-mono text-xs shadow-2xs shrink-0">
                     {user?.fullName ? user.fullName[0] : "J"}
                   </div>
-                  <div className="hidden sm:block text-left">
-                    <span className="block text-xs font-bold text-[#121316] leading-none group-hover:text-[#15803D] transition-colors">
+                  <div className="hidden xl:block text-left">
+                    <span className="block text-xs font-bold text-[#121316] leading-none group-hover:text-[#15803D] transition-colors truncate max-w-[100px]">
                       {user?.fullName || "James Kamau"}
                     </span>
                     <span className="block text-[10px] font-mono text-[#75777E] leading-none mt-0.5">
-                      {state.businessProfile.city || "Nairobi"} &middot; {state.stats?.currentPlanId?.toUpperCase() || "PRO"}
+                      {state.businessProfile.city || "Nairobi"}
                     </span>
                   </div>
-                  <ChevronDown className="w-3 h-3 text-[#75777E] hidden sm:block group-hover:text-[#121316] transition-transform" />
+                  <ChevronDown className="w-3 h-3 text-[#75777E] hidden xl:block group-hover:text-[#121316] transition-transform" />
                 </button>
 
                 {/* Dropdown Menu */}
