@@ -25,12 +25,14 @@ interface OnboardingModalProps {
   isOpen: boolean;
   onClose: () => void;
   onComplete: () => void;
+  onTriggerAuth?: (mode?: "login" | "signup") => void;
 }
 
 export const OnboardingModal: React.FC<OnboardingModalProps> = ({
   isOpen,
   onClose,
-  onComplete
+  onComplete,
+  onTriggerAuth
 }) => {
   const { state, activateOpportunity, updateBusinessProfile } = useOtomatizonStore();
   const [step, setStep] = useState(1);
@@ -90,7 +92,15 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
       customerAcquisitionChannels: channels,
       biggestRepetitiveTask: wishAutomation
     });
-    onComplete();
+
+    if (!state.session?.isAuthenticated) {
+      onClose();
+      if (onTriggerAuth) {
+        onTriggerAuth("signup");
+      }
+    } else {
+      onComplete();
+    }
   };
 
   return (
@@ -155,36 +165,35 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
             </div>
           )}
 
-          {/* STEP 2: HOW DO CUSTOMERS FIND YOU? */}
+          {/* STEP 2: WHERE DO CLIENTS FIND YOU? */}
           {step === 2 && (
             <div className="space-y-6 animate-fadeIn">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-[#121316] tracking-tight">
-                  How do customers find you?
+                  Where do new clients find you?
                 </h2>
                 <p className="text-sm text-[#4A4B50] mt-1.5">
-                  Select all channels where inquiries arrive.
+                  Select the main channels where inquiries first arrive.
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                {channelOptions.map((opt) => {
-                  const Icon = opt.icon;
-                  const isSelected = channels.includes(opt.name);
-
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {channelOptions.map((ch) => {
+                  const isSelected = channels.includes(ch.name);
+                  const Icon = ch.icon;
                   return (
                     <button
-                      key={opt.name}
+                      key={ch.name}
                       type="button"
-                      onClick={() => toggleChannel(opt.name)}
-                      className={`p-4 rounded-2xl border text-left flex items-center gap-3 transition-all ${
+                      onClick={() => toggleChannel(ch.name)}
+                      className={`p-4 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
                         isSelected
-                          ? "bg-[#ECFDF5] border-[#15803D] text-[#15803D] font-bold"
-                          : "bg-[#FAF9F5] border-[#EAE7DF] text-[#121316] hover:bg-stone-50"
+                          ? "border-[#15803D] bg-[#ECFDF5] text-[#15803D]"
+                          : "border-[#EAE7DF] bg-[#FAF9F5] text-[#121316] hover:border-[#D5D1C6]"
                       }`}
                     >
                       <Icon className="w-4 h-4 shrink-0" />
-                      <span className="text-xs font-semibold">{opt.name}</span>
+                      <span className="text-xs font-semibold">{ch.name}</span>
                       {isSelected && <Check className="w-4 h-4 text-[#15803D] ml-auto" />}
                     </button>
                   );
@@ -210,32 +219,31 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
             </div>
           )}
 
-          {/* STEP 3: WHAT TOOLS DO YOU ALREADY USE? */}
+          {/* STEP 3: WHICH TOOLS DO YOU USE? */}
           {step === 3 && (
             <div className="space-y-6 animate-fadeIn">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-[#121316] tracking-tight">
-                  What tools do you already use?
+                  Which tools do you use daily?
                 </h2>
                 <p className="text-sm text-[#4A4B50] mt-1.5">
-                  Pick the apps where your business data already lives.
+                  We will show you how they can talk to each other.
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {appOptions.map((app) => {
-                  const Icon = app.icon;
                   const isSelected = selectedApps.includes(app.name);
-
+                  const Icon = app.icon;
                   return (
                     <button
                       key={app.name}
                       type="button"
                       onClick={() => toggleApp(app.name)}
-                      className={`p-4 rounded-2xl border text-left flex items-center gap-3 transition-all ${
+                      className={`p-4 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
                         isSelected
-                          ? "bg-[#ECFDF5] border-[#15803D] text-[#15803D] font-bold"
-                          : "bg-[#FAF9F5] border-[#EAE7DF] text-[#121316] hover:bg-stone-50"
+                          ? "border-[#15803D] bg-[#ECFDF5] text-[#15803D]"
+                          : "border-[#EAE7DF] bg-[#FAF9F5] text-[#121316] hover:border-[#D5D1C6]"
                       }`}
                     >
                       <Icon className="w-4 h-4 shrink-0" />
@@ -312,10 +320,10 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   Discovery Complete
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-[#121316] tracking-tight">
-                  We found {state.opportunities.length} things you could automate.
+                  We found {state.opportunities.length || 2} things you could automate.
                 </h2>
                 <p className="text-sm text-[#4A4B50]">
-                  Based on your connected tools and customer channels.
+                  Based on your daily tools ({selectedApps.join(", ")}) and customer flow.
                 </p>
               </div>
 
@@ -332,20 +340,30 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 
                 <div className="space-y-1">
                   <h3 className="text-lg font-bold text-[#121316]">
-                    You may be losing leads between inquiry and booking.
+                    You may be losing leads between WhatsApp inquiry and booking.
                   </h3>
                   <p className="text-xs text-[#4A4B50] leading-relaxed">
-                    Automatically follow up after 24 hours if the customer hasn&apos;t booked.
+                    Automatically follow up after 24 hours if the customer hasn&apos;t confirmed a session on Google Calendar.
                   </p>
                 </div>
 
                 <div className="pt-2">
                   <button
-                    onClick={() => setSelectedOppForPreview(state.opportunities[0])}
+                    onClick={() => {
+                      if (!state.session?.isAuthenticated) {
+                        handleFinishOnboarding();
+                      } else {
+                        setSelectedOppForPreview(state.opportunities[0] || null);
+                      }
+                    }}
                     className={DS.btnPrimary}
                   >
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Automate this</span>
+                    <span>
+                      {state.session?.isAuthenticated 
+                        ? "Automate this" 
+                        : "Create Free Account to Automate This →"}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -355,20 +373,28 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 <span className="text-xs font-mono uppercase text-[#75777E] font-semibold tracking-wider block">
                   Other detected opportunities
                 </span>
-                {state.opportunities.slice(1, 3).map((opp, idx) => (
+                {(state.opportunities.length > 0 ? state.opportunities.slice(1, 3) : [
+                  { id: "opp_mpesa", title: "Unconfirmed Tuition Payments", problem: "Unverified M-Pesa Consultations", recommendation: "Match incoming M-Pesa receipts directly with calendar booking slots." }
+                ]).map((opp: any) => (
                   <div
                     key={opp.id}
                     className="p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center justify-between gap-4 text-xs"
                   >
                     <div>
-                      <h4 className="font-bold text-[#121316]">{opp.problem}</h4>
+                      <h4 className="font-bold text-[#121316]">{opp.problem || opp.title}</h4>
                       <p className="text-[#4A4B50] text-[11px] mt-0.5">{opp.recommendation}</p>
                     </div>
                     <button
-                      onClick={() => setSelectedOppForPreview(opp)}
+                      onClick={() => {
+                        if (!state.session?.isAuthenticated) {
+                          handleFinishOnboarding();
+                        } else {
+                          setSelectedOppForPreview(opp);
+                        }
+                      }}
                       className={DS.btnSecondary}
                     >
-                      Preview
+                      {state.session?.isAuthenticated ? "Preview" : "Sign Up"}
                     </button>
                   </div>
                 ))}
@@ -376,13 +402,15 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 
               <div className="pt-4 border-t border-[#EAE7DF] flex flex-col sm:flex-row items-center justify-between gap-3">
                 <span className="text-xs text-[#4A4B50]">
-                  Ready to link your WhatsApp, Google &amp; M-Pesa tools.
+                  {state.session?.isAuthenticated
+                    ? "Starter Plan includes 1 active automation."
+                    : "Create a free account to activate your first automation."}
                 </span>
                 <button
                   onClick={handleFinishOnboarding}
                   className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <span>Connect Selected Apps Now</span>
+                  <span>{state.session?.isAuthenticated ? "Connect Selected Apps Now" : "Create Account & Continue →"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -392,18 +420,20 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
       </div>
 
       {/* Preview Modal from Step 5 */}
-      <AutomationPreviewModal
-        isOpen={!!selectedOppForPreview}
-        onClose={() => setSelectedOppForPreview(null)}
-        opportunity={selectedOppForPreview}
-        onActivate={() => {
-          if (selectedOppForPreview) {
-            activateOpportunity(selectedOppForPreview.id);
-            setSelectedOppForPreview(null);
-            handleFinishOnboarding();
-          }
-        }}
-      />
+      {selectedOppForPreview && (
+        <AutomationPreviewModal
+          isOpen={true}
+          onClose={() => setSelectedOppForPreview(null)}
+          opportunity={selectedOppForPreview}
+          onActivate={() => {
+            if (selectedOppForPreview) {
+              activateOpportunity(selectedOppForPreview.id);
+              setSelectedOppForPreview(null);
+              handleFinishOnboarding();
+            }
+          }}
+        />
+      )}
     </div>
   );
 };

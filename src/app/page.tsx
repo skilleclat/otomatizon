@@ -144,6 +144,7 @@ export default function AppRoot() {
           isOpen={isOnboardingOpen}
           onClose={() => navigateTo("/")}
           onComplete={handleOnboardingComplete}
+          onTriggerAuth={(mode = "signup") => handleOpenAuth(mode)}
         />
         <AuthModal
           isOpen={isAuthOpen}

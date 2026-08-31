@@ -9891,7 +9891,7 @@ var _BrandLogo = require('@/components/BrandLogo');
 
   // Module: @/components/OnboardingModal
   define("@/components/OnboardingModal", function(require, exports) {
-    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }"use client";
+    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }"use client";
 
 var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
@@ -9920,10 +9920,12 @@ var _designsystem = require('@/lib/design-system');
 
 
 
+
  const OnboardingModal = ({
   isOpen,
   onClose,
-  onComplete
+  onComplete,
+  onTriggerAuth
 }) => {
   const { state, activateOpportunity, updateBusinessProfile } = _store.useOtomatizonStore.call(void 0, );
   const [step, setStep] = _react.useState.call(void 0, 1);
@@ -9983,7 +9985,15 @@ var _designsystem = require('@/lib/design-system');
       customerAcquisitionChannels: channels,
       biggestRepetitiveTask: wishAutomation
     });
-    onComplete();
+
+    if (!_optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.isAuthenticated])) {
+      onClose();
+      if (onTriggerAuth) {
+        onTriggerAuth("signup");
+      }
+    } else {
+      onComplete();
+    }
   };
 
   return (
@@ -10048,36 +10058,35 @@ var _designsystem = require('@/lib/design-system');
             )
           )
 
-          /* STEP 2: HOW DO CUSTOMERS FIND YOU? */
+          /* STEP 2: WHERE DO CLIENTS FIND YOU? */
           , step === 2 && (
             _react2.default.createElement('div', { className: "space-y-6 animate-fadeIn" ,}
               , _react2.default.createElement('div', null
-                , _react2.default.createElement('h2', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] tracking-tight"    ,}, "How do customers find you?"
+                , _react2.default.createElement('h2', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] tracking-tight"    ,}, "Where do new clients find you?"
 
                 )
-                , _react2.default.createElement('p', { className: "text-sm text-[#4A4B50] mt-1.5"  ,}, "Select all channels where inquiries arrive."
+                , _react2.default.createElement('p', { className: "text-sm text-[#4A4B50] mt-1.5"  ,}, "Select the main channels where inquiries first arrive."
 
                 )
               )
 
-              , _react2.default.createElement('div', { className: "grid grid-cols-2 gap-3"  ,}
-                , channelOptions.map((opt) => {
-                  const Icon = opt.icon;
-                  const isSelected = channels.includes(opt.name);
-
+              , _react2.default.createElement('div', { className: "grid grid-cols-2 sm:grid-cols-3 gap-3"   ,}
+                , channelOptions.map((ch) => {
+                  const isSelected = channels.includes(ch.name);
+                  const Icon = ch.icon;
                   return (
                     _react2.default.createElement('button', {
-                      key: opt.name,
+                      key: ch.name,
                       type: "button",
-                      onClick: () => toggleChannel(opt.name),
-                      className: `p-4 rounded-2xl border text-left flex items-center gap-3 transition-all ${
+                      onClick: () => toggleChannel(ch.name),
+                      className: `p-4 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
                         isSelected
-                          ? "bg-[#ECFDF5] border-[#15803D] text-[#15803D] font-bold"
-                          : "bg-[#FAF9F5] border-[#EAE7DF] text-[#121316] hover:bg-stone-50"
+                          ? "border-[#15803D] bg-[#ECFDF5] text-[#15803D]"
+                          : "border-[#EAE7DF] bg-[#FAF9F5] text-[#121316] hover:border-[#D5D1C6]"
                       }`,}
 
                       , _react2.default.createElement(Icon, { className: "w-4 h-4 shrink-0"  ,} )
-                      , _react2.default.createElement('span', { className: "text-xs font-semibold" ,}, opt.name)
+                      , _react2.default.createElement('span', { className: "text-xs font-semibold" ,}, ch.name)
                       , isSelected && _react2.default.createElement(_lucidereact.Check, { className: "w-4 h-4 text-[#15803D] ml-auto"   ,} )
                     )
                   );
@@ -10103,32 +10112,31 @@ var _designsystem = require('@/lib/design-system');
             )
           )
 
-          /* STEP 3: WHAT TOOLS DO YOU ALREADY USE? */
+          /* STEP 3: WHICH TOOLS DO YOU USE? */
           , step === 3 && (
             _react2.default.createElement('div', { className: "space-y-6 animate-fadeIn" ,}
               , _react2.default.createElement('div', null
-                , _react2.default.createElement('h2', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] tracking-tight"    ,}, "What tools do you already use?"
+                , _react2.default.createElement('h2', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] tracking-tight"    ,}, "Which tools do you use daily?"
 
                 )
-                , _react2.default.createElement('p', { className: "text-sm text-[#4A4B50] mt-1.5"  ,}, "Pick the apps where your business data already lives."
+                , _react2.default.createElement('p', { className: "text-sm text-[#4A4B50] mt-1.5"  ,}, "We will show you how they can talk to each other."
 
                 )
               )
 
-              , _react2.default.createElement('div', { className: "grid grid-cols-2 gap-3"  ,}
+              , _react2.default.createElement('div', { className: "grid grid-cols-2 sm:grid-cols-3 gap-3"   ,}
                 , appOptions.map((app) => {
-                  const Icon = app.icon;
                   const isSelected = selectedApps.includes(app.name);
-
+                  const Icon = app.icon;
                   return (
                     _react2.default.createElement('button', {
                       key: app.name,
                       type: "button",
                       onClick: () => toggleApp(app.name),
-                      className: `p-4 rounded-2xl border text-left flex items-center gap-3 transition-all ${
+                      className: `p-4 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
                         isSelected
-                          ? "bg-[#ECFDF5] border-[#15803D] text-[#15803D] font-bold"
-                          : "bg-[#FAF9F5] border-[#EAE7DF] text-[#121316] hover:bg-stone-50"
+                          ? "border-[#15803D] bg-[#ECFDF5] text-[#15803D]"
+                          : "border-[#EAE7DF] bg-[#FAF9F5] text-[#121316] hover:border-[#D5D1C6]"
                       }`,}
 
                       , _react2.default.createElement(Icon, { className: "w-4 h-4 shrink-0"  ,} )
@@ -10205,10 +10213,10 @@ var _designsystem = require('@/lib/design-system');
 
                 )
                 , _react2.default.createElement('h2', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] tracking-tight"    ,}, "We found "
-                    , state.opportunities.length, " things you could automate."
+                    , state.opportunities.length || 2, " things you could automate."
                 )
-                , _react2.default.createElement('p', { className: "text-sm text-[#4A4B50]" ,}, "Based on your connected tools and customer channels."
-
+                , _react2.default.createElement('p', { className: "text-sm text-[#4A4B50]" ,}, "Based on your daily tools ("
+                       , selectedApps.join(", "), ") and customer flow."
                 )
               )
 
@@ -10224,21 +10232,31 @@ var _designsystem = require('@/lib/design-system');
                 )
 
                 , _react2.default.createElement('div', { className: "space-y-1",}
-                  , _react2.default.createElement('h3', { className: "text-lg font-bold text-[#121316]"  ,}, "You may be losing leads between inquiry and booking."
+                  , _react2.default.createElement('h3', { className: "text-lg font-bold text-[#121316]"  ,}, "You may be losing leads between WhatsApp inquiry and booking."
 
                   )
-                  , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] leading-relaxed"  ,}, "Automatically follow up after 24 hours if the customer hasn't booked."
+                  , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] leading-relaxed"  ,}, "Automatically follow up after 24 hours if the customer hasn't confirmed a session on Google Calendar."
 
                   )
                 )
 
                 , _react2.default.createElement('div', { className: "pt-2",}
                   , _react2.default.createElement('button', {
-                    onClick: () => setSelectedOppForPreview(state.opportunities[0]),
+                    onClick: () => {
+                      if (!_optionalChain([state, 'access', _3 => _3.session, 'optionalAccess', _4 => _4.isAuthenticated])) {
+                        handleFinishOnboarding();
+                      } else {
+                        setSelectedOppForPreview(state.opportunities[0] || null);
+                      }
+                    },
                     className: _designsystem.DS.btnPrimary,}
 
                     , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5" ,} )
-                    , _react2.default.createElement('span', null, "Automate this" )
+                    , _react2.default.createElement('span', null
+                      , _optionalChain([state, 'access', _5 => _5.session, 'optionalAccess', _6 => _6.isAuthenticated]) 
+                        ? "Automate this" 
+                        : "Create Free Account to Automate This →"
+                    )
                   )
                 )
               )
@@ -10248,34 +10266,44 @@ var _designsystem = require('@/lib/design-system');
                 , _react2.default.createElement('span', { className: "text-xs font-mono uppercase text-[#75777E] font-semibold tracking-wider block"      ,}, "Other detected opportunities"
 
                 )
-                , state.opportunities.slice(1, 3).map((opp, idx) => (
+                , (state.opportunities.length > 0 ? state.opportunities.slice(1, 3) : [
+                  { id: "opp_mpesa", title: "Unconfirmed Tuition Payments", problem: "Unverified M-Pesa Consultations", recommendation: "Match incoming M-Pesa receipts directly with calendar booking slots." }
+                ]).map((opp) => (
                   _react2.default.createElement('div', {
                     key: opp.id,
                     className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center justify-between gap-4 text-xs"         ,}
 
                     , _react2.default.createElement('div', null
-                      , _react2.default.createElement('h4', { className: "font-bold text-[#121316]" ,}, opp.problem)
+                      , _react2.default.createElement('h4', { className: "font-bold text-[#121316]" ,}, opp.problem || opp.title)
                       , _react2.default.createElement('p', { className: "text-[#4A4B50] text-[11px] mt-0.5"  ,}, opp.recommendation)
                     )
                     , _react2.default.createElement('button', {
-                      onClick: () => setSelectedOppForPreview(opp),
+                      onClick: () => {
+                        if (!_optionalChain([state, 'access', _7 => _7.session, 'optionalAccess', _8 => _8.isAuthenticated])) {
+                          handleFinishOnboarding();
+                        } else {
+                          setSelectedOppForPreview(opp);
+                        }
+                      },
                       className: _designsystem.DS.btnSecondary,}
-, "Preview"
 
+                      , _optionalChain([state, 'access', _9 => _9.session, 'optionalAccess', _10 => _10.isAuthenticated]) ? "Preview" : "Sign Up"
                     )
                   )
                 ))
               )
 
               , _react2.default.createElement('div', { className: "pt-4 border-t border-[#EAE7DF] flex flex-col sm:flex-row items-center justify-between gap-3"        ,}
-                , _react2.default.createElement('span', { className: "text-xs text-[#4A4B50]" ,}, "Ready to link your WhatsApp, Google & M-Pesa tools."
-
+                , _react2.default.createElement('span', { className: "text-xs text-[#4A4B50]" ,}
+                  , _optionalChain([state, 'access', _11 => _11.session, 'optionalAccess', _12 => _12.isAuthenticated])
+                    ? "Starter Plan includes 1 active automation."
+                    : "Create a free account to activate your first automation."
                 )
                 , _react2.default.createElement('button', {
                   onClick: handleFinishOnboarding,
                   className: "w-full sm:w-auto px-6 py-3 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"                   ,}
 
-                  , _react2.default.createElement('span', null, "Connect Selected Apps Now"   )
+                  , _react2.default.createElement('span', null, _optionalChain([state, 'access', _13 => _13.session, 'optionalAccess', _14 => _14.isAuthenticated]) ? "Connect Selected Apps Now" : "Create Account & Continue →")
                   , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5" ,} )
                 )
               )
@@ -10285,17 +10313,19 @@ var _designsystem = require('@/lib/design-system');
       )
 
       /* Preview Modal from Step 5 */
-      , _react2.default.createElement(_AutomationPreviewModal.AutomationPreviewModal, {
-        isOpen: !!selectedOppForPreview,
-        onClose: () => setSelectedOppForPreview(null),
-        opportunity: selectedOppForPreview,
-        onActivate: () => {
-          if (selectedOppForPreview) {
-            activateOpportunity(selectedOppForPreview.id);
-            setSelectedOppForPreview(null);
-            handleFinishOnboarding();
-          }
-        },}
+      , selectedOppForPreview && (
+        _react2.default.createElement(_AutomationPreviewModal.AutomationPreviewModal, {
+          isOpen: true,
+          onClose: () => setSelectedOppForPreview(null),
+          opportunity: selectedOppForPreview,
+          onActivate: () => {
+            if (selectedOppForPreview) {
+              activateOpportunity(selectedOppForPreview.id);
+              setSelectedOppForPreview(null);
+              handleFinishOnboarding();
+            }
+          },}
+        )
       )
     )
   );
@@ -19186,7 +19216,8 @@ var _store = require('@/lib/store');
         , _react2.default.createElement(_OnboardingModal.OnboardingModal, {
           isOpen: isOnboardingOpen,
           onClose: () => navigateTo("/"),
-          onComplete: handleOnboardingComplete,}
+          onComplete: handleOnboardingComplete,
+          onTriggerAuth: (mode = "signup") => handleOpenAuth(mode),}
         )
         , _react2.default.createElement(_AuthModal.AuthModal, {
           isOpen: isAuthOpen,
