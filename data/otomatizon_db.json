@@ -1,0 +1,4177 @@
+{
+  "users": [
+    {
+      "id": "user_james",
+      "fullName": "James Kamau",
+      "email": "james@otomatizon.co.ke",
+      "phone": "+254 722 000 123",
+      "organizationId": "org_james",
+      "createdAt": "2026-08-01"
+    },
+    {
+      "id": "user_1787957940664",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1787957940664",
+      "createdAt": "2026-08-28T22:59:00.664Z"
+    },
+    {
+      "id": "user_1787958003493",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1787958003493",
+      "createdAt": "2026-08-28T23:00:03.493Z"
+    },
+    {
+      "id": "user_1787959104324",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1787959104322",
+      "createdAt": "2026-08-28T23:18:24.325Z"
+    },
+    {
+      "id": "user_1787959182376",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1787959182376",
+      "createdAt": "2026-08-28T23:19:42.376Z"
+    },
+    {
+      "id": "user_1787960476904",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1787960476903",
+      "createdAt": "2026-08-28T23:41:16.904Z"
+    },
+    {
+      "id": "user_1787961543085",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1787961543084",
+      "createdAt": "2026-08-28T23:59:03.086Z"
+    },
+    {
+      "id": "user_1788012495648",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788012495648",
+      "createdAt": "2026-08-29T14:08:15.648Z"
+    },
+    {
+      "id": "user_1788027294156",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788027294156",
+      "createdAt": "2026-08-29T18:14:54.156Z"
+    },
+    {
+      "id": "user_1788027343735",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788027343735",
+      "createdAt": "2026-08-29T18:15:43.735Z"
+    },
+    {
+      "id": "user_1788027416399",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788027416399",
+      "createdAt": "2026-08-29T18:16:56.399Z"
+    },
+    {
+      "id": "user_1788030676793",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788030676793",
+      "createdAt": "2026-08-29T19:11:16.793Z"
+    },
+    {
+      "id": "user_1788035406804",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788035406804",
+      "createdAt": "2026-08-29T20:30:06.804Z"
+    },
+    {
+      "id": "user_1788035610805",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788035610805",
+      "createdAt": "2026-08-29T20:33:30.805Z"
+    },
+    {
+      "id": "user_1788039340519",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788039340519",
+      "createdAt": "2026-08-29T21:35:40.519Z"
+    },
+    {
+      "id": "user_1788039976869",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788039976869",
+      "createdAt": "2026-08-29T21:46:16.869Z"
+    },
+    {
+      "id": "user_1788040038008",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788040038008",
+      "createdAt": "2026-08-29T21:47:18.008Z"
+    },
+    {
+      "id": "user_1788040466128",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788040466128",
+      "createdAt": "2026-08-29T21:54:26.128Z"
+    },
+    {
+      "id": "user_1788040514702",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788040514702",
+      "createdAt": "2026-08-29T21:55:14.702Z"
+    },
+    {
+      "id": "user_1788040900852",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788040900851",
+      "createdAt": "2026-08-29T22:01:40.852Z"
+    },
+    {
+      "id": "user_1788046166427",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788046166427",
+      "createdAt": "2026-08-29T23:29:26.427Z"
+    },
+    {
+      "id": "user_1788046213299",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788046213299",
+      "createdAt": "2026-08-29T23:30:13.299Z"
+    },
+    {
+      "id": "user_1788046708699",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788046708699",
+      "createdAt": "2026-08-29T23:38:28.699Z"
+    },
+    {
+      "id": "user_1788047040570",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788047040570",
+      "createdAt": "2026-08-29T23:44:00.570Z"
+    },
+    {
+      "id": "user_1788072351691",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788072351691",
+      "createdAt": "2026-08-30T06:45:51.691Z"
+    },
+    {
+      "id": "user_1788072395082",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788072395082",
+      "createdAt": "2026-08-30T06:46:35.082Z"
+    },
+    {
+      "id": "user_1788072412387",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788072412387",
+      "createdAt": "2026-08-30T06:46:52.387Z"
+    },
+    {
+      "id": "user_1788072728203",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788072728203",
+      "createdAt": "2026-08-30T06:52:08.203Z"
+    },
+    {
+      "id": "user_1788073012709",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788073012709",
+      "createdAt": "2026-08-30T06:56:52.709Z"
+    },
+    {
+      "id": "user_1788073219141",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788073219140",
+      "createdAt": "2026-08-30T07:00:19.141Z"
+    },
+    {
+      "id": "user_1788074025181",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788074025180",
+      "createdAt": "2026-08-30T07:13:45.181Z"
+    },
+    {
+      "id": "user_1788074907297",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788074907297",
+      "createdAt": "2026-08-30T07:28:27.297Z"
+    },
+    {
+      "id": "user_1788090599047",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788090599047",
+      "createdAt": "2026-08-30T11:49:59.049Z"
+    },
+    {
+      "id": "user_1788090652699",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788090652699",
+      "createdAt": "2026-08-30T11:50:52.699Z"
+    },
+    {
+      "id": "user_1788090867941",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788090867941",
+      "createdAt": "2026-08-30T11:54:27.941Z"
+    },
+    {
+      "id": "user_1788091316788",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788091316788",
+      "createdAt": "2026-08-30T12:01:56.788Z"
+    },
+    {
+      "id": "user_1788115526819",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788115526819",
+      "createdAt": "2026-08-30T18:45:26.819Z"
+    }
+  ],
+  "organizations": [
+    {
+      "id": "org_james",
+      "name": "Kamau French & Academic Tutoring",
+      "planId": "growth",
+      "createdAt": "2026-08-01"
+    },
+    {
+      "id": "org_1787957940664",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-28T22:59:00.665Z"
+    },
+    {
+      "id": "org_1787958003493",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-28T23:00:03.493Z"
+    },
+    {
+      "id": "org_1787959104322",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-28T23:18:24.325Z"
+    },
+    {
+      "id": "org_1787959182376",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-28T23:19:42.377Z"
+    },
+    {
+      "id": "org_1787960476903",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-28T23:41:16.904Z"
+    },
+    {
+      "id": "org_1787961543084",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-28T23:59:03.086Z"
+    },
+    {
+      "id": "org_1788012495648",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T14:08:15.648Z"
+    },
+    {
+      "id": "org_1788027294156",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T18:14:54.156Z"
+    },
+    {
+      "id": "org_1788027343735",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T18:15:43.735Z"
+    },
+    {
+      "id": "org_1788027416399",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T18:16:56.399Z"
+    },
+    {
+      "id": "org_1788030676793",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T19:11:16.793Z"
+    },
+    {
+      "id": "org_1788035406804",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T20:30:06.805Z"
+    },
+    {
+      "id": "org_1788035610805",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T20:33:30.805Z"
+    },
+    {
+      "id": "org_1788039340519",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T21:35:40.519Z"
+    },
+    {
+      "id": "org_1788039976869",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T21:46:16.869Z"
+    },
+    {
+      "id": "org_1788040038008",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T21:47:18.008Z"
+    },
+    {
+      "id": "org_1788040466128",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T21:54:26.129Z"
+    },
+    {
+      "id": "org_1788040514702",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T21:55:14.702Z"
+    },
+    {
+      "id": "org_1788040900851",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T22:01:40.852Z"
+    },
+    {
+      "id": "org_1788046166427",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T23:29:26.427Z"
+    },
+    {
+      "id": "org_1788046213299",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T23:30:13.299Z"
+    },
+    {
+      "id": "org_1788046708699",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T23:38:28.699Z"
+    },
+    {
+      "id": "org_1788047040570",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-29T23:44:00.570Z"
+    },
+    {
+      "id": "org_1788072351691",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T06:45:51.691Z"
+    },
+    {
+      "id": "org_1788072395082",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T06:46:35.082Z"
+    },
+    {
+      "id": "org_1788072412387",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T06:46:52.387Z"
+    },
+    {
+      "id": "org_1788072728203",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T06:52:08.203Z"
+    },
+    {
+      "id": "org_1788073012709",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T06:56:52.709Z"
+    },
+    {
+      "id": "org_1788073219140",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T07:00:19.141Z"
+    },
+    {
+      "id": "org_1788074025180",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T07:13:45.181Z"
+    },
+    {
+      "id": "org_1788074907297",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T07:28:27.297Z"
+    },
+    {
+      "id": "org_1788090599047",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T11:49:59.049Z"
+    },
+    {
+      "id": "org_1788090652699",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T11:50:52.699Z"
+    },
+    {
+      "id": "org_1788090867941",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T11:54:27.941Z"
+    },
+    {
+      "id": "org_1788091316788",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T12:01:56.788Z"
+    },
+    {
+      "id": "org_1788115526819",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-30T18:45:26.819Z"
+    }
+  ],
+  "businessProfiles": [
+    {
+      "id": "bp_james",
+      "organizationId": "org_james",
+      "businessName": "Kamau French & Academic Tutoring",
+      "businessType": "Private French Tutor & Exam Coach",
+      "description": "Private DELF/DALF French lessons & exam preparation in Nairobi.",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "WhatsApp",
+        "Google Maps",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "Gmail",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Reminding students to pay before lessons and sending brochures.",
+      "workflowStages": [
+        {
+          "id": "stg_01",
+          "order": 1,
+          "name": "Customer inquiry",
+          "sourceApp": "WhatsApp Business",
+          "actionDescription": "Student inquires about French lessons",
+          "destinationApp": "WhatsApp Business",
+          "manualFriction": "Manual response required within hours"
+        },
+        {
+          "id": "stg_02",
+          "order": 2,
+          "name": "Information sent",
+          "sourceApp": "WhatsApp Business",
+          "actionDescription": "Tutor sends lesson brochure and pricing",
+          "destinationApp": "Google Drive",
+          "manualFriction": "Manual PDF attachment"
+        },
+        {
+          "id": "stg_03",
+          "order": 3,
+          "name": "Session booking",
+          "sourceApp": "Google Calendar",
+          "actionDescription": "Agreed slot booked on Google Calendar with Meet link",
+          "destinationApp": "Google Calendar",
+          "manualFriction": "Typing details and verifying slot availability"
+        },
+        {
+          "id": "stg_04",
+          "order": 4,
+          "name": "Payment verification",
+          "sourceApp": "M-Pesa",
+          "actionDescription": "Student pays deposit via Paybill 849201",
+          "destinationApp": "M-Pesa",
+          "manualFriction": "Manual SMS reconciliation"
+        },
+        {
+          "id": "stg_05",
+          "order": 5,
+          "name": "Lesson execution",
+          "sourceApp": "Google Meet",
+          "actionDescription": "60-min coaching session conducted",
+          "destinationApp": "Google Meet"
+        },
+        {
+          "id": "stg_06",
+          "order": 6,
+          "name": "Session follow-up",
+          "sourceApp": "Google Sheets",
+          "actionDescription": "Attendance and homework logged in roster",
+          "destinationApp": "Google Sheets",
+          "manualFriction": "Manual roster entry"
+        }
+      ],
+      "manualTasks": [
+        "Copy-pasting lesson schedules into WhatsApp messages",
+        "Sending PDF brochures manually to prospective students",
+        "Checking M-Pesa SMS alerts against student attendance rosters",
+        "Chasing payment on the morning of scheduled sessions"
+      ],
+      "frictionPoints": [
+        "Unanswered WhatsApp inquiries going cold after 24 hours",
+        "Students attending lessons before completing payments",
+        "Manual entry of session attendance into Google Sheets"
+      ],
+      "customerType": "Individual learners, executives & university candidates"
+    },
+    {
+      "id": "bp_1787957940665",
+      "organizationId": "org_1787957940664",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1787958003493",
+      "organizationId": "org_1787958003493",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1787959104325",
+      "organizationId": "org_1787959104322",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1787959182377",
+      "organizationId": "org_1787959182376",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1787960476904",
+      "organizationId": "org_1787960476903",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1787961543086",
+      "organizationId": "org_1787961543084",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788012495648",
+      "organizationId": "org_1788012495648",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788027294156",
+      "organizationId": "org_1788027294156",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788027343735",
+      "organizationId": "org_1788027343735",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788027416399",
+      "organizationId": "org_1788027416399",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788030676793",
+      "organizationId": "org_1788030676793",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788035406805",
+      "organizationId": "org_1788035406804",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788035610805",
+      "organizationId": "org_1788035610805",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788039340519",
+      "organizationId": "org_1788039340519",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788039976869",
+      "organizationId": "org_1788039976869",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788040038008",
+      "organizationId": "org_1788040038008",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788040466129",
+      "organizationId": "org_1788040466128",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788040514702",
+      "organizationId": "org_1788040514702",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788040900852",
+      "organizationId": "org_1788040900851",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788046166427",
+      "organizationId": "org_1788046166427",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788046213299",
+      "organizationId": "org_1788046213299",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788046708699",
+      "organizationId": "org_1788046708699",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788047040570",
+      "organizationId": "org_1788047040570",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788072351691",
+      "organizationId": "org_1788072351691",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788072395082",
+      "organizationId": "org_1788072395082",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788072412387",
+      "organizationId": "org_1788072412387",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788072728204",
+      "organizationId": "org_1788072728203",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788073012709",
+      "organizationId": "org_1788073012709",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788073219141",
+      "organizationId": "org_1788073219140",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788074025181",
+      "organizationId": "org_1788074025180",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788074907298",
+      "organizationId": "org_1788074907297",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788090599049",
+      "organizationId": "org_1788090599047",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788090652699",
+      "organizationId": "org_1788090652699",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788090867941",
+      "organizationId": "org_1788090867941",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788091316788",
+      "organizationId": "org_1788091316788",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788115526819",
+      "organizationId": "org_1788115526819",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    }
+  ],
+  "leads": [
+    {
+      "id": "lead_01",
+      "organizationId": "org_james",
+      "name": "Mercy Chebet",
+      "phone": "+254 719 552 108",
+      "email": "mercy.chebet@gmail.com",
+      "source": "whatsapp",
+      "status": "new",
+      "notes": "Inquired about DELF B2 prep on WhatsApp",
+      "inquiredService": "Executive Exam Prep (90 min)",
+      "potentialValueKes": 3500,
+      "lastContactAt": "10 mins ago",
+      "createdAt": "2026-08-28T22:55:54.232Z"
+    }
+  ],
+  "workflows": [
+    {
+      "id": "wf_lead_autopilot",
+      "organizationId": "org_james",
+      "title": "Lead Follow-Up Autopilot",
+      "summary": "Captures WhatsApp inquiries in Google Sheets, sends syllabus, and follows up in 24h.",
+      "category": "lead_recovery",
+      "active": true,
+      "triggerDescription": "When an inquiry arrives on WhatsApp",
+      "steps": [
+        {
+          "id": "s1",
+          "label": "Save customer to Google Sheets student roster",
+          "actionType": "update_sheet",
+          "parameters": {},
+          "icon": "file-spreadsheet"
+        },
+        {
+          "id": "s2",
+          "label": "Deliver lesson brochure to prospective student on WhatsApp",
+          "actionType": "send_whatsapp",
+          "parameters": {},
+          "icon": "message-square"
+        },
+        {
+          "id": "s3",
+          "label": "Wait 24h & check if lesson booked on Google Calendar",
+          "actionType": "wait_delay",
+          "parameters": {},
+          "icon": "clock"
+        },
+        {
+          "id": "s4",
+          "label": "Book session & create Google Meet link",
+          "actionType": "create_calendar_event",
+          "parameters": {},
+          "icon": "calendar"
+        },
+        {
+          "id": "s5",
+          "label": "Send M-Pesa payment prompt for KES 3,500 via Paybill 849201",
+          "actionType": "request_mpesa",
+          "parameters": {
+            "amountKes": 3500
+          },
+          "icon": "credit-card"
+        }
+      ],
+      "metrics": {
+        "runsCount": 64,
+        "leadsHelped": 70,
+        "hoursSaved": 30.1,
+        "revenueRecoveredKes": 176500
+      },
+      "createdAt": "2026-08-10T08:00:00Z",
+      "lastRunAt": "12 mins ago",
+      "operationalFlow": [
+        {
+          "id": "flow_01",
+          "stepNumber": 1,
+          "nodeType": "trigger",
+          "application": "WhatsApp",
+          "systemRole": "Inbound Channel",
+          "title": "Customer sends a WhatsApp message",
+          "description": "Student reaches out inquiring about French lessons or pricing packages."
+        },
+        {
+          "id": "flow_02",
+          "stepNumber": 2,
+          "nodeType": "intelligence",
+          "application": "Otomatizon",
+          "systemRole": "Operations Intelligence",
+          "title": "Otomatizon identifies a new inquiry",
+          "description": "Extracts contact information, verifies student status, and initiates the automated process."
+        },
+        {
+          "id": "flow_03",
+          "stepNumber": 3,
+          "nodeType": "action",
+          "application": "Google Sheets",
+          "systemRole": "Student Registry",
+          "title": "Customer information is recorded in Google Sheets",
+          "description": "Student name, WhatsApp phone number, and inquiry timestamp are appended to your active roster."
+        },
+        {
+          "id": "flow_04",
+          "stepNumber": 4,
+          "nodeType": "action",
+          "application": "WhatsApp",
+          "systemRole": "Information Delivery",
+          "title": "Course information is sent automatically",
+          "description": "Rate sheet, exam syllabus brochure, and Google Calendar booking link are dispatched instantly."
+        },
+        {
+          "id": "flow_05",
+          "stepNumber": 5,
+          "nodeType": "action",
+          "application": "Google Calendar",
+          "systemRole": "Booking Verification",
+          "title": "Google Calendar is checked",
+          "description": "Monitors your calendar availability to detect whether the student confirmed a lesson slot."
+        },
+        {
+          "id": "flow_06",
+          "stepNumber": 6,
+          "nodeType": "condition",
+          "application": "Otomatizon",
+          "systemRole": "Operational Decision",
+          "title": "If no booking exists after 24 hours, Otomatizon follows up",
+          "description": "Evaluates booking confirmation status after the 24-hour waiting period.",
+          "conditionText": "Has student confirmed a lesson on Google Calendar?",
+          "branchOutcome": {
+            "yes": "Stop follow-up sequence",
+            "no": "Send polite check-in message on WhatsApp"
+          }
+        },
+        {
+          "id": "flow_07",
+          "stepNumber": 7,
+          "nodeType": "stop",
+          "application": "Otomatizon",
+          "systemRole": "Sequence Termination",
+          "title": "The follow-up stops when customer books or replies",
+          "description": "A Google Calendar invite with Meet link is confirmed, and an M-Pesa payment prompt is sent.",
+          "finalState": "Lead converted & scheduled on Calendar"
+        }
+      ],
+      "connectedApps": [
+        "WhatsApp",
+        "Google Sheets",
+        "Google Calendar"
+      ]
+    }
+  ],
+  "opportunities": [
+    {
+      "id": "opp_01",
+      "organizationId": "org_james",
+      "title": "14 leads were not followed up",
+      "problem": "You're losing leads between inquiry and booking.",
+      "evidence": "We found 23 inquiries with inconsistent follow-up across WhatsApp and Gmail.",
+      "impactScore": 90,
+      "impactLevel": "High impact",
+      "confidenceScore": 94,
+      "estimatedTimeSavedHoursPerWeek": 4.5,
+      "estimatedRevenueAtRiskKes": 49000,
+      "recommendation": "Automatically follow up after 24 hours when a lead hasn't booked.",
+      "suggestedWorkflowTitle": "Lead Follow-Up Autopilot",
+      "suggestedWorkflowDescription": "Saves inquiry to Sheets, delivers syllabus, sends 24h follow-up.",
+      "status": "new",
+      "detectedAt": "Today at 08:30",
+      "category": "lead_recovery",
+      "evidenceType": "OBSERVED",
+      "requiredIntegrations": [
+        "whatsapp_business",
+        "google_calendar"
+      ]
+    },
+    {
+      "id": "opp_02",
+      "organizationId": "org_james",
+      "title": "6 lessons completed without payment",
+      "problem": "Students attend lessons but payment is collected days later.",
+      "evidence": "6 calendar sessions lack matching M-Pesa receipts within 24 hours.",
+      "impactScore": 85,
+      "impactLevel": "High impact",
+      "confidenceScore": 92,
+      "estimatedTimeSavedHoursPerWeek": 3,
+      "estimatedRevenueAtRiskKes": 21000,
+      "recommendation": "Automatically send M-Pesa STK push 18 hours before scheduled sessions.",
+      "suggestedWorkflowTitle": "Pre-Session Payment Follow-Up",
+      "suggestedWorkflowDescription": "Checks calendar, sends M-Pesa reminder, confirms payment receipt.",
+      "status": "new",
+      "detectedAt": "Yesterday at 14:15",
+      "category": "payment_reminder",
+      "evidenceType": "INFERRED",
+      "requiredIntegrations": [
+        "whatsapp_business",
+        "google_calendar"
+      ]
+    }
+  ],
+  "executions": [
+    {
+      "id": "exec_1788128466323",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788115531965",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788115526900",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788091316853",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788090868031",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788090652786",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788074907395",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788074025266",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788073219214",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788073012780",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788072728263",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788072412448",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788072395185",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788072362809",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788072351773",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788047040623",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788046708782",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788046213364",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788046158833",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788044198538",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "run_1788044185645",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEventId": "evt_1788044185645",
+      "triggerEvent": "Inquiry from Prospective Client (SIMULATED)",
+      "entityName": "Prospective Client",
+      "status": "completed",
+      "currentStepIndex": 4,
+      "stepsTotal": 4,
+      "logSummary": "Completed automated pipeline across WhatsApp, Sheets, and Calendar.",
+      "startedAt": "Just now",
+      "completedAt": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "exec_1788043275857",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "run_1788043257919",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEventId": "evt_1788043257919",
+      "triggerEvent": "Inquiry from Prospective Client (SIMULATED)",
+      "entityName": "Prospective Client",
+      "status": "completed",
+      "currentStepIndex": 4,
+      "stepsTotal": 4,
+      "logSummary": "Completed automated pipeline across WhatsApp, Sheets, and Calendar.",
+      "startedAt": "Just now",
+      "completedAt": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "run_1788043225369",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEventId": "evt_1788043225367",
+      "triggerEvent": "Inquiry from Prospective Client (SIMULATED)",
+      "entityName": "Prospective Client",
+      "status": "completed",
+      "currentStepIndex": 4,
+      "stepsTotal": 4,
+      "logSummary": "Completed automated pipeline across WhatsApp, Sheets, and Calendar.",
+      "startedAt": "Just now",
+      "completedAt": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "exec_1788042807609",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788042606457",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788042124119",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788041862620",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788040914842",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788040900974",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788040514777",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788040457337",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788040071505",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788040038066",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788039965907",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "run_1788039414577",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEventId": "evt_1788039414576",
+      "triggerEvent": "Inquiry from Live REST Lead (SIMULATED)",
+      "entityName": "Live REST Lead",
+      "status": "completed",
+      "currentStepIndex": 4,
+      "stepsTotal": 4,
+      "logSummary": "Completed automated pipeline across WhatsApp, Sheets, and Calendar.",
+      "startedAt": "Just now",
+      "completedAt": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "exec_1788039340574",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788039332990",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788035638960",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788035610870",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788035390993",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788030752044",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788030676878",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788030670006",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788027416465",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788012495706",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1787961543147",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1787960477040",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1787959182577",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1787959104925",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1787958003598",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_01",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "WhatsApp inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Syllabus delivered, Google Calendar slot reserved, M-Pesa prompt confirmed.",
+      "startedAt": "12 mins ago",
+      "completedAt": "12 mins ago"
+    }
+  ],
+  "activityLogs": [
+    {
+      "id": "act_1788159627116",
+      "organizationId": "org_test",
+      "runId": "run_1788159627116",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788159416958",
+      "organizationId": "org_test",
+      "runId": "run_1788159416958",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788159401942",
+      "organizationId": "org_test",
+      "runId": "run_1788159401942",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788158906654",
+      "organizationId": "org_james",
+      "runId": "run_1788158906654",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Brian Omondi",
+      "description": "\"Hi Brian! Following up on your Saturday 10am maths coaching request. Would you like me to hold this slot on Google Calendar for you? — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Brian Omondi",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788158906638",
+      "organizationId": "org_james",
+      "runId": "run_1788158906638",
+      "type": "lead_follow_up",
+      "channel": "system",
+      "application": "Otomatizon Intelligence",
+      "title": "Follow-up stopped for Mercy Chebet (Circuit Broken)",
+      "description": "Verified M-Pesa payment or Google Calendar booking already found for Mercy Chebet. Follow-up suppressed.",
+      "actionTakenByOtomatizon": "Circuit breaker evaluated positive outcome and prevented duplicate message.",
+      "businessResult": "Zero spam · Customer conversion protected",
+      "entityName": "Mercy Chebet",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "log_1788128466323",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788115536218",
+      "organizationId": "org_james",
+      "runId": "run_1788115536218",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Sylvie Dubois",
+      "description": "\"Bonjour Sylvie ! Petit rappel amical pour la séance de français de demain 15h. Vous pouvez finaliser le règlement via M-Pesa Till 174379 pour recevoir le lien Meet. Merci ! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Sylvie Dubois",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "log_1788115531965",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788115526900",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788091316853",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788090868031",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788090652787",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788078952468",
+      "organizationId": "org_james",
+      "runId": "run_1788078952468",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Dr. Patrick Mbugua",
+      "description": "\"Hi Dr. Patrick Mbugua! Just following up on your Grade 8 Mathematics coaching request for Saturday 10am. Would you like me to reserve this Google Calendar slot for you? — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Dr. Patrick Mbugua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788078952370",
+      "organizationId": "org_james",
+      "runId": "run_1788078952370",
+      "type": "booking_confirmed",
+      "channel": "mpesa",
+      "application": "Safaricom M-Pesa",
+      "title": "M-Pesa payment received: KES 3,500",
+      "description": "Receipt: QAH8952365 from 254722998811",
+      "actionTakenByOtomatizon": "Validated M-Pesa Daraja callback and confirmed coaching booking",
+      "businessResult": "KES 3,500 revenue secured",
+      "entityName": "254722998811",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788078952300",
+      "organizationId": "org_james",
+      "runId": "run_1788078952300",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "WhatsApp: Dr. Patrick Mbugua [booking_request]",
+      "description": "\"Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?\" → Extracted: Mathematics Coaching (Primary / Junior Secondary (CBC))",
+      "actionTakenByOtomatizon": "Intelligence parsed message (98% confidence) & prepared response.",
+      "businessResult": "Lead captured in Google Sheets · Proposed: Propose Available Calendar Slots",
+      "entityName": "Dr. Patrick Mbugua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788078912645",
+      "organizationId": "org_james",
+      "runId": "run_1788078912645",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "WhatsApp: Dr. Patrick Mbugua [booking_request]",
+      "description": "\"Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?\" → Extracted: Mathematics Coaching (Primary / Junior Secondary (CBC))",
+      "actionTakenByOtomatizon": "Intelligence parsed message (98% confidence) & prepared response.",
+      "businessResult": "Lead captured in Google Sheets · Proposed: Propose Available Calendar Slots",
+      "entityName": "Dr. Patrick Mbugua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788078874345",
+      "organizationId": "org_james",
+      "runId": "run_1788078874345",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "WhatsApp: Dr. Patrick Mbugua [booking_request]",
+      "description": "\"Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?\" → Extracted: Mathematics Coaching (Primary / Junior Secondary (CBC))",
+      "actionTakenByOtomatizon": "Intelligence parsed message (98% confidence) & prepared response.",
+      "businessResult": "Lead captured in Google Sheets · Proposed: Propose Available Calendar Slots",
+      "entityName": "Dr. Patrick Mbugua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "log_1788074907395",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788074025266",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788073219214",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788073218065",
+      "organizationId": "org_test",
+      "runId": "run_1788073218065",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Naomi Kiprono",
+      "description": "\"Bonjour Naomi ! Petit suivi concernant votre demande de cours de français.\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Naomi Kiprono",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788073215879",
+      "organizationId": "org_james",
+      "runId": "run_1788073215879",
+      "type": "subscription_upgraded",
+      "channel": "mpesa",
+      "application": "Otomatizon Billing",
+      "title": "Plan upgraded to Growth (KES 999/mo)",
+      "description": "M-Pesa Receipt: QAH9012345. Higher quota unlocked (5 Automations & 300 Follow-ups/mo).",
+      "actionTakenByOtomatizon": "Safaricom M-Pesa STK subscription payment verified & plan upgraded.",
+      "businessResult": "Subscription active until 29/09/2026",
+      "entityName": "Kamau French & Academic Tutoring",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "log_1788073012780",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788073011760",
+      "organizationId": "org_test",
+      "runId": "run_1788073011760",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Naomi Kiprono",
+      "description": "\"Bonjour Naomi ! Petit suivi concernant votre demande de cours de français.\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Naomi Kiprono",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788072989454",
+      "organizationId": "org_test",
+      "runId": "run_1788072989454",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Naomi Kiprono",
+      "description": "\"Bonjour Naomi ! Petit suivi concernant votre demande de cours de français.\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Naomi Kiprono",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "log_1788072728263",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788072412449",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788072395185",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788072362809",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788072351773",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788047040623",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788046708782",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788046213364",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788046158833",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788044198538",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788044185645",
+      "organizationId": "org_james",
+      "runId": "run_1788044185645",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp",
+      "title": "New inquiry received: Prospective Client",
+      "description": "Processed by Otomatizon Intelligence (SIMULATED).",
+      "actionTakenByOtomatizon": "Inquiry received & syllabus sent via WhatsApp",
+      "businessResult": "Lead captured & verified in student roster",
+      "entityName": "Prospective Client",
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "log_1788043275857",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788043257919",
+      "organizationId": "org_james",
+      "runId": "run_1788043257919",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp",
+      "title": "New inquiry received: Prospective Client",
+      "description": "Processed by Otomatizon Intelligence (SIMULATED).",
+      "actionTakenByOtomatizon": "Inquiry received & syllabus sent via WhatsApp",
+      "businessResult": "Lead captured & verified in student roster",
+      "entityName": "Prospective Client",
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "act_1788043225370",
+      "organizationId": "org_james",
+      "runId": "run_1788043225369",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp",
+      "title": "New inquiry received: Prospective Client",
+      "description": "Processed by Otomatizon Intelligence (SIMULATED).",
+      "actionTakenByOtomatizon": "Inquiry received & syllabus sent via WhatsApp",
+      "businessResult": "Lead captured & verified in student roster",
+      "entityName": "Prospective Client",
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "log_1788042807609",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788042606457",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788042124119",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788041862621",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788040914842",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788040900974",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788040514777",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788040457337",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788040071505",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788040038066",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788039965907",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788039414577",
+      "organizationId": "org_james",
+      "runId": "run_1788039414577",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp",
+      "title": "New inquiry received: Live REST Lead",
+      "description": "Processed by Otomatizon Intelligence (SIMULATED).",
+      "actionTakenByOtomatizon": "Inquiry received & syllabus sent via WhatsApp",
+      "businessResult": "Lead captured & verified in student roster",
+      "entityName": "Live REST Lead",
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "log_1788039340574",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788039332990",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788035638960",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788035610870",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788035390993",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788030752044",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788030676878",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788030670006",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788027416465",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788012495706",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1787961543148",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1787960477040",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1787959182577",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1787959104936",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1787958003600",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_01",
+      "organizationId": "org_james",
+      "type": "lead_captured",
+      "title": "Student inquiry received via WhatsApp",
+      "description": "Mercy Chebet asked about DELF Exam Prep. Saved to Google Sheets.",
+      "timestamp": "Today at 08:45 AM",
+      "channel": "whatsapp",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_02",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "French coaching session booked on Calendar",
+      "description": "Reserved 60-min session with Mercy Chebet. Google Meet link generated.",
+      "timestamp": "Today at 08:46 AM",
+      "channel": "calendar",
+      "badgeColor": "blue"
+    },
+    {
+      "id": "act_03",
+      "organizationId": "org_james",
+      "type": "payment_reminder",
+      "title": "M-Pesa payment received (KES 3,500)",
+      "description": "Confirmed receipt QK91028472 via Paybill 849201.",
+      "timestamp": "Today at 08:48 AM",
+      "channel": "mpesa",
+      "badgeColor": "amber"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": "sub_01",
+      "organizationId": "org_james",
+      "planId": "growth",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T07:00:15.879Z",
+      "currentPeriodEnd": "2026-09-29T07:00:15.879Z",
+      "priceKesMonthly": 999
+    },
+    {
+      "id": "sub_1787957940665",
+      "organizationId": "org_1787957940664",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-28T22:59:00.665Z",
+      "currentPeriodEnd": "2026-09-27T22:59:00.666Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1787958003493",
+      "organizationId": "org_1787958003493",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-28T23:00:03.493Z",
+      "currentPeriodEnd": "2026-09-27T23:00:03.493Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1787959104326",
+      "organizationId": "org_1787959104322",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-28T23:18:24.326Z",
+      "currentPeriodEnd": "2026-09-27T23:18:24.326Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1787959182377",
+      "organizationId": "org_1787959182376",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-28T23:19:42.377Z",
+      "currentPeriodEnd": "2026-09-27T23:19:42.377Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1787960476904",
+      "organizationId": "org_1787960476903",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-28T23:41:16.904Z",
+      "currentPeriodEnd": "2026-09-27T23:41:16.904Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1787961543086",
+      "organizationId": "org_1787961543084",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-28T23:59:03.086Z",
+      "currentPeriodEnd": "2026-09-27T23:59:03.086Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788012495648",
+      "organizationId": "org_1788012495648",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T14:08:15.648Z",
+      "currentPeriodEnd": "2026-09-28T14:08:15.648Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788027294156",
+      "organizationId": "org_1788027294156",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T18:14:54.156Z",
+      "currentPeriodEnd": "2026-09-28T18:14:54.156Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788027343735",
+      "organizationId": "org_1788027343735",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T18:15:43.735Z",
+      "currentPeriodEnd": "2026-09-28T18:15:43.735Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788027416399",
+      "organizationId": "org_1788027416399",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T18:16:56.399Z",
+      "currentPeriodEnd": "2026-09-28T18:16:56.399Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788030676793",
+      "organizationId": "org_1788030676793",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T19:11:16.793Z",
+      "currentPeriodEnd": "2026-09-28T19:11:16.793Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788035406805",
+      "organizationId": "org_1788035406804",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T20:30:06.805Z",
+      "currentPeriodEnd": "2026-09-28T20:30:06.805Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788035610805",
+      "organizationId": "org_1788035610805",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T20:33:30.805Z",
+      "currentPeriodEnd": "2026-09-28T20:33:30.805Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788039340519",
+      "organizationId": "org_1788039340519",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T21:35:40.519Z",
+      "currentPeriodEnd": "2026-09-28T21:35:40.519Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788039976869",
+      "organizationId": "org_1788039976869",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T21:46:16.869Z",
+      "currentPeriodEnd": "2026-09-28T21:46:16.869Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788040038008",
+      "organizationId": "org_1788040038008",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T21:47:18.008Z",
+      "currentPeriodEnd": "2026-09-28T21:47:18.008Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788040466129",
+      "organizationId": "org_1788040466128",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T21:54:26.129Z",
+      "currentPeriodEnd": "2026-09-28T21:54:26.129Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788040514702",
+      "organizationId": "org_1788040514702",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T21:55:14.702Z",
+      "currentPeriodEnd": "2026-09-28T21:55:14.702Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788040900852",
+      "organizationId": "org_1788040900851",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T22:01:40.852Z",
+      "currentPeriodEnd": "2026-09-28T22:01:40.852Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788046166427",
+      "organizationId": "org_1788046166427",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T23:29:26.427Z",
+      "currentPeriodEnd": "2026-09-28T23:29:26.427Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788046213299",
+      "organizationId": "org_1788046213299",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T23:30:13.299Z",
+      "currentPeriodEnd": "2026-09-28T23:30:13.299Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788046708699",
+      "organizationId": "org_1788046708699",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T23:38:28.699Z",
+      "currentPeriodEnd": "2026-09-28T23:38:28.699Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788047040570",
+      "organizationId": "org_1788047040570",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-29T23:44:00.570Z",
+      "currentPeriodEnd": "2026-09-28T23:44:00.570Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788072351691",
+      "organizationId": "org_1788072351691",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T06:45:51.691Z",
+      "currentPeriodEnd": "2026-09-29T06:45:51.691Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788072395082",
+      "organizationId": "org_1788072395082",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T06:46:35.082Z",
+      "currentPeriodEnd": "2026-09-29T06:46:35.082Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788072412387",
+      "organizationId": "org_1788072412387",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T06:46:52.387Z",
+      "currentPeriodEnd": "2026-09-29T06:46:52.387Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788072728204",
+      "organizationId": "org_1788072728203",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T06:52:08.204Z",
+      "currentPeriodEnd": "2026-09-29T06:52:08.204Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788073012709",
+      "organizationId": "org_1788073012709",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T06:56:52.709Z",
+      "currentPeriodEnd": "2026-09-29T06:56:52.709Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788073219141",
+      "organizationId": "org_1788073219140",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T07:00:19.141Z",
+      "currentPeriodEnd": "2026-09-29T07:00:19.141Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788074025181",
+      "organizationId": "org_1788074025180",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T07:13:45.181Z",
+      "currentPeriodEnd": "2026-09-29T07:13:45.181Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788074907298",
+      "organizationId": "org_1788074907297",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T07:28:27.298Z",
+      "currentPeriodEnd": "2026-09-29T07:28:27.298Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788090599049",
+      "organizationId": "org_1788090599047",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T11:49:59.049Z",
+      "currentPeriodEnd": "2026-09-29T11:49:59.049Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788090652699",
+      "organizationId": "org_1788090652699",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T11:50:52.699Z",
+      "currentPeriodEnd": "2026-09-29T11:50:52.699Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788090867941",
+      "organizationId": "org_1788090867941",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T11:54:27.941Z",
+      "currentPeriodEnd": "2026-09-29T11:54:27.941Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788091316788",
+      "organizationId": "org_1788091316788",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T12:01:56.788Z",
+      "currentPeriodEnd": "2026-09-29T12:01:56.788Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788115526819",
+      "organizationId": "org_1788115526819",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-30T18:45:26.819Z",
+      "currentPeriodEnd": "2026-09-29T18:45:26.819Z",
+      "priceKesMonthly": 499
+    }
+  ],
+  "connections": [
+    {
+      "id": "whatsapp_business",
+      "name": "WhatsApp Business",
+      "category": "messaging",
+      "description": "Inbound student messages, rate brochures, and 24h reminders.",
+      "icon": "message-square",
+      "connected": true,
+      "accountPhone": "+254 722 000 123",
+      "accountIdentifier": "WABA ID: 109284729104",
+      "lastSyncedAt": "Just now",
+      "status": "connected",
+      "scopes": [
+        "whatsapp_business_messaging",
+        "whatsapp_business_management"
+      ],
+      "permissionsGranted": [
+        "Send message templates",
+        "Read incoming messages",
+        "Manage contact profiles"
+      ],
+      "whatWeUseItFor": [
+        "Delivering course brochures",
+        "Sending automated 24h follow-ups",
+        "Payment reminders via WhatsApp"
+      ],
+      "authType": "api_key"
+    },
+    {
+      "id": "gmail",
+      "name": "Gmail",
+      "category": "google",
+      "description": "Inbound inquiries, invoice delivery, and official confirmations.",
+      "icon": "mail",
+      "connected": true,
+      "accountEmail": "james.kamau.nairobi@gmail.com",
+      "lastSyncedAt": "5 mins ago",
+      "status": "connected",
+      "scopes": [
+        "https://www.googleapis.com/auth/gmail.send",
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ],
+      "permissionsGranted": [
+        "Send emails on your behalf",
+        "Read student inquiry emails"
+      ],
+      "whatWeUseItFor": [
+        "Sending formal syllabus PDFs",
+        "Delivering lesson confirmation emails"
+      ],
+      "authType": "oauth2"
+    },
+    {
+      "id": "google_calendar",
+      "name": "Google Calendar",
+      "category": "google",
+      "description": "Session scheduling, availability checks, and Google Meet generation.",
+      "icon": "calendar",
+      "connected": true,
+      "accountEmail": "james.kamau.nairobi@gmail.com",
+      "lastSyncedAt": "Just now",
+      "status": "connected",
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar.events",
+        "https://www.googleapis.com/auth/calendar.readonly"
+      ],
+      "permissionsGranted": [
+        "Create calendar events",
+        "Generate Google Meet links",
+        "Check schedule availability"
+      ],
+      "whatWeUseItFor": [
+        "Creating lesson slots automatically",
+        "Triggering pre-session reminders"
+      ],
+      "authType": "oauth2"
+    },
+    {
+      "id": "google_sheets",
+      "name": "Google Sheets",
+      "category": "google",
+      "description": "Recording student rosters, lesson logs, and payment records.",
+      "icon": "table",
+      "connected": true,
+      "accountEmail": "james.kamau.nairobi@gmail.com (Sheet: Student Roster 2026)",
+      "lastSyncedAt": "15 mins ago",
+      "status": "connected",
+      "scopes": [
+        "https://www.googleapis.com/auth/spreadsheets"
+      ],
+      "permissionsGranted": [
+        "Append student records",
+        "Read existing roster rows"
+      ],
+      "whatWeUseItFor": [
+        "Logging new student inquiries",
+        "Updating lesson attendance and billing records"
+      ],
+      "authType": "oauth2"
+    },
+    {
+      "id": "google_drive",
+      "name": "Google Drive",
+      "category": "google",
+      "description": "Sharing worksheets, course materials and notes.",
+      "icon": "hard-drive",
+      "connected": false,
+      "accountEmail": "james.kamau.nairobi@gmail.com",
+      "lastSyncedAt": "Setup required",
+      "lastError": "Drive folder permission setup required for student syllabus folder",
+      "status": "needs_attention",
+      "scopes": [
+        "https://www.googleapis.com/auth/drive.file"
+      ],
+      "permissionsGranted": [],
+      "whatWeUseItFor": [
+        "Auto-sharing lesson worksheets and syllabus PDFs"
+      ],
+      "authType": "oauth2"
+    },
+    {
+      "id": "google_business",
+      "name": "Google Business Profile",
+      "category": "google",
+      "description": "Google Maps visibility and student review collection.",
+      "icon": "map-pin",
+      "connected": false,
+      "status": "coming_soon",
+      "scopes": [],
+      "permissionsGranted": [],
+      "whatWeUseItFor": [
+        "Inviting happy students to leave Google reviews"
+      ],
+      "authType": "oauth2"
+    },
+    {
+      "id": "mpesa_safaricom",
+      "name": "Safaricom M-Pesa",
+      "category": "payments",
+      "description": "Automatic payment prompts and matching receipts.",
+      "icon": "credit-card",
+      "connected": true,
+      "accountIdentifier": "Paybill: 849201 (Sandbox Active)",
+      "lastSyncedAt": "Just now",
+      "status": "connected",
+      "scopes": [
+        "mpesa_stk_push",
+        "mpesa_c2b_validation"
+      ],
+      "permissionsGranted": [
+        "Trigger STK Push prompts",
+        "Receive instant confirmation callbacks"
+      ],
+      "whatWeUseItFor": [
+        "Prompting students for session deposits",
+        "Verifying payment before class starts"
+      ],
+      "authType": "daraja_b2c"
+    }
+  ],
+  "operationalEvents": [
+    {
+      "id": "evt_1788078952300",
+      "businessId": "prof_james_01",
+      "sourceAppId": "app_wa_01",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "inquiry_received",
+      "title": "Inquiry from Dr. Patrick Mbugua (+254 722 998 811)",
+      "description": "Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?",
+      "entityName": "Dr. Patrick Mbugua",
+      "payload": {
+        "source": "meta_cloud_api",
+        "messageId": "wamid_sim_1788078952241",
+        "senderPhone": "+254 722 998 811",
+        "senderName": "Dr. Patrick Mbugua",
+        "text": "Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?",
+        "type": "text",
+        "timestamp": "2026-08-30T08:35:52.000Z",
+        "semantic": {
+          "rawMessage": "Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?",
+          "detectedLanguage": "en",
+          "intent": "booking_request",
+          "confidenceScore": 98,
+          "urgency": "normal",
+          "entities": {
+            "studentName": "Dr. Patrick Mbugua",
+            "phone": "+254 722 998 811",
+            "subject": "Mathematics Coaching",
+            "level": "Primary / Junior Secondary (CBC)",
+            "requestedDay": "Saturday",
+            "requestedTime": "10am"
+          },
+          "sentiment": "positive"
+        },
+        "actionPlan": {
+          "suggestedAction": {
+            "actionType": "offer_calendar_slots",
+            "title": "Propose Available Calendar Slots",
+            "description": "Provide 2 open slots for Saturday 10am and M-Pesa payment link."
+          },
+          "draftedReply": "Hi Dr. Patrick Mbugua! Thank you for reaching out regarding Mathematics Coaching (Primary / Junior Secondary (CBC)) (KES 3,500 / session). I currently have open lesson slots for Saturday 10am. You can select your preferred time here: https://calendar.google.com/calendar/appointments/s/kamau-french . Would you like me to hold this slot for you? — James",
+          "googleSheetsRow": {
+            "Date": "2026-08-30",
+            "Student Name": "Dr. Patrick Mbugua",
+            "Phone": "+254 722 998 811",
+            "Subject": "Mathematics Coaching",
+            "Level": "Primary / Junior Secondary (CBC)",
+            "Requested Slot": "Saturday 10am",
+            "Intent": "booking_request",
+            "Urgency": "NORMAL",
+            "Language": "EN",
+            "Status": "INQUIRY_CAPTURED",
+            "Estimated Value (KES)": 3500
+          },
+          "suggestedCalendarEvent": {
+            "summary": "Mathematics Coaching · Dr. Patrick Mbugua",
+            "description": "Student Level: Primary / Junior Secondary (CBC)\nInquiry Source: WhatsApp Business\nCoordinated by Otomatizon Intelligence.",
+            "proposedSlot": "Saturday 10am"
+          }
+        }
+      },
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "evt_1788078912645",
+      "businessId": "prof_james_01",
+      "sourceAppId": "app_wa_01",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "inquiry_received",
+      "title": "Inquiry from Dr. Patrick Mbugua (+254 722 998 811)",
+      "description": "Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?",
+      "entityName": "Dr. Patrick Mbugua",
+      "payload": {
+        "source": "meta_cloud_api",
+        "messageId": "wamid_sim_1788078912575",
+        "senderPhone": "+254 722 998 811",
+        "senderName": "Dr. Patrick Mbugua",
+        "text": "Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?",
+        "type": "text",
+        "timestamp": "2026-08-30T08:35:12.000Z",
+        "semantic": {
+          "rawMessage": "Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?",
+          "detectedLanguage": "en",
+          "intent": "booking_request",
+          "confidenceScore": 98,
+          "urgency": "normal",
+          "entities": {
+            "studentName": "Dr. Patrick Mbugua",
+            "phone": "+254 722 998 811",
+            "subject": "Mathematics Coaching",
+            "level": "Primary / Junior Secondary (CBC)",
+            "requestedDay": "Saturday",
+            "requestedTime": "10am"
+          },
+          "sentiment": "positive"
+        },
+        "actionPlan": {
+          "suggestedAction": {
+            "actionType": "offer_calendar_slots",
+            "title": "Propose Available Calendar Slots",
+            "description": "Provide 2 open slots for Saturday 10am and M-Pesa payment link."
+          },
+          "draftedReply": "Hi Dr. Patrick Mbugua! Thank you for reaching out regarding Mathematics Coaching (Primary / Junior Secondary (CBC)) (KES 3,500 / session). I currently have open lesson slots for Saturday 10am. You can select your preferred time here: https://calendar.google.com/calendar/appointments/s/kamau-french . Would you like me to hold this slot for you? — James",
+          "googleSheetsRow": {
+            "Date": "2026-08-30",
+            "Student Name": "Dr. Patrick Mbugua",
+            "Phone": "+254 722 998 811",
+            "Subject": "Mathematics Coaching",
+            "Level": "Primary / Junior Secondary (CBC)",
+            "Requested Slot": "Saturday 10am",
+            "Intent": "booking_request",
+            "Urgency": "NORMAL",
+            "Language": "EN",
+            "Status": "INQUIRY_CAPTURED",
+            "Estimated Value (KES)": 3500
+          },
+          "suggestedCalendarEvent": {
+            "summary": "Mathematics Coaching · Dr. Patrick Mbugua",
+            "description": "Student Level: Primary / Junior Secondary (CBC)\nInquiry Source: WhatsApp Business\nCoordinated by Otomatizon Intelligence.",
+            "proposedSlot": "Saturday 10am"
+          }
+        }
+      },
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "evt_1788078874344",
+      "businessId": "prof_james_01",
+      "sourceAppId": "app_wa_01",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "inquiry_received",
+      "title": "Inquiry from Dr. Patrick Mbugua (+254 722 998 811)",
+      "description": "Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?",
+      "entityName": "Dr. Patrick Mbugua",
+      "payload": {
+        "source": "meta_cloud_api",
+        "messageId": "wamid_sim_1788078874189",
+        "senderPhone": "+254 722 998 811",
+        "senderName": "Dr. Patrick Mbugua",
+        "text": "Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?",
+        "type": "text",
+        "timestamp": "2026-08-30T08:34:34.000Z",
+        "semantic": {
+          "rawMessage": "Hi James, I need Mathematics CBC coaching for my son in Grade 8. Are you available on Saturday mornings around 10am? How much do you charge per lesson?",
+          "detectedLanguage": "en",
+          "intent": "booking_request",
+          "confidenceScore": 98,
+          "urgency": "normal",
+          "entities": {
+            "studentName": "Dr. Patrick Mbugua",
+            "phone": "+254 722 998 811",
+            "subject": "Mathematics Coaching",
+            "level": "Primary / Junior Secondary (CBC)",
+            "requestedDay": "Saturday",
+            "requestedTime": "10am"
+          },
+          "sentiment": "positive"
+        },
+        "actionPlan": {
+          "suggestedAction": {
+            "actionType": "offer_calendar_slots",
+            "title": "Propose Available Calendar Slots",
+            "description": "Provide 2 open slots for Saturday 10am and M-Pesa payment link."
+          },
+          "draftedReply": "Hi Dr. Patrick Mbugua! Thank you for reaching out regarding Mathematics Coaching (Primary / Junior Secondary (CBC)) (KES 3,500 / session). I currently have open lesson slots for Saturday 10am. You can select your preferred time here: https://calendar.google.com/calendar/appointments/s/kamau-french . Would you like me to hold this slot for you? — James",
+          "googleSheetsRow": {
+            "Date": "2026-08-30",
+            "Student Name": "Dr. Patrick Mbugua",
+            "Phone": "+254 722 998 811",
+            "Subject": "Mathematics Coaching",
+            "Level": "Primary / Junior Secondary (CBC)",
+            "Requested Slot": "Saturday 10am",
+            "Intent": "booking_request",
+            "Urgency": "NORMAL",
+            "Language": "EN",
+            "Status": "INQUIRY_CAPTURED",
+            "Estimated Value (KES)": 3500
+          },
+          "suggestedCalendarEvent": {
+            "summary": "Mathematics Coaching · Dr. Patrick Mbugua",
+            "description": "Student Level: Primary / Junior Secondary (CBC)\nInquiry Source: WhatsApp Business\nCoordinated by Otomatizon Intelligence.",
+            "proposedSlot": "Saturday 10am"
+          }
+        }
+      },
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "evt_1788044185645",
+      "businessId": "prof_james_01",
+      "sourceAppId": "whatsapp_business",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "customer_inquiry_received",
+      "title": "Inquiry from Prospective Client",
+      "description": "Inbound customer action processed by Otomatizon Intelligence.",
+      "entityName": "Prospective Client",
+      "payload": {},
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "evt_1788043257919",
+      "businessId": "prof_james_01",
+      "sourceAppId": "whatsapp_business",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "customer_inquiry_received",
+      "title": "Inquiry from Prospective Client",
+      "description": "Inbound customer action processed by Otomatizon Intelligence.",
+      "entityName": "Prospective Client",
+      "payload": {},
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "evt_1788043225367",
+      "businessId": "prof_james_01",
+      "sourceAppId": "whatsapp_business",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "customer_inquiry_received",
+      "title": "Inquiry from Prospective Client",
+      "description": "Inbound customer action processed by Otomatizon Intelligence.",
+      "entityName": "Prospective Client",
+      "payload": {},
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "evt_1788039414576",
+      "businessId": "prof_james_01",
+      "sourceAppId": "app_wa_01",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "inquiry_received",
+      "title": "Inquiry from Live REST Lead",
+      "description": "Inbound customer action processed by Otomatizon Intelligence.",
+      "entityName": "Live REST Lead",
+      "payload": {},
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    }
+  ],
+  "insights": [
+    {
+      "id": "ins_1788044185645",
+      "businessId": "prof_james_01",
+      "eventId": "evt_1788044185645",
+      "type": "friction_detected",
+      "title": "Intelligence evaluation for Prospective Client",
+      "description": "Evaluated customer_inquiry_received from whatsapp_business.",
+      "confidenceScore": 96,
+      "provenance": "SIMULATED",
+      "createdAt": "2026-08-29T22:56:25.645Z"
+    },
+    {
+      "id": "ins_1788043257919",
+      "businessId": "prof_james_01",
+      "eventId": "evt_1788043257919",
+      "type": "friction_detected",
+      "title": "Intelligence evaluation for Prospective Client",
+      "description": "Evaluated customer_inquiry_received from whatsapp_business.",
+      "confidenceScore": 96,
+      "provenance": "SIMULATED",
+      "createdAt": "2026-08-29T22:40:57.919Z"
+    },
+    {
+      "id": "ins_1788043225369",
+      "businessId": "prof_james_01",
+      "eventId": "evt_1788043225367",
+      "type": "friction_detected",
+      "title": "Intelligence evaluation for Prospective Client",
+      "description": "Evaluated customer_inquiry_received from whatsapp_business.",
+      "confidenceScore": 96,
+      "provenance": "SIMULATED",
+      "createdAt": "2026-08-29T22:40:25.367Z"
+    },
+    {
+      "id": "ins_1788039414576",
+      "businessId": "prof_james_01",
+      "eventId": "evt_1788039414576",
+      "type": "friction_detected",
+      "title": "Intelligence evaluation for Live REST Lead",
+      "description": "Evaluated inquiry_received from app_wa_01.",
+      "confidenceScore": 96,
+      "provenance": "SIMULATED",
+      "createdAt": "2026-08-29T21:36:54.576Z"
+    }
+  ],
+  "scheduledJobs": [
+    {
+      "id": "job_fu_01",
+      "organizationId": "org_james",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_live_01",
+      "targetEntityName": "Mercy Chebet",
+      "targetPhone": "+254 719 552 108",
+      "scheduledFor": "2026-08-31T00:56:29.380Z",
+      "createdAt": "2026-08-30T00:56:29.380Z",
+      "status": "cancelled_converted",
+      "conditionDescription": "Cancel if Mercy Chebet books a slot or completes payment",
+      "payload": {
+        "subject": "French DELF B1 Tutoring",
+        "level": "Intermediate B1",
+        "requestedSlot": "Tuesday 16:00",
+        "followUpMessageText": "Bonjour Mercy ! Je voulais vérifier si vous aviez pu consulter la brochure de cours pour ce mardi 16h. J'ai encore 1 place disponible si vous souhaitez démarrer cette semaine ! — James",
+        "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-08-31T06:48:26.638Z",
+        "circuitBroken": true,
+        "reason": "Verified M-Pesa payment or Google Calendar booking already found for Mercy Chebet. Follow-up suppressed."
+      }
+    },
+    {
+      "id": "job_fu_02",
+      "organizationId": "org_james",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_live_02",
+      "targetEntityName": "Brian Omondi",
+      "targetPhone": "+254 722 334 455",
+      "scheduledFor": "2026-08-31T04:56:29.380Z",
+      "createdAt": "2026-08-30T04:56:29.380Z",
+      "status": "dispatched",
+      "conditionDescription": "Cancel if Brian Omondi confirms lesson slot",
+      "payload": {
+        "subject": "Mathematics Coaching (CBC Grade 8)",
+        "level": "Grade 8",
+        "requestedSlot": "Saturday 10:00 AM",
+        "followUpMessageText": "Hi Brian! Following up on your Saturday 10am maths coaching request. Would you like me to hold this slot on Google Calendar for you? — James",
+        "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-08-31T06:48:26.654Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Brian Omondi within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788158906654=="
+      }
+    },
+    {
+      "id": "job_pay_01",
+      "organizationId": "org_james",
+      "workflowId": "wf_payment_recovery",
+      "jobType": "payment_reminder_12h",
+      "targetEntityId": "lead_live_03",
+      "targetEntityName": "Sylvie Dubois",
+      "targetPhone": "+254 712 990 112",
+      "scheduledFor": "2026-08-30T14:56:29.380Z",
+      "createdAt": "2026-08-29T14:56:29.380Z",
+      "status": "dispatched",
+      "conditionDescription": "Cancel if M-Pesa tuition payment verified",
+      "payload": {
+        "subject": "French Tutoring (Grade 4e)",
+        "level": "Junior Secondary",
+        "requestedSlot": "Wednesday 15:00",
+        "followUpMessageText": "Bonjour Sylvie ! Petit rappel amical pour la séance de français de demain 15h. Vous pouvez finaliser le règlement via M-Pesa Till 174379 pour recevoir le lien Meet. Merci ! — James",
+        "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-08-30T18:45:36.218Z",
+        "circuitBroken": false,
+        "reason": "Tuition remains unpaid 12 hours before scheduled session for Sylvie Dubois.",
+        "messageId": "wamid.HBgL1788115536218=="
+      }
+    },
+    {
+      "id": "job_1788072989400",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788072989400",
+      "targetEntityName": "Esther Mutua",
+      "targetPhone": "+254 712 555 666",
+      "scheduledFor": "2026-08-31T06:56:29.385Z",
+      "createdAt": "2026-08-30T06:56:29.400Z",
+      "status": "dispatched",
+      "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
+      "payload": {
+        "subject": "French Tutoring (DELF A2)",
+        "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-08-31T06:56:41.942Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788159401942=="
+      }
+    },
+    {
+      "id": "job_1788072989442",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788072989442",
+      "targetEntityName": "Naomi Kiprono",
+      "targetPhone": "+254 711 998 877",
+      "scheduledFor": "2026-08-31T06:56:29.442Z",
+      "createdAt": "2026-08-30T06:56:29.442Z",
+      "status": "dispatched",
+      "conditionDescription": "Cancel if Naomi books",
+      "payload": {
+        "subject": "French Coaching",
+        "followUpMessageText": "Bonjour Naomi ! Petit suivi concernant votre demande de cours de français."
+      },
+      "executionResult": {
+        "executedAt": "2026-08-30T06:56:29.454Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Naomi Kiprono within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788072989453=="
+      }
+    },
+    {
+      "id": "job_1788072989471",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788072989471",
+      "targetEntityName": "Samson Cheruiyot",
+      "targetPhone": "+254 733 445 566",
+      "scheduledFor": "2026-08-31T06:56:29.471Z",
+      "createdAt": "2026-08-30T06:56:29.471Z",
+      "status": "cancelled_manual",
+      "conditionDescription": "Cancel if student books or pays",
+      "payload": {},
+      "executionResult": {
+        "executedAt": "2026-08-30T06:56:29.491Z",
+        "circuitBroken": true,
+        "reason": "Manually cancelled by business owner in Otomatizon."
+      }
+    },
+    {
+      "id": "job_1788073011715",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788073011715",
+      "targetEntityName": "Esther Mutua",
+      "targetPhone": "+254 712 555 666",
+      "scheduledFor": "2026-08-31T06:56:51.705Z",
+      "createdAt": "2026-08-30T06:56:51.715Z",
+      "status": "dispatched",
+      "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
+      "payload": {
+        "subject": "French Tutoring (DELF A2)",
+        "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-08-31T06:56:56.958Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788159416958=="
+      }
+    },
+    {
+      "id": "job_1788073011741",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788073011741",
+      "targetEntityName": "Naomi Kiprono",
+      "targetPhone": "+254 711 998 877",
+      "scheduledFor": "2026-08-31T06:56:51.741Z",
+      "createdAt": "2026-08-30T06:56:51.741Z",
+      "status": "dispatched",
+      "conditionDescription": "Cancel if Naomi books",
+      "payload": {
+        "subject": "French Coaching",
+        "followUpMessageText": "Bonjour Naomi ! Petit suivi concernant votre demande de cours de français."
+      },
+      "executionResult": {
+        "executedAt": "2026-08-30T06:56:51.760Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Naomi Kiprono within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788073011760=="
+      }
+    },
+    {
+      "id": "job_1788073011778",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788073011778",
+      "targetEntityName": "Samson Cheruiyot",
+      "targetPhone": "+254 733 445 566",
+      "scheduledFor": "2026-08-31T06:56:51.778Z",
+      "createdAt": "2026-08-30T06:56:51.778Z",
+      "status": "cancelled_manual",
+      "conditionDescription": "Cancel if student books or pays",
+      "payload": {},
+      "executionResult": {
+        "executedAt": "2026-08-30T06:56:51.786Z",
+        "circuitBroken": true,
+        "reason": "Manually cancelled by business owner in Otomatizon."
+      }
+    },
+    {
+      "id": "job_1788073218015",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788073218015",
+      "targetEntityName": "Esther Mutua",
+      "targetPhone": "+254 712 555 666",
+      "scheduledFor": "2026-08-31T07:00:18.005Z",
+      "createdAt": "2026-08-30T07:00:18.015Z",
+      "status": "dispatched",
+      "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
+      "payload": {
+        "subject": "French Tutoring (DELF A2)",
+        "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-08-31T07:00:27.116Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788159627116=="
+      }
+    },
+    {
+      "id": "job_1788073218039",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788073218039",
+      "targetEntityName": "Naomi Kiprono",
+      "targetPhone": "+254 711 998 877",
+      "scheduledFor": "2026-08-31T07:00:18.039Z",
+      "createdAt": "2026-08-30T07:00:18.039Z",
+      "status": "dispatched",
+      "conditionDescription": "Cancel if Naomi books",
+      "payload": {
+        "subject": "French Coaching",
+        "followUpMessageText": "Bonjour Naomi ! Petit suivi concernant votre demande de cours de français."
+      },
+      "executionResult": {
+        "executedAt": "2026-08-30T07:00:18.065Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Naomi Kiprono within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788073218065=="
+      }
+    },
+    {
+      "id": "job_1788073218087",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788073218087",
+      "targetEntityName": "Samson Cheruiyot",
+      "targetPhone": "+254 733 445 566",
+      "scheduledFor": "2026-08-31T07:00:18.087Z",
+      "createdAt": "2026-08-30T07:00:18.087Z",
+      "status": "cancelled_manual",
+      "conditionDescription": "Cancel if student books or pays",
+      "payload": {},
+      "executionResult": {
+        "executedAt": "2026-08-30T07:00:18.105Z",
+        "circuitBroken": true,
+        "reason": "Manually cancelled by business owner in Otomatizon."
+      }
+    },
+    {
+      "id": "job_1788078952351",
+      "organizationId": "org_james",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788078952351",
+      "targetEntityName": "Dr. Patrick Mbugua",
+      "targetPhone": "+254 722 998 811",
+      "scheduledFor": "2026-08-31T08:35:52.348Z",
+      "createdAt": "2026-08-30T08:35:52.351Z",
+      "status": "dispatched",
+      "conditionDescription": "Cancel if Dr. Patrick Mbugua confirms Saturday lesson or pays tuition via M-Pesa",
+      "payload": {
+        "subject": "Mathematics Coaching",
+        "requestedSlot": "Saturday 10am",
+        "followUpMessageText": "Hi Dr. Patrick Mbugua! Just following up on your Grade 8 Mathematics coaching request for Saturday 10am. Would you like me to reserve this Google Calendar slot for you? — James",
+        "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-08-30T08:35:52.468Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Dr. Patrick Mbugua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788078952468=="
+      }
+    }
+  ],
+  "invoices": [
+    {
+      "id": "INV_1788073215879",
+      "organizationId": "org_james",
+      "organizationName": "Kamau French & Academic Tutoring",
+      "planId": "growth",
+      "planName": "Growth",
+      "amountKes": 999,
+      "paymentMethod": "Safaricom M-Pesa Express (STK Push)",
+      "mpesaReceiptNumber": "QAH9012345",
+      "issuedAt": "2026-08-30T07:00:15.879Z",
+      "status": "PAID",
+      "billingPeriod": "30 Days (Monthly Recurring)"
+    }
+  ]
+}
