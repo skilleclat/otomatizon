@@ -1650,10 +1650,10 @@
         }
       ],
       "metrics": {
-        "runsCount": 74,
-        "leadsHelped": 80,
-        "hoursSaved": 35.1,
-        "revenueRecoveredKes": 211500
+        "runsCount": 75,
+        "leadsHelped": 81,
+        "hoursSaved": 35.6,
+        "revenueRecoveredKes": 215000
       },
       "createdAt": "2026-08-10T08:00:00Z",
       "lastRunAt": "12 mins ago",
@@ -1784,6 +1784,19 @@
     }
   ],
   "executions": [
+    {
+      "id": "exec_1788205250740",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
     {
       "id": "exec_1788204557326",
       "workflowId": "wf_lead_autopilot",
@@ -2645,6 +2658,16 @@
     }
   ],
   "activityLogs": [
+    {
+      "id": "log_1788205250740",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
     {
       "id": "log_1788204557326",
       "organizationId": "org_james",

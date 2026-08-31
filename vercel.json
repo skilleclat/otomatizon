@@ -1,7 +1,17 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "public",
+  "functions": {
+    "api/**/*.js": {
+      "includeFiles": "server.cjs,src/**,data/**,public/**",
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
     {
       "source": "/((?!api/|.*\\..*).*)",
       "destination": "/index.html"

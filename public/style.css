@@ -2397,16 +2397,6 @@ body {
   color: rgb(110 231 183 / var(--tw-text-opacity, 1));
 }
 
-.selection\:text-emerald-800 *::-moz-selection {
-  --tw-text-opacity: 1;
-  color: rgb(6 95 70 / var(--tw-text-opacity, 1));
-}
-
-.selection\:text-emerald-800 *::selection {
-  --tw-text-opacity: 1;
-  color: rgb(6 95 70 / var(--tw-text-opacity, 1));
-}
-
 .selection\:bg-\[\#15803D\]\/15::-moz-selection {
   background-color: rgb(21 128 61 / 0.15);
 }
@@ -2441,16 +2431,6 @@ body {
 .selection\:text-emerald-300::selection {
   --tw-text-opacity: 1;
   color: rgb(110 231 183 / var(--tw-text-opacity, 1));
-}
-
-.selection\:text-emerald-800::-moz-selection {
-  --tw-text-opacity: 1;
-  color: rgb(6 95 70 / var(--tw-text-opacity, 1));
-}
-
-.selection\:text-emerald-800::selection {
-  --tw-text-opacity: 1;
-  color: rgb(6 95 70 / var(--tw-text-opacity, 1));
 }
 
 .hover\:scale-\[1\.01\]:hover {

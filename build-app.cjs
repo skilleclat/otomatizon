@@ -273,6 +273,12 @@ function bundleApp() {
 
   fs.writeFileSync(path.join(__dirname, "public/app.js"), bundleCode);
   console.log("App bundle created at public/app.js");
+
+  // Ensure public/index.html is synced with root index.html
+  if (fs.existsSync(path.join(__dirname, "index.html"))) {
+    fs.copyFileSync(path.join(__dirname, "index.html"), path.join(__dirname, "public/index.html"));
+    console.log("Synced index.html to public/index.html");
+  }
 }
 
 bundleVendor();
