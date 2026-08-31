@@ -87,7 +87,7 @@ function sendJson(res, statusCode, data) {
   res.end(JSON.stringify(data));
 }
 
-const server = http.createServer(async (req, res) => {
+async function handleRequest(req, res) {
   const clientIp = req.socket.remoteAddress || "127.0.0.1";
 
   if (isRateLimited(clientIp)) {
@@ -1330,7 +1330,9 @@ const server = http.createServer(async (req, res) => {
       res.end(content);
     }
   });
-});
+}
+
+const server = http.createServer(handleRequest);
 
 function startServer(port) {
   server.listen(port, () => {
@@ -1354,4 +1356,8 @@ function startServer(port) {
   });
 }
 
-startServer(PORT);
+if (require.main === module) {
+  startServer(PORT);
+}
+
+module.exports = { server, handleRequest };
