@@ -130,11 +130,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   const handleCtaClick = () => {
     trackFunnelEvent("onboarding_started", { source: "landing_primary_cta" });
-    if (isAuthenticated) {
-      onEnterDashboard();
-    } else {
-      onOpenOnboarding();
-    }
+    onOpenOnboarding();
   };
 
   const plans = getAllPlans();

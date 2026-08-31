@@ -18266,11 +18266,7 @@ const DEMO_SCENARIOS = [
 
   const handleCtaClick = () => {
     _funnel.trackFunnelEvent.call(void 0, "onboarding_started", { source: "landing_primary_cta" });
-    if (isAuthenticated) {
-      onEnterDashboard();
-    } else {
-      onOpenOnboarding();
-    }
+    onOpenOnboarding();
   };
 
   const plans = _config.getAllPlans.call(void 0, );
