@@ -582,5 +582,15 @@ Les opportunités suivent un cycle de vie strict :
   node test-decision-engine.cjs
   ```
 
+* **Gestion de Version & Git Auto-Commit** :
+  ```powershell
+  # Commiter systématiquement après chaque changement majeur
+  $git = "C:\Users\User\AppData\Local\Programs\MinGit\cmd\git.exe"
+  & $git add .
+  & $git commit -m "..."
+  & $git push
+  ```
+
 ---
-*Dernière mise à jour : 29 Août 2026 — Otomatizon Engineering & Product Architecture.*
+*Règle permanente : À chaque changement majeur, compiler, tester, commiter et pousser automatiquement le code (ou rappeler l'ajout du remote si non configuré).*
+*Dernière mise à jour : 31 Août 2026 — Otomatizon Engineering & Product Architecture.*
