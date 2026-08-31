@@ -144,18 +144,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       
       {/* 1. MINIMAL EDITORIAL HEADER */}
       <header className="sticky top-0 z-30 bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#EAE7DF] transition-all">
-        <div className="max-w-6xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-3 sm:gap-4">
           
           {/* Left: Brand Identity & Location */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 notranslate" translate="no">
             <button 
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="cursor-pointer focus:outline-none flex items-center gap-2"
+              className="cursor-pointer focus:outline-none flex items-center gap-2 shrink-0 notranslate"
+              translate="no"
             >
               <BrandLogo variant="full" size="md" />
             </button>
-            <div className="hidden lg:flex items-center gap-1.5 text-xs text-[#75777E] font-mono border-l border-[#EAE7DF] pl-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse" />
+            <div className="hidden xl:flex items-center gap-1.5 text-xs text-[#75777E] font-mono border-l border-[#EAE7DF] pl-3 shrink-0 whitespace-nowrap notranslate" translate="no">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse shrink-0" />
               <span className="font-semibold text-[#121316]">Nairobi, Kenya</span>
               <span className="text-[#A1A1AA]">&middot;</span>
               <span className="text-[#15803D] font-bold">LIVE OS</span>
@@ -163,36 +164,36 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Center: Editorial Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 bg-[#EFECE6]/80 p-1 rounded-full border border-[#E2DED5] text-xs font-semibold text-[#5A5C63] shadow-2xs">
-            <a href="#problem" className="px-3.5 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all">The Problem</a>
-            <a href="#difference" className="px-3.5 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all">The Difference</a>
-            <a href="#examples" className="px-3.5 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all">Discoveries</a>
-            <a href="#how-it-works" className="px-3.5 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all">How it works</a>
-            <a href="#pricing" className="px-3.5 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all">Pricing</a>
+          <nav className="hidden lg:flex items-center gap-1 bg-[#EFECE6]/80 p-1 rounded-full border border-[#E2DED5] text-xs font-semibold text-[#5A5C63] shadow-2xs shrink-0">
+            <a href="#problem" className="px-3 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all whitespace-nowrap">The Problem</a>
+            <a href="#difference" className="px-3 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all whitespace-nowrap">The Difference</a>
+            <a href="#examples" className="px-3 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all whitespace-nowrap">Discoveries</a>
+            <a href="#how-it-works" className="px-3 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all whitespace-nowrap">How it works</a>
+            <a href="#pricing" className="px-3 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all whitespace-nowrap">Pricing</a>
           </nav>
 
           {/* Right: Authentication & Primary Action */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 whitespace-nowrap">
             {isAuthenticated ? (
-              <div className="relative">
-                <div className="flex items-center gap-2">
+              <div className="relative shrink-0">
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                   <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EFECE6] hover:bg-[#E5E1D8] border border-[#E2DED5] text-xs font-bold text-[#121316] transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-[#EFECE6] hover:bg-[#E5E1D8] border border-[#E2DED5] text-xs font-bold text-[#121316] transition-all cursor-pointer shadow-2xs shrink-0 whitespace-nowrap"
                   >
-                    <div className="w-6 h-6 rounded-full bg-[#002E25] text-white flex items-center justify-center text-[10px] font-mono font-bold">
+                    <div className="w-6 h-6 rounded-full bg-[#002E25] text-white flex items-center justify-center text-[10px] font-mono font-bold shrink-0 notranslate" translate="no">
                       {userInitials}
                     </div>
-                    <span className="max-w-[120px] truncate hidden sm:inline">{user?.fullName || "My Account"}</span>
-                    <ChevronDown className="w-3.5 h-3.5 text-[#75777E]" />
+                    <span className="max-w-[90px] sm:max-w-[120px] truncate hidden md:inline">{user?.fullName || "My Account"}</span>
+                    <ChevronDown className="w-3.5 h-3.5 text-[#75777E] shrink-0" />
                   </button>
 
                   <button
                     onClick={onEnterDashboard}
-                    className="px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25]"
+                    className="px-3 sm:px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25] shrink-0 whitespace-nowrap"
                   >
                     <span>Open Workspace</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-emerald-300" />
+                    <ArrowRight className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
                   </button>
                 </div>
 
@@ -217,7 +218,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                           setIsUserMenuOpen(false);
                           onEnterDashboard();
                         }}
-                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors whitespace-nowrap"
                       >
                         <LayoutDashboard className="w-3.5 h-3.5 text-[#15803D]" />
                         <span>Command Center</span>
@@ -228,7 +229,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                           setIsUserMenuOpen(false);
                           onOpenOnboarding();
                         }}
-                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors whitespace-nowrap"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-[#15803D]" />
                         <span>Discover Automations</span>
@@ -241,7 +242,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                           setIsUserMenuOpen(false);
                           logout();
                         }}
-                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-700 font-semibold flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-700 font-semibold flex items-center gap-2 cursor-pointer transition-colors whitespace-nowrap"
                       >
                         <LogOut className="w-3.5 h-3.5 text-rose-600" />
                         <span>Sign Out</span>
@@ -254,16 +255,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <>
                 <button
                   onClick={() => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard()}
-                  className="text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer"
+                  className="text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3 sm:px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer shrink-0 whitespace-nowrap"
                 >
                   Sign In
                 </button>
                 <button
                   onClick={handleCtaClick}
-                  className="px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25]"
+                  className="px-3.5 sm:px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25] shrink-0 whitespace-nowrap"
                 >
                   <span>Find Automations</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-emerald-300" />
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
                 </button>
               </>
             )}

@@ -5179,11 +5179,11 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
   if (variant === "mark" || imageError) {
     if (imageError && variant === "full") {
       return (
-        _react2.default.createElement('div', { className: `inline-flex items-center gap-2 select-none ${className}`,}
-          , _react2.default.createElement('div', { className: "w-7 h-7 rounded-lg bg-[#002E25] flex items-center justify-center text-emerald-300 font-bold font-mono text-sm border border-[#15803D]/40 shadow-2xs"             ,}, "O"
+        _react2.default.createElement('div', { className: `inline-flex items-center gap-2 select-none shrink-0 notranslate ${className}`, translate: "no",}
+          , _react2.default.createElement('div', { className: "w-7 h-7 rounded-lg bg-[#002E25] flex items-center justify-center text-emerald-300 font-bold font-mono text-sm border border-[#15803D]/40 shadow-2xs shrink-0"              ,}, "O"
 
           )
-          , _react2.default.createElement('span', { className: "font-extrabold text-[#121316] text-base tracking-tight font-sans"    ,}, "Otomatizon"
+          , _react2.default.createElement('span', { className: "font-extrabold text-[#121316] text-base tracking-tight font-sans whitespace-nowrap notranslate"      , translate: "no",}, "Otomatizon"
             , _react2.default.createElement('span', { className: "text-[#15803D]",}, ".")
           )
         )
@@ -5191,24 +5191,26 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
     }
 
     return (
-      _react2.default.createElement('div', { className: `inline-flex items-center justify-center select-none shrink-0 ${className}`,}
+      _react2.default.createElement('div', { className: `inline-flex items-center justify-center select-none shrink-0 notranslate ${className}`, translate: "no",}
         , _react2.default.createElement('img', {
           src: "/logo-mark.png",
           alt: "Otomatizon Emblem" ,
           onError: () => setImageError(true),
-          className: `${heightClass} w-auto object-contain shrink-0`,}
+          className: `${heightClass} w-auto object-contain shrink-0 notranslate`,
+          translate: "no",}
         )
       )
     );
   }
 
   return (
-    _react2.default.createElement('div', { className: `inline-flex items-center select-none shrink-0 ${className}`,}
+    _react2.default.createElement('div', { className: `inline-flex items-center select-none shrink-0 notranslate ${className}`, translate: "no",}
       , _react2.default.createElement('img', {
         src: "/logo.png",
         alt: "Otomatizon",
         onError: () => setImageError(true),
-        className: `${heightClass} w-auto object-contain shrink-0`,}
+        className: `${heightClass} w-auto object-contain shrink-0 notranslate`,
+        translate: "no",}
       )
     )
   );
@@ -18248,18 +18250,19 @@ const DEMO_SCENARIOS = [
 
       /* 1. MINIMAL EDITORIAL HEADER */
       , _react2.default.createElement('header', { className: "sticky top-0 z-30 bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#EAE7DF] transition-all"       ,}
-        , _react2.default.createElement('div', { className: "max-w-6xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4"        ,}
+        , _react2.default.createElement('div', { className: "max-w-6xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-3 sm:gap-4"         ,}
 
           /* Left: Brand Identity & Location */
-          , _react2.default.createElement('div', { className: "flex items-center gap-3"  ,}
+          , _react2.default.createElement('div', { className: "flex items-center gap-2.5 sm:gap-3 shrink-0 notranslate"     , translate: "no",}
             , _react2.default.createElement('button', { 
               onClick: () => window.scrollTo({ top: 0, behavior: "smooth" }),
-              className: "cursor-pointer focus:outline-none flex items-center gap-2"    ,}
+              className: "cursor-pointer focus:outline-none flex items-center gap-2 shrink-0 notranslate"      ,
+              translate: "no",}
 
               , _react2.default.createElement(_BrandLogo.BrandLogo, { variant: "full", size: "md",} )
             )
-            , _react2.default.createElement('div', { className: "hidden lg:flex items-center gap-1.5 text-xs text-[#75777E] font-mono border-l border-[#EAE7DF] pl-3"         ,}
-              , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse"    ,} )
+            , _react2.default.createElement('div', { className: "hidden xl:flex items-center gap-1.5 text-xs text-[#75777E] font-mono border-l border-[#EAE7DF] pl-3 shrink-0 whitespace-nowrap notranslate"            , translate: "no",}
+              , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse shrink-0"     ,} )
               , _react2.default.createElement('span', { className: "font-semibold text-[#121316]" ,}, "Nairobi, Kenya" )
               , _react2.default.createElement('span', { className: "text-[#A1A1AA]",}, "·")
               , _react2.default.createElement('span', { className: "text-[#15803D] font-bold" ,}, "LIVE OS" )
@@ -18267,36 +18270,36 @@ const DEMO_SCENARIOS = [
           )
 
           /* Center: Editorial Navigation Links */
-          , _react2.default.createElement('nav', { className: "hidden md:flex items-center gap-1 bg-[#EFECE6]/80 p-1 rounded-full border border-[#E2DED5] text-xs font-semibold text-[#5A5C63] shadow-2xs"            ,}
-            , _react2.default.createElement('a', { href: "#problem", className: "px-3.5 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all"     ,}, "The Problem" )
-            , _react2.default.createElement('a', { href: "#difference", className: "px-3.5 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all"     ,}, "The Difference" )
-            , _react2.default.createElement('a', { href: "#examples", className: "px-3.5 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all"     ,}, "Discoveries")
-            , _react2.default.createElement('a', { href: "#how-it-works", className: "px-3.5 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all"     ,}, "How it works"  )
-            , _react2.default.createElement('a', { href: "#pricing", className: "px-3.5 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all"     ,}, "Pricing")
+          , _react2.default.createElement('nav', { className: "hidden lg:flex items-center gap-1 bg-[#EFECE6]/80 p-1 rounded-full border border-[#E2DED5] text-xs font-semibold text-[#5A5C63] shadow-2xs shrink-0"             ,}
+            , _react2.default.createElement('a', { href: "#problem", className: "px-3 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all whitespace-nowrap"      ,}, "The Problem" )
+            , _react2.default.createElement('a', { href: "#difference", className: "px-3 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all whitespace-nowrap"      ,}, "The Difference" )
+            , _react2.default.createElement('a', { href: "#examples", className: "px-3 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all whitespace-nowrap"      ,}, "Discoveries")
+            , _react2.default.createElement('a', { href: "#how-it-works", className: "px-3 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all whitespace-nowrap"      ,}, "How it works"  )
+            , _react2.default.createElement('a', { href: "#pricing", className: "px-3 py-1.5 rounded-full hover:text-[#121316] hover:bg-white/60 transition-all whitespace-nowrap"      ,}, "Pricing")
           )
 
           /* Right: Authentication & Primary Action */
-          , _react2.default.createElement('div', { className: "flex items-center gap-2.5 shrink-0"   ,}
+          , _react2.default.createElement('div', { className: "flex items-center gap-2 sm:gap-2.5 shrink-0 whitespace-nowrap"     ,}
             , isAuthenticated ? (
-              _react2.default.createElement('div', { className: "relative",}
-                , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+              _react2.default.createElement('div', { className: "relative shrink-0" ,}
+                , _react2.default.createElement('div', { className: "flex items-center gap-1.5 sm:gap-2 shrink-0"    ,}
                   , _react2.default.createElement('button', {
                     onClick: () => setIsUserMenuOpen(!isUserMenuOpen),
-                    className: "flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EFECE6] hover:bg-[#E5E1D8] border border-[#E2DED5] text-xs font-bold text-[#121316] transition-all cursor-pointer shadow-2xs"               ,}
+                    className: "flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-[#EFECE6] hover:bg-[#E5E1D8] border border-[#E2DED5] text-xs font-bold text-[#121316] transition-all cursor-pointer shadow-2xs shrink-0 whitespace-nowrap"                  ,}
 
-                    , _react2.default.createElement('div', { className: "w-6 h-6 rounded-full bg-[#002E25] text-white flex items-center justify-center text-[10px] font-mono font-bold"          ,}
+                    , _react2.default.createElement('div', { className: "w-6 h-6 rounded-full bg-[#002E25] text-white flex items-center justify-center text-[10px] font-mono font-bold shrink-0 notranslate"            , translate: "no",}
                       , userInitials
                     )
-                    , _react2.default.createElement('span', { className: "max-w-[120px] truncate hidden sm:inline"   ,}, _optionalChain([user, 'optionalAccess', _8 => _8.fullName]) || "My Account")
-                    , _react2.default.createElement(_lucidereact.ChevronDown, { className: "w-3.5 h-3.5 text-[#75777E]"  ,} )
+                    , _react2.default.createElement('span', { className: "max-w-[90px] sm:max-w-[120px] truncate hidden md:inline"    ,}, _optionalChain([user, 'optionalAccess', _8 => _8.fullName]) || "My Account")
+                    , _react2.default.createElement(_lucidereact.ChevronDown, { className: "w-3.5 h-3.5 text-[#75777E] shrink-0"   ,} )
                   )
 
                   , _react2.default.createElement('button', {
                     onClick: onEnterDashboard,
-                    className: "px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25]"                  ,}
+                    className: "px-3 sm:px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25] shrink-0 whitespace-nowrap"                     ,}
 
                     , _react2.default.createElement('span', null, "Open Workspace" )
-                    , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-emerald-300"  ,} )
+                    , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-emerald-300 shrink-0"   ,} )
                   )
                 )
 
@@ -18321,7 +18324,7 @@ const DEMO_SCENARIOS = [
                           setIsUserMenuOpen(false);
                           onEnterDashboard();
                         },
-                        className: "w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors"            ,}
+                        className: "w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors whitespace-nowrap"             ,}
 
                         , _react2.default.createElement(_lucidereact.LayoutDashboard, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
                         , _react2.default.createElement('span', null, "Command Center" )
@@ -18332,7 +18335,7 @@ const DEMO_SCENARIOS = [
                           setIsUserMenuOpen(false);
                           onOpenOnboarding();
                         },
-                        className: "w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors"            ,}
+                        className: "w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors whitespace-nowrap"             ,}
 
                         , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
                         , _react2.default.createElement('span', null, "Discover Automations" )
@@ -18345,7 +18348,7 @@ const DEMO_SCENARIOS = [
                           setIsUserMenuOpen(false);
                           logout();
                         },
-                        className: "w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-700 font-semibold flex items-center gap-2 cursor-pointer transition-colors"            ,}
+                        className: "w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-700 font-semibold flex items-center gap-2 cursor-pointer transition-colors whitespace-nowrap"             ,}
 
                         , _react2.default.createElement(_lucidereact.LogOut, { className: "w-3.5 h-3.5 text-rose-600"  ,} )
                         , _react2.default.createElement('span', null, "Sign Out" )
@@ -18358,16 +18361,16 @@ const DEMO_SCENARIOS = [
               _react2.default.createElement(_react2.default.Fragment, null
                 , _react2.default.createElement('button', {
                   onClick: () => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard(),
-                  className: "text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer"          ,}
+                  className: "text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3 sm:px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer shrink-0 whitespace-nowrap"             ,}
 , "Sign In"
 
                 )
                 , _react2.default.createElement('button', {
                   onClick: handleCtaClick,
-                  className: "px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25]"                  ,}
+                  className: "px-3.5 sm:px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25] shrink-0 whitespace-nowrap"                     ,}
 
                   , _react2.default.createElement('span', null, "Find Automations" )
-                  , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-emerald-300"  ,} )
+                  , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-emerald-300 shrink-0"   ,} )
                 )
               )
             )
