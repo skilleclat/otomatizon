@@ -96,9 +96,9 @@ const getInitialState = (): AppState => {
 
   return {
     session: {
-      user: defaultUser,
-      token: "session_tok_james_nairobi",
-      isAuthenticated: true
+      user: null,
+      token: null,
+      isAuthenticated: false
     },
     organization: defaultOrganization,
     businessProfile: defaultBusinessProfile,

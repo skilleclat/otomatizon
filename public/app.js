@@ -3934,9 +3934,9 @@ const getInitialState = () => {
 
   return {
     session: {
-      user: defaultUser,
-      token: "session_tok_james_nairobi",
-      isAuthenticated: true
+      user: null,
+      token: null,
+      isAuthenticated: false
     },
     organization: _mockdata.defaultOrganization,
     businessProfile: _mockdata.defaultBusinessProfile,
