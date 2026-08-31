@@ -10,11 +10,17 @@ import {
   Mail, 
   CreditCard, 
   HardDrive,
-  ArrowDown
+  ArrowDown,
+  User,
+  LogOut,
+  ChevronDown,
+  Sparkles,
+  LayoutDashboard
 } from "lucide-react";
 import { getAllPlans } from "@/lib/billing/config";
 import { trackFunnelEvent } from "@/lib/analytics/funnel";
 import { BrandLogo } from "@/components/BrandLogo";
+import { useOtomatizonStore } from "@/lib/store";
 
 interface LandingPageProps {
   onOpenOnboarding: () => void;
@@ -26,10 +32,13 @@ interface LandingPageProps {
 interface DemoScenario {
   id: string;
   label: string;
+  tagline: string;
   input: string;
-  foundTitle: string;
-  foundDetail: string;
-  impact: "High" | "Medium";
+  discovery: {
+    title: string;
+    description: string;
+    impact: string;
+  };
   whyItMatters: string;
   recommended: string;
 }
@@ -37,32 +46,41 @@ interface DemoScenario {
 const DEMO_SCENARIOS: DemoScenario[] = [
   {
     id: "tutoring",
-    label: "Tutoring & Coaching",
-    input: "I run a tutoring business. Students contact me on WhatsApp, I schedule lessons manually, and some forget to pay.",
-    foundTitle: "Payment follow-up",
-    foundDetail: "Some students haven't completed payment before their scheduled lesson.",
-    impact: "High",
-    whyItMatters: "Unconfirmed payments can lead to missed sessions and unnecessary follow-up work.",
-    recommended: "Automatically remind unpaid students before their lesson."
+    label: "French Tutor",
+    tagline: "High WhatsApp message volume, manual scheduling & payment chasing.",
+    input: "I teach French online. Students message me on WhatsApp. I send them prices manually, schedule them in Google Calendar, and ask for M-Pesa payments.",
+    discovery: {
+      title: "Inbound Lead Follow-Up Delay",
+      description: "Students who don't book immediately are forgotten.",
+      impact: "HIGH IMPACT"
+    },
+    whyItMatters: "Prospective students inquire on WhatsApp, but if they don't pick a slot immediately, following up manually takes hours and leads go cold.",
+    recommended: "Automatically send syllabus, verify Google Calendar booking, and send a single polite WhatsApp reminder after 24 hours if unbooked."
   },
   {
-    id: "inquiries",
-    label: "Lead Follow-up",
-    input: "I get multiple WhatsApp inquiries for my services, but when I get busy I don't follow up with people who didn't book right away.",
-    foundTitle: "Lead follow-up",
-    foundDetail: "Inquiries go cold when no follow-up is sent within 24 hours.",
-    impact: "High",
-    whyItMatters: "Prospective customers who expressed clear intent are lost simply due to lack of a prompt check-in.",
-    recommended: "Automatically check in with interested contacts 24 hours after their first message."
+    id: "consulting",
+    label: "Business Consultant",
+    tagline: "Discovery calls booked without qualification or agenda prep.",
+    input: "Clients fill out my Google Form or email me. I manually send Calendly links and create folders in Google Drive for their onboarding files.",
+    discovery: {
+      title: "Manual Client Onboarding Friction",
+      description: "Drive folders & welcome dossiers created manually per client.",
+      impact: "HIGH IMPACT"
+    },
+    whyItMatters: "Consultants spend 45 minutes per new client creating shared folders, sending prep materials, and confirming meeting times across separate tools.",
+    recommended: "Trigger automatic Google Drive folder creation, share onboarding questionnaire, and log client details into Google Sheets on booking confirmation."
   },
   {
-    id: "appointments",
-    label: "Service Appointments",
-    input: "Clients book appointments with me, but I spend half my day manually texting them to confirm and verify their M-Pesa payments.",
-    foundTitle: "Manual booking confirmation",
-    foundDetail: "You are spending manual hours verifying M-Pesa receipts against calendar slots.",
-    impact: "Medium",
-    whyItMatters: "Administrative time spent cross-checking payments reduces available client session hours.",
+    id: "clinic",
+    label: "Local SME / Clinic",
+    tagline: "Appointment no-shows and unconfirmed M-Pesa consultation deposits.",
+    input: "Patients call or WhatsApp for dental consultations. We write their names in a notebook and check M-Pesa messages on a shared reception phone.",
+    discovery: {
+      title: "Unverified Booking Deposits & No-Shows",
+      description: "Patients forget appointments; M-Pesa receipts checked manually.",
+      impact: "CRITICAL"
+    },
+    whyItMatters: "No-shows cost private practices up to 30% of daily revenue because reminders aren't sent and deposits aren't automatically verified.",
     recommended: "Match incoming M-Pesa confirmation codes directly with calendar bookings."
   }
 ];
@@ -73,9 +91,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenCheckout,
   onTriggerAuth
 }) => {
+  const { state, logout } = useOtomatizonStore();
   const [selectedScenarioIndex, setSelectedScenarioIndex] = useState(0);
   const [visitorInput, setVisitorInput] = useState(DEMO_SCENARIOS[0].input);
   const [demoState, setDemoState] = useState<"ready" | "analyzing" | "discovered">("discovered");
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  const isAuthenticated = state.session?.isAuthenticated && !!state.session?.user;
+  const user = state.session?.user;
+  const userInitials = user?.fullName
+    ? user.fullName
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "U";
 
   const currentScenario = DEMO_SCENARIOS[selectedScenarioIndex];
 
@@ -99,7 +130,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   const handleCtaClick = () => {
     trackFunnelEvent("onboarding_started", { source: "landing_primary_cta" });
-    onOpenOnboarding();
+    if (isAuthenticated) {
+      onEnterDashboard();
+    } else {
+      onOpenOnboarding();
+    }
   };
 
   const plans = getAllPlans();
@@ -108,25 +143,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     <div className="min-h-screen bg-[#FAF9F5] text-[#121316] selection:bg-[#15803D]/15 selection:text-[#15803D] font-sans antialiased">
       
       {/* 1. MINIMAL EDITORIAL HEADER */}
-      <header className="sticky top-0 z-50 w-full bg-[#FAF9F5]/90 backdrop-blur-xl border-b border-[#EAE7DF] shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-30 bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#EAE7DF] transition-all">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
           
-          {/* Left: Brand Logo & Operational Region */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div 
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="cursor-pointer select-none transition-transform active:scale-[0.98]"
+          {/* Left: Brand Identity & Location */}
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="cursor-pointer focus:outline-none flex items-center gap-2"
             >
               <BrandLogo variant="full" size="md" />
-            </div>
-            
-            <div className="h-5 w-px bg-[#EAE7DF] hidden sm:block" />
-
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F4F2EB] border border-[#E2DED5] text-[11px] font-mono text-[#5A5C63] select-none shadow-2xs">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#15803D] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#15803D]"></span>
-              </span>
+            </button>
+            <div className="hidden lg:flex items-center gap-1.5 text-xs text-[#75777E] font-mono border-l border-[#EAE7DF] pl-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse" />
               <span className="font-semibold text-[#121316]">Nairobi, Kenya</span>
               <span className="text-[#A1A1AA]">&middot;</span>
               <span className="text-[#15803D] font-bold">LIVE OS</span>
@@ -144,19 +173,100 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Right: Authentication & Primary Action */}
           <div className="flex items-center gap-2.5 shrink-0">
-            <button
-              onClick={() => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard()}
-              className="text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={handleCtaClick}
-              className="px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25]"
-            >
-              <span>Find Automations</span>
-              <ArrowRight className="w-3.5 h-3.5 text-emerald-300" />
-            </button>
+            {isAuthenticated ? (
+              <div className="relative">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EFECE6] hover:bg-[#E5E1D8] border border-[#E2DED5] text-xs font-bold text-[#121316] transition-all cursor-pointer shadow-2xs"
+                  >
+                    <div className="w-6 h-6 rounded-full bg-[#002E25] text-white flex items-center justify-center text-[10px] font-mono font-bold">
+                      {userInitials}
+                    </div>
+                    <span className="max-w-[120px] truncate hidden sm:inline">{user?.fullName || "My Account"}</span>
+                    <ChevronDown className="w-3.5 h-3.5 text-[#75777E]" />
+                  </button>
+
+                  <button
+                    onClick={onEnterDashboard}
+                    className="px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25]"
+                  >
+                    <span>Open Workspace</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-emerald-300" />
+                  </button>
+                </div>
+
+                {isUserMenuOpen && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40" 
+                      onClick={() => setIsUserMenuOpen(false)} 
+                    />
+                    <div className="absolute right-0 mt-2 w-60 bg-white rounded-2xl border border-[#EAE7DF] shadow-xl py-2 px-2 z-50 animate-fadeIn text-xs">
+                      <div className="px-3 py-2.5 border-b border-[#EAE7DF] mb-1">
+                        <div className="font-bold text-[#121316] truncate">{user?.fullName}</div>
+                        <div className="text-[10px] text-[#75777E] truncate font-mono">{user?.email}</div>
+                        <div className="mt-1.5 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] text-[10px] font-mono font-bold border border-[#A7F3D0]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse" />
+                          <span>{state.organization?.name || "Workspace Active"}</span>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                          onEnterDashboard();
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <LayoutDashboard className="w-3.5 h-3.5 text-[#15803D]" />
+                        <span>Command Center</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                          onOpenOnboarding();
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-[#15803D]" />
+                        <span>Discover Automations</span>
+                      </button>
+
+                      <div className="my-1 border-t border-[#EAE7DF]" />
+
+                      <button
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                          logout();
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-700 font-semibold flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <LogOut className="w-3.5 h-3.5 text-rose-600" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={() => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard()}
+                  className="text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={handleCtaClick}
+                  className="px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25]"
+                >
+                  <span>Find Automations</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-300" />
+                </button>
+              </>
+            )}
           </div>
         </div>
       </header>

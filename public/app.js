@@ -8785,10 +8785,19 @@ var _BrandLogo = require('@/components/BrandLogo');
     }, 120);
   };
 
+  const isValidEmail = (em) => {
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(em.trim());
+  };
+
   const handleSignupSubmit = (e) => {
     e.preventDefault();
-    if (!fullName || !email) {
-      setMessage({ type: "error", text: "Please enter your full name and email." });
+    if (!fullName.trim() || !email.trim()) {
+      setMessage({ type: "error", text: "Please enter your full name and email address." });
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setMessage({ type: "error", text: "Please provide a valid email format (e.g. name@company.com)." });
       return;
     }
 
@@ -8805,7 +8814,7 @@ var _BrandLogo = require('@/components/BrandLogo');
       setMode("verify_otp");
       setMessage({ 
         type: "success", 
-        text: `Security code dispatched to ${email}. Please verify below.` 
+        text: `Security code dispatched to ${email}. Please enter the 6-digit code below.` 
       });
     }, 80);
   };
@@ -8840,21 +8849,21 @@ var _BrandLogo = require('@/components/BrandLogo');
   const handleVerifyOtpDirect = (codeToVerify) => {
     setIsLoading(true);
     setTimeout(() => {
-      if (codeToVerify === generatedOtp || codeToVerify === "849201" || codeToVerify.length === 6) {
+      if (codeToVerify === generatedOtp || codeToVerify === "849201" || (codeToVerify.length === 6 && /^\d+$/.test(codeToVerify))) {
         signup({
           fullName,
           email,
           phone: phone || "+254 700 000 000",
           password,
-          businessName: businessName || `${fullName}'s Practice`
+          businessName: businessName || `${fullName}'s Workspace`
         });
-        setMessage({ type: "success", text: "Email verified & workspace initialized!" });
+        setMessage({ type: "success", text: "Email verified & authenticated! Returning to landing page..." });
         setTimeout(() => {
           setIsLoading(false);
           onSuccess();
         }, 100);
       } else {
-        setMessage({ type: "error", text: "Invalid verification code. Please check your inbox or tap 1-Tap Autofill." });
+        setMessage({ type: "error", text: "Invalid 6-digit verification code. Please check your code or tap Autofill." });
         setIsLoading(false);
       }
     }, 80);
@@ -8872,8 +8881,13 @@ var _BrandLogo = require('@/components/BrandLogo');
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    if (!email) {
+    if (!email.trim()) {
       setMessage({ type: "error", text: "Please enter your email address." });
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setMessage({ type: "error", text: "Please provide a valid email format (e.g. name@company.com)." });
       return;
     }
 
@@ -8883,13 +8897,13 @@ var _BrandLogo = require('@/components/BrandLogo');
     setTimeout(() => {
       const success = login(email, password);
       if (success) {
-        setMessage({ type: "success", text: "Authentication verified. Redirecting to Command Center..." });
+        setMessage({ type: "success", text: "Authentication verified. Returning to workspace..." });
         setTimeout(() => {
           setIsLoading(false);
           onSuccess();
         }, 100);
       } else {
-        setMessage({ type: "error", text: "Invalid credentials. Please check your email or tap 1-Click Demo Fill." });
+        setMessage({ type: "error", text: "Authentication failed. Please check your credentials." });
         setIsLoading(false);
       }
     }, 80);
@@ -18018,9 +18032,14 @@ var _generatereportpdf = require('@/lib/pdf/generate-report-pdf');
 
   // Module: @/components/LandingPage
   define("@/components/LandingPage", function(require, exports) {
-    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }"use client";
+    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }"use client";
 
 var _react = require('react'); var _react2 = _interopRequireDefault(_react);
+
+
+
+
+
 
 
 
@@ -18035,6 +18054,10 @@ var _lucidereact = require('lucide-react');
 var _config = require('@/lib/billing/config');
 var _funnel = require('@/lib/analytics/funnel');
 var _BrandLogo = require('@/components/BrandLogo');
+var _store = require('@/lib/store');
+
+
+
 
 
 
@@ -18057,32 +18080,41 @@ var _BrandLogo = require('@/components/BrandLogo');
 const DEMO_SCENARIOS = [
   {
     id: "tutoring",
-    label: "Tutoring & Coaching",
-    input: "I run a tutoring business. Students contact me on WhatsApp, I schedule lessons manually, and some forget to pay.",
-    foundTitle: "Payment follow-up",
-    foundDetail: "Some students haven't completed payment before their scheduled lesson.",
-    impact: "High",
-    whyItMatters: "Unconfirmed payments can lead to missed sessions and unnecessary follow-up work.",
-    recommended: "Automatically remind unpaid students before their lesson."
+    label: "French Tutor",
+    tagline: "High WhatsApp message volume, manual scheduling & payment chasing.",
+    input: "I teach French online. Students message me on WhatsApp. I send them prices manually, schedule them in Google Calendar, and ask for M-Pesa payments.",
+    discovery: {
+      title: "Inbound Lead Follow-Up Delay",
+      description: "Students who don't book immediately are forgotten.",
+      impact: "HIGH IMPACT"
+    },
+    whyItMatters: "Prospective students inquire on WhatsApp, but if they don't pick a slot immediately, following up manually takes hours and leads go cold.",
+    recommended: "Automatically send syllabus, verify Google Calendar booking, and send a single polite WhatsApp reminder after 24 hours if unbooked."
   },
   {
-    id: "inquiries",
-    label: "Lead Follow-up",
-    input: "I get multiple WhatsApp inquiries for my services, but when I get busy I don't follow up with people who didn't book right away.",
-    foundTitle: "Lead follow-up",
-    foundDetail: "Inquiries go cold when no follow-up is sent within 24 hours.",
-    impact: "High",
-    whyItMatters: "Prospective customers who expressed clear intent are lost simply due to lack of a prompt check-in.",
-    recommended: "Automatically check in with interested contacts 24 hours after their first message."
+    id: "consulting",
+    label: "Business Consultant",
+    tagline: "Discovery calls booked without qualification or agenda prep.",
+    input: "Clients fill out my Google Form or email me. I manually send Calendly links and create folders in Google Drive for their onboarding files.",
+    discovery: {
+      title: "Manual Client Onboarding Friction",
+      description: "Drive folders & welcome dossiers created manually per client.",
+      impact: "HIGH IMPACT"
+    },
+    whyItMatters: "Consultants spend 45 minutes per new client creating shared folders, sending prep materials, and confirming meeting times across separate tools.",
+    recommended: "Trigger automatic Google Drive folder creation, share onboarding questionnaire, and log client details into Google Sheets on booking confirmation."
   },
   {
-    id: "appointments",
-    label: "Service Appointments",
-    input: "Clients book appointments with me, but I spend half my day manually texting them to confirm and verify their M-Pesa payments.",
-    foundTitle: "Manual booking confirmation",
-    foundDetail: "You are spending manual hours verifying M-Pesa receipts against calendar slots.",
-    impact: "Medium",
-    whyItMatters: "Administrative time spent cross-checking payments reduces available client session hours.",
+    id: "clinic",
+    label: "Local SME / Clinic",
+    tagline: "Appointment no-shows and unconfirmed M-Pesa consultation deposits.",
+    input: "Patients call or WhatsApp for dental consultations. We write their names in a notebook and check M-Pesa messages on a shared reception phone.",
+    discovery: {
+      title: "Unverified Booking Deposits & No-Shows",
+      description: "Patients forget appointments; M-Pesa receipts checked manually.",
+      impact: "CRITICAL"
+    },
+    whyItMatters: "No-shows cost private practices up to 30% of daily revenue because reminders aren't sent and deposits aren't automatically verified.",
     recommended: "Match incoming M-Pesa confirmation codes directly with calendar bookings."
   }
 ];
@@ -18093,9 +18125,22 @@ const DEMO_SCENARIOS = [
   onOpenCheckout,
   onTriggerAuth
 }) => {
+  const { state, logout } = _store.useOtomatizonStore.call(void 0, );
   const [selectedScenarioIndex, setSelectedScenarioIndex] = _react.useState.call(void 0, 0);
   const [visitorInput, setVisitorInput] = _react.useState.call(void 0, DEMO_SCENARIOS[0].input);
   const [demoState, setDemoState] = _react.useState("discovered");
+  const [isUserMenuOpen, setIsUserMenuOpen] = _react.useState.call(void 0, false);
+
+  const isAuthenticated = _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.isAuthenticated]) && !!_optionalChain([state, 'access', _3 => _3.session, 'optionalAccess', _4 => _4.user]);
+  const user = _optionalChain([state, 'access', _5 => _5.session, 'optionalAccess', _6 => _6.user]);
+  const userInitials = _optionalChain([user, 'optionalAccess', _7 => _7.fullName])
+    ? user.fullName
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "U";
 
   const currentScenario = DEMO_SCENARIOS[selectedScenarioIndex];
 
@@ -18119,7 +18164,11 @@ const DEMO_SCENARIOS = [
 
   const handleCtaClick = () => {
     _funnel.trackFunnelEvent.call(void 0, "onboarding_started", { source: "landing_primary_cta" });
-    onOpenOnboarding();
+    if (isAuthenticated) {
+      onEnterDashboard();
+    } else {
+      onOpenOnboarding();
+    }
   };
 
   const plans = _config.getAllPlans.call(void 0, );
@@ -18128,25 +18177,19 @@ const DEMO_SCENARIOS = [
     _react2.default.createElement('div', { className: "min-h-screen bg-[#FAF9F5] text-[#121316] selection:bg-[#15803D]/15 selection:text-[#15803D] font-sans antialiased"      ,}
 
       /* 1. MINIMAL EDITORIAL HEADER */
-      , _react2.default.createElement('header', { className: "sticky top-0 z-50 w-full bg-[#FAF9F5]/90 backdrop-blur-xl border-b border-[#EAE7DF] shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all"         ,}
-        , _react2.default.createElement('div', { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4"         ,}
+      , _react2.default.createElement('header', { className: "sticky top-0 z-30 bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#EAE7DF] transition-all"       ,}
+        , _react2.default.createElement('div', { className: "max-w-6xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4"        ,}
 
-          /* Left: Brand Logo & Operational Region */
-          , _react2.default.createElement('div', { className: "flex items-center gap-3 shrink-0"   ,}
-            , _react2.default.createElement('div', { 
-              onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
-              className: "cursor-pointer select-none transition-transform active:scale-[0.98]"   ,}
+          /* Left: Brand Identity & Location */
+          , _react2.default.createElement('div', { className: "flex items-center gap-3"  ,}
+            , _react2.default.createElement('button', { 
+              onClick: () => window.scrollTo({ top: 0, behavior: "smooth" }),
+              className: "cursor-pointer focus:outline-none flex items-center gap-2"    ,}
 
               , _react2.default.createElement(_BrandLogo.BrandLogo, { variant: "full", size: "md",} )
             )
-
-            , _react2.default.createElement('div', { className: "h-5 w-px bg-[#EAE7DF] hidden sm:block"    ,} )
-
-            , _react2.default.createElement('div', { className: "hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F4F2EB] border border-[#E2DED5] text-[11px] font-mono text-[#5A5C63] select-none shadow-2xs"              ,}
-              , _react2.default.createElement('span', { className: "relative flex h-2 w-2"   ,}
-                , _react2.default.createElement('span', { className: "animate-ping absolute inline-flex h-full w-full rounded-full bg-[#15803D] opacity-75"       ,})
-                , _react2.default.createElement('span', { className: "relative inline-flex rounded-full h-2 w-2 bg-[#15803D]"     ,})
-              )
+            , _react2.default.createElement('div', { className: "hidden lg:flex items-center gap-1.5 text-xs text-[#75777E] font-mono border-l border-[#EAE7DF] pl-3"         ,}
+              , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse"    ,} )
               , _react2.default.createElement('span', { className: "font-semibold text-[#121316]" ,}, "Nairobi, Kenya" )
               , _react2.default.createElement('span', { className: "text-[#A1A1AA]",}, "·")
               , _react2.default.createElement('span', { className: "text-[#15803D] font-bold" ,}, "LIVE OS" )
@@ -18164,18 +18207,99 @@ const DEMO_SCENARIOS = [
 
           /* Right: Authentication & Primary Action */
           , _react2.default.createElement('div', { className: "flex items-center gap-2.5 shrink-0"   ,}
-            , _react2.default.createElement('button', {
-              onClick: () => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard(),
-              className: "text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer"          ,}
+            , isAuthenticated ? (
+              _react2.default.createElement('div', { className: "relative",}
+                , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+                  , _react2.default.createElement('button', {
+                    onClick: () => setIsUserMenuOpen(!isUserMenuOpen),
+                    className: "flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EFECE6] hover:bg-[#E5E1D8] border border-[#E2DED5] text-xs font-bold text-[#121316] transition-all cursor-pointer shadow-2xs"               ,}
+
+                    , _react2.default.createElement('div', { className: "w-6 h-6 rounded-full bg-[#002E25] text-white flex items-center justify-center text-[10px] font-mono font-bold"          ,}
+                      , userInitials
+                    )
+                    , _react2.default.createElement('span', { className: "max-w-[120px] truncate hidden sm:inline"   ,}, _optionalChain([user, 'optionalAccess', _8 => _8.fullName]) || "My Account")
+                    , _react2.default.createElement(_lucidereact.ChevronDown, { className: "w-3.5 h-3.5 text-[#75777E]"  ,} )
+                  )
+
+                  , _react2.default.createElement('button', {
+                    onClick: onEnterDashboard,
+                    className: "px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25]"                  ,}
+
+                    , _react2.default.createElement('span', null, "Open Workspace" )
+                    , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-emerald-300"  ,} )
+                  )
+                )
+
+                , isUserMenuOpen && (
+                  _react2.default.createElement(_react2.default.Fragment, null
+                    , _react2.default.createElement('div', { 
+                      className: "fixed inset-0 z-40"  , 
+                      onClick: () => setIsUserMenuOpen(false),} 
+                    )
+                    , _react2.default.createElement('div', { className: "absolute right-0 mt-2 w-60 bg-white rounded-2xl border border-[#EAE7DF] shadow-xl py-2 px-2 z-50 animate-fadeIn text-xs"             ,}
+                      , _react2.default.createElement('div', { className: "px-3 py-2.5 border-b border-[#EAE7DF] mb-1"    ,}
+                        , _react2.default.createElement('div', { className: "font-bold text-[#121316] truncate"  ,}, _optionalChain([user, 'optionalAccess', _9 => _9.fullName]))
+                        , _react2.default.createElement('div', { className: "text-[10px] text-[#75777E] truncate font-mono"   ,}, _optionalChain([user, 'optionalAccess', _10 => _10.email]))
+                        , _react2.default.createElement('div', { className: "mt-1.5 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] text-[10px] font-mono font-bold border border-[#A7F3D0]"             ,}
+                          , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse"    ,} )
+                          , _react2.default.createElement('span', null, _optionalChain([state, 'access', _11 => _11.organization, 'optionalAccess', _12 => _12.name]) || "Workspace Active")
+                        )
+                      )
+
+                      , _react2.default.createElement('button', {
+                        onClick: () => {
+                          setIsUserMenuOpen(false);
+                          onEnterDashboard();
+                        },
+                        className: "w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors"            ,}
+
+                        , _react2.default.createElement(_lucidereact.LayoutDashboard, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
+                        , _react2.default.createElement('span', null, "Command Center" )
+                      )
+
+                      , _react2.default.createElement('button', {
+                        onClick: () => {
+                          setIsUserMenuOpen(false);
+                          onOpenOnboarding();
+                        },
+                        className: "w-full text-left px-3 py-2 rounded-xl hover:bg-[#FAF9F5] text-[#121316] font-semibold flex items-center gap-2 cursor-pointer transition-colors"            ,}
+
+                        , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
+                        , _react2.default.createElement('span', null, "Discover Automations" )
+                      )
+
+                      , _react2.default.createElement('div', { className: "my-1 border-t border-[#EAE7DF]"  ,} )
+
+                      , _react2.default.createElement('button', {
+                        onClick: () => {
+                          setIsUserMenuOpen(false);
+                          logout();
+                        },
+                        className: "w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-700 font-semibold flex items-center gap-2 cursor-pointer transition-colors"            ,}
+
+                        , _react2.default.createElement(_lucidereact.LogOut, { className: "w-3.5 h-3.5 text-rose-600"  ,} )
+                        , _react2.default.createElement('span', null, "Sign Out" )
+                      )
+                    )
+                  )
+                )
+              )
+            ) : (
+              _react2.default.createElement(_react2.default.Fragment, null
+                , _react2.default.createElement('button', {
+                  onClick: () => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard(),
+                  className: "text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer"          ,}
 , "Sign In"
 
-            )
-            , _react2.default.createElement('button', {
-              onClick: handleCtaClick,
-              className: "px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25]"                  ,}
+                )
+                , _react2.default.createElement('button', {
+                  onClick: handleCtaClick,
+                  className: "px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25]"                  ,}
 
-              , _react2.default.createElement('span', null, "Find Automations" )
-              , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-emerald-300"  ,} )
+                  , _react2.default.createElement('span', null, "Find Automations" )
+                  , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-emerald-300"  ,} )
+                )
+              )
             )
           )
         )
@@ -18969,7 +19093,7 @@ var _store = require('@/lib/store');
 
   const handleAuthSuccess = () => {
     setIsAuthOpen(false);
-    navigateTo("/app");
+    navigateTo("/");
   };
 
   const handleOpenCheckout = (planId = "starter") => {

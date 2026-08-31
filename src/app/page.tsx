@@ -123,7 +123,7 @@ export default function AppRoot() {
 
   const handleAuthSuccess = () => {
     setIsAuthOpen(false);
-    navigateTo("/app");
+    navigateTo("/");
   };
 
   const handleOpenCheckout = (planId: string = "starter") => {

@@ -119,10 +119,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }, 120);
   };
 
+  const isValidEmail = (em: string) => {
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(em.trim());
+  };
+
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName || !email) {
-      setMessage({ type: "error", text: "Please enter your full name and email." });
+    if (!fullName.trim() || !email.trim()) {
+      setMessage({ type: "error", text: "Please enter your full name and email address." });
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setMessage({ type: "error", text: "Please provide a valid email format (e.g. name@company.com)." });
       return;
     }
 
@@ -139,7 +148,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       setMode("verify_otp");
       setMessage({ 
         type: "success", 
-        text: `Security code dispatched to ${email}. Please verify below.` 
+        text: `Security code dispatched to ${email}. Please enter the 6-digit code below.` 
       });
     }, 80);
   };
@@ -174,21 +183,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const handleVerifyOtpDirect = (codeToVerify: string) => {
     setIsLoading(true);
     setTimeout(() => {
-      if (codeToVerify === generatedOtp || codeToVerify === "849201" || codeToVerify.length === 6) {
+      if (codeToVerify === generatedOtp || codeToVerify === "849201" || (codeToVerify.length === 6 && /^\d+$/.test(codeToVerify))) {
         signup({
           fullName,
           email,
           phone: phone || "+254 700 000 000",
           password,
-          businessName: businessName || `${fullName}'s Practice`
+          businessName: businessName || `${fullName}'s Workspace`
         });
-        setMessage({ type: "success", text: "Email verified & workspace initialized!" });
+        setMessage({ type: "success", text: "Email verified & authenticated! Returning to landing page..." });
         setTimeout(() => {
           setIsLoading(false);
           onSuccess();
         }, 100);
       } else {
-        setMessage({ type: "error", text: "Invalid verification code. Please check your inbox or tap 1-Tap Autofill." });
+        setMessage({ type: "error", text: "Invalid 6-digit verification code. Please check your code or tap Autofill." });
         setIsLoading(false);
       }
     }, 80);
@@ -206,8 +215,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) {
+    if (!email.trim()) {
       setMessage({ type: "error", text: "Please enter your email address." });
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setMessage({ type: "error", text: "Please provide a valid email format (e.g. name@company.com)." });
       return;
     }
 
@@ -217,13 +231,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setTimeout(() => {
       const success = login(email, password);
       if (success) {
-        setMessage({ type: "success", text: "Authentication verified. Redirecting to Command Center..." });
+        setMessage({ type: "success", text: "Authentication verified. Returning to workspace..." });
         setTimeout(() => {
           setIsLoading(false);
           onSuccess();
         }, 100);
       } else {
-        setMessage({ type: "error", text: "Invalid credentials. Please check your email or tap 1-Click Demo Fill." });
+        setMessage({ type: "error", text: "Authentication failed. Please check your credentials." });
         setIsLoading(false);
       }
     }, 80);
