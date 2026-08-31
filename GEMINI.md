@@ -591,6 +591,20 @@ Les opportunités suivent un cycle de vie strict :
   & $git push
   ```
 
+### Étape 16 : Résolution de l'Incident Production Vercel (FUNCTION_INVOCATION_FAILED)
+- **Diagnostic de la Cause Racine** :
+  1. Présence d'un fichier fantôme `next.config.mjs` à la racine entraînant l'auto-détection par Vercel du framework Next.js, créant des fonctions serverless Next.js inexistantes qui crashent sur la route racine `/`.
+  2. Dans `api/index.js`, tentative d'évaluation de `__dirname` dans un environnement ES Module (`package.json` en `"type": "module"`), levant une `ReferenceError: __dirname is not defined` fatale non interceptée.
+  3. Imports dynamiques variables empêchant le traçage des dépendances (`@vercel/nft`) vers `server.cjs`.
+  4. Sensibilité de `server.cjs` à `req.socket` non défini et blocage de `parseJsonBody` sur des corps déjà parsés par Vercel.
+- **Correctifs Implémentés & Déployés** :
+  1. Suppression définitive de `next.config.mjs` et ajout de `"framework": null` dans `vercel.json`.
+  2. Réécriture complète de `api/index.js` et `api/[...path].js` avec dérivation ESM sécurisée (`fileURLToPath`), importation statique de `server.cjs` et endpoints directs `/api/health` et `/api/ping`.
+  3. Durcissement de `server.cjs` : extraction IP tolérante aux proxies/serverless, gestion des corps pré-parsés et isolation stricte de la boucle de travail en arrière-plan (`persistentJobQueue`).
+  4. Création de la suite d'audit de non-régression `test-vercel-serverless.cjs` (25/25 tests passés avec succès).
+- **Validation Production** :
+  - Déploiement en direct sur `https://otomatizon.vercel.app/` confirmé 100% opérationnel (HTTP 200 OK sur toutes les routes statiques, SPA et REST APIs).
+
 ---
 *Règle permanente : À chaque changement majeur, compiler, tester, commiter et pousser automatiquement le code (ou rappeler l'ajout du remote si non configuré).*
-*Dernière mise à jour : 31 Août 2026 — Otomatizon Engineering & Product Architecture.*
+*Dernière mise à jour : 31 Août 2026 — Incident Vercel Résolu & Déploiement Production 100% Opérationnel.*
