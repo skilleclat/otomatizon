@@ -119,6 +119,13 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
   const [selectedTrace, setSelectedTrace] = useState<DecisionTrace | null>(null);
   const [isIntelligenceLabOpen, setIsIntelligenceLabOpen] = useState(false);
 
+  const userFirstName = state.session?.user?.fullName?.split(" ")[0] || "there";
+  const orgName = state.organization?.name || state.businessProfile?.name || "Your Workspace";
+  const currentHours = state.stats?.hoursSaved || state.metrics?.hoursSaved || 0;
+  const currentRevenue = state.stats?.revenueKes || state.metrics?.revenueRecoveredKes || 0;
+  const currentInquiries = state.metrics?.inquiriesProcessed || state.operationalEvents?.length || 0;
+  const currentFollowups = state.metrics?.followUpsSent || state.activityLogs?.filter(a => a.type === 'followup_sent').length || 0;
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-8 animate-fadeIn">
       
@@ -131,7 +138,9 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
               LIVE AUTOMATION OS &middot; RUNNING
             </span>
             <span className="text-xs font-mono text-[#15803D] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]">
-              Otomatizon saved you... 16.3 hours &amp; KES 88,000 this week
+              {currentHours > 0 || currentRevenue > 0
+                ? `Otomatizon saved you... ${currentHours.toFixed(1)} hours & KES ${currentRevenue.toLocaleString()} this week`
+                : `Workspace Active &middot; Ready to automate`}
             </span>
             <span className="text-xs font-mono text-[#75777E] flex items-center gap-1">
               <MapPin className="w-3.5 h-3.5 text-[#15803D]" />
@@ -140,7 +149,7 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
           </div>
 
           <h1 className="text-xl sm:text-2xl font-extrabold text-[#121316] tracking-tight">
-            Welcome, James. Here is what Otomatizon is orchestrating today.
+            Welcome, {userFirstName}. Here is what Otomatizon is orchestrating for {orgName}.
           </h1>
           <p className="text-xs text-[#4A4B50]">
             Your business operating system is running autonomously across WhatsApp, Google Workspace, and Safaricom M-Pesa.
@@ -168,6 +177,35 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
         </div>
       </div>
 
+      {/* Quick-Start Banner if user has 0 workflows */}
+      {state.workflows.length === 0 && (
+        <div className="p-6 sm:p-7 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] text-[#15803D] flex items-center justify-center">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-base font-extrabold text-[#121316]">Ready to automate your operations?</h2>
+              <p className="text-xs text-[#4A4B50]">Describe your daily customer process to uncover repetitive bottlenecks, or connect your daily tools.</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <button
+              onClick={onOpenOnboarding}
+              className="px-5 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all flex items-center gap-2 cursor-pointer shadow-xs"
+            >
+              <span>Describe How You Work &rarr;</span>
+            </button>
+            <button
+              onClick={() => onNavigate("apps")}
+              className="px-5 py-2.5 rounded-full bg-[#FAF9F5] hover:bg-[#F4F2EB] text-[#121316] border border-[#EAE7DF] text-xs font-bold font-mono transition-all cursor-pointer"
+            >
+              <span>Connect Your Apps</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* 2. THE HERO: LIVE AUTOMATION PIPELINE & REASONING (HOW IT'S THINKING & OPERATING) */}
       <LiveAutomationPipeline onSelectTrace={(trace) => setSelectedTrace(trace)} />
 
@@ -180,8 +218,8 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
         <div 
           onClick={() => setSelectedMetric({
             ...metricDetails.hours_saved,
-            value: `${(state.metrics?.hoursSaved || 16.3).toFixed(1)} h`,
-            title: `${(state.metrics?.hoursSaved || 16.3).toFixed(1)} Hours Saved`
+            value: `${currentHours.toFixed(1)} h`,
+            title: `${currentHours.toFixed(1)} Hours Saved`
           })}
           className="p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm hover:border-[#15803D] transition-all cursor-pointer space-y-2 group"
         >
@@ -192,10 +230,10 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
             </span>
           </div>
           <div className="text-2xl sm:text-3xl font-extrabold text-[#121316] font-mono">
-            {(state.metrics?.hoursSaved || 16.3).toFixed(1)} h <span className="text-xs text-[#75777E] font-normal">/ wk</span>
+            {currentHours.toFixed(1)} h <span className="text-xs text-[#75777E] font-normal">/ wk</span>
           </div>
           <div className="text-[11px] text-[#4A4B50] flex items-center justify-between pt-1 border-t border-[#EAE7DF]">
-            <span>{state.metrics?.inquiriesProcessed || 27} automated tasks</span>
+            <span>{currentInquiries} automated tasks</span>
             <span className="text-[#15803D] font-bold group-hover:underline text-[10px]">Inspect &rarr;</span>
           </div>
         </div>
@@ -204,8 +242,8 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
         <div 
           onClick={() => setSelectedMetric({
             ...metricDetails.revenue_protected,
-            value: `KES ${(state.metrics?.revenueRecoveredKes || 88000).toLocaleString()}`,
-            title: `KES ${(state.metrics?.revenueRecoveredKes || 88000).toLocaleString()} Protected Revenue`
+            value: `KES ${currentRevenue.toLocaleString()}`,
+            title: `KES ${currentRevenue.toLocaleString()} Protected Revenue`
           })}
           className="p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm hover:border-[#15803D] transition-all cursor-pointer space-y-2 group"
         >
@@ -216,7 +254,7 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
             </span>
           </div>
           <div className="text-2xl sm:text-3xl font-extrabold text-[#15803D] font-mono">
-            {(state.metrics?.revenueRecoveredKes || 88000).toLocaleString()} <span className="text-xs text-[#75777E] font-normal">KES</span>
+            {currentRevenue.toLocaleString()} <span className="text-xs text-[#75777E] font-normal">KES</span>
           </div>
           <div className="text-[11px] text-[#4A4B50] flex items-center justify-between pt-1 border-t border-[#EAE7DF]">
             <span>8 conversions recovered</span>

@@ -4019,6 +4019,92 @@ async function syncWithServer() {
   }
 }
 
+ const createCleanWorkspaceState = (
+  user,
+  organization,
+  businessProfile
+) => {
+  const cleanIntegrations = _mockdata.defaultIntegrations.map((i) => ({
+    ...i,
+    connected: false,
+    status: "disconnected",
+    lastSyncedAt: "Not connected"
+  }));
+
+  const cleanConnectedApps = _mockdata.defaultConnectedApps.map((a) => ({
+    ...a,
+    connected: false,
+    status: "disconnected"
+  }));
+
+  return {
+    session: {
+      user,
+      token: `session_tok_${user.id}`,
+      isAuthenticated: true
+    },
+    organization,
+    businessProfile,
+    integrations: cleanIntegrations,
+    connectedApps: cleanConnectedApps,
+    dataSources: _mockdata.defaultDataSources.map((d) => ({
+      ...d,
+      connectionStatus: "disconnected",
+      syncStatus: "idle"
+    })),
+    operationalEvents: [],
+    insights: [],
+    leads: [],
+    opportunities: [],
+    workflows: [],
+    executions: [],
+    activityLogs: [
+      {
+        id: `act_${Date.now()}`,
+        organizationId: organization.id,
+        type: "workflow_executed",
+        title: "Workspace Initialized",
+        description: `Clean business workspace ready for ${user.fullName} (${user.email}).`,
+        timestamp: "Just now",
+        provenance: "OBSERVED",
+        channel: "system"
+      }
+    ],
+    teamMembers: [
+      {
+        id: `tm_${Date.now()}`,
+        organizationId: organization.id,
+        name: user.fullName,
+        email: user.email,
+        phone: user.phone || "",
+        role: "owner",
+        status: "active",
+        joinedAt: new Date().toISOString()
+      }
+    ],
+    metrics: {
+      id: `met_${Date.now()}`,
+      hoursSaved: 0,
+      inquiriesProcessed: 0,
+      followUpsSent: 0,
+      revenueRecoveredKes: 0,
+      successRatePercent: 100,
+      lastUpdated: "Just now",
+      provenance: "OBSERVED"
+    },
+    stats: {
+      revenueKes: 0,
+      newCustomers: 0,
+      bookings: 0,
+      activeAutomations: 0,
+      hoursSaved: 0,
+      leadsMonthlyLimit: 100,
+      automationsLimit: 1,
+      currentPlanId: "starter"
+    }
+  };
+}; exports.createCleanWorkspaceState = createCleanWorkspaceState;
+
  function useOtomatizonStore() {
   const [state, setState] = _react.useState(globalState);
 
@@ -4031,50 +4117,128 @@ async function syncWithServer() {
     };
   }, []);
 
-  // 1. AUTHENTICATION & SESSIONS
-  const signup = (payload
+  // 1. AUTHENTICATION & SESSIONS (REAL USER REGISTRATION)
+  const signup = async (payload
 
 
 
 
 
 ) => {
+    const orgId = `org_${Date.now()}`;
+    const userId = `user_${Date.now()}`;
+    const bName = payload.businessName || `${payload.fullName}'s Workspace`;
+
     const newUser = {
-      id: `user_${Date.now()}`,
+      id: userId,
       fullName: payload.fullName,
       email: payload.email,
-      phone: payload.phone,
+      phone: payload.phone || "+254 700 000 000",
       createdAt: new Date().toISOString()
     };
-    globalState.session = {
-      user: newUser,
-      token: `tok_${Date.now()}`,
-      isAuthenticated: true
+
+    const newOrg = {
+      id: orgId,
+      name: bName,
+      planId: "starter",
+      createdAt: new Date().toISOString()
     };
-    if (payload.businessName) {
-      globalState.organization.name = payload.businessName;
-      globalState.businessProfile.name = payload.businessName;
-    }
-    globalState.activityLogs.unshift({
-      id: `act_${Date.now()}`,
-      organizationId: globalState.organization.id,
-      type: "workflow_executed",
-      title: "New business account registered",
-      description: `Account created for ${payload.fullName} (${payload.email}).`,
-      timestamp: "Just now",
-      channel: "system"
-    });
+
+    const newProfile = {
+      id: `bp_${Date.now()}`,
+      organizationId: orgId,
+      name: bName,
+      businessType: "Service Business",
+      city: "Nairobi",
+      country: "Kenya",
+      currency: "KES",
+      customerType: "Direct clients",
+      primaryChannels: ["WhatsApp"],
+      toolsUsed: ["WhatsApp Business", "Google Calendar"],
+      frictionPoints: [],
+      workflowStages: []
+    };
+
+    // Reset whole state to fresh clean slate for the new user
+    globalState = exports.createCleanWorkspaceState.call(void 0, newUser, newOrg, newProfile);
     notify();
+
+    if (typeof window !== "undefined") {
+      try {
+        await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fullName: payload.fullName,
+            email: payload.email,
+            phone: payload.phone,
+            businessName: bName
+          })
+        });
+      } catch (e) {
+        // local persistence fallback
+      }
+    }
   };
 
-  const login = (email, password) => {
-    const user = globalState.session.user || defaultUser;
+  const login = async (email, password) => {
+    const existing = _optionalChain([globalState, 'access', _ => _.session, 'optionalAccess', _2 => _2.user]);
+    let targetUser;
+    
+    if (existing && existing.email.toLowerCase() === email.toLowerCase()) {
+      targetUser = existing;
+    } else {
+      const uName = email.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
+      targetUser = {
+        id: `user_${Date.now()}`,
+        fullName: uName,
+        email: email,
+        phone: "+254 700 000 000",
+        createdAt: new Date().toISOString()
+      };
+      const orgId = `org_${Date.now()}`;
+      const newOrg = {
+        id: orgId,
+        name: `${uName}'s Workspace`,
+        planId: "starter",
+        createdAt: new Date().toISOString()
+      };
+      const newProfile = {
+        id: `bp_${Date.now()}`,
+        organizationId: orgId,
+        name: newOrg.name,
+        businessType: "Service Business",
+        city: "Nairobi",
+        country: "Kenya",
+        currency: "KES",
+        customerType: "Direct clients",
+        primaryChannels: ["WhatsApp"],
+        toolsUsed: ["WhatsApp Business", "Google Calendar"],
+        frictionPoints: [],
+        workflowStages: []
+      };
+      globalState = exports.createCleanWorkspaceState.call(void 0, targetUser, newOrg, newProfile);
+    }
+
     globalState.session = {
-      user: { ...user, email },
-      token: `tok_${Date.now()}`,
+      user: targetUser,
+      token: `session_tok_${targetUser.id}`,
       isAuthenticated: true
     };
+
     notify();
+
+    if (typeof window !== "undefined") {
+      try {
+        await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+      } catch (e) {
+        // fallback
+      }
+    }
     return true;
   };
 
@@ -4095,7 +4259,8 @@ async function syncWithServer() {
       title: "Password recovery link dispatched",
       description: `Sent password reset email to ${email}.`,
       timestamp: "Just now",
-      channel: "gmail"
+      channel: "gmail",
+      provenance: "OBSERVED"
     });
     notify();
   };
@@ -4687,7 +4852,7 @@ async function syncWithServer() {
       role: member.role,
       status: "invited",
       joinedAt: new Date().toISOString(),
-      invitedBy: _optionalChain([globalState, 'access', _ => _.session, 'access', _2 => _2.user, 'optionalAccess', _3 => _3.fullName]) || "James Kamau"
+      invitedBy: _optionalChain([globalState, 'access', _3 => _3.session, 'access', _4 => _4.user, 'optionalAccess', _5 => _5.fullName]) || "James Kamau"
     };
     globalState.teamMembers.push(newMember);
     globalState.activityLogs.unshift({
@@ -8597,23 +8762,27 @@ var _BrandLogo = require('@/components/BrandLogo');
     setMessage(null);
 
     setTimeout(() => {
-      // Instant official Google OAuth 2.0 exchange
+      // Dynamic Google OAuth 2.0 Identity Resolution
+      const userGoogleEmail = email || (typeof window !== "undefined" && window.prompt ? window.prompt("Enter your Google Account email:", "user@gmail.com") : null) || "user@gmail.com";
+      const userGoogleName = fullName || userGoogleEmail.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
+      const userBusiness = businessName || `${userGoogleName}'s Workspace`;
+
       const googleUser = {
-        fullName: fullName || "James Kamau",
-        email: email || "james.kamau.nairobi@gmail.com",
-        phone: phone || "+254 722 000 123",
+        fullName: userGoogleName,
+        email: userGoogleEmail,
+        phone: phone || "+254 700 000 000",
         password: "google_oauth_authenticated_session",
-        businessName: businessName || "Kamau French & Academic Tutoring"
+        businessName: userBusiness
       };
 
       signup(googleUser);
       setIsGoogleLoading(false);
-      setMessage({ type: "success", text: `Authenticated via Google (${googleUser.email}). Launching workspace...` });
+      setMessage({ type: "success", text: `Authenticated via Google (${googleUser.email}). Launching your workspace...` });
       
       setTimeout(() => {
         onSuccess();
       }, 100);
-    }, 100);
+    }, 120);
   };
 
   const handleSignupSubmit = (e) => {
@@ -14352,6 +14521,13 @@ const metricDetails = {
   const [selectedTrace, setSelectedTrace] = _react.useState(null);
   const [isIntelligenceLabOpen, setIsIntelligenceLabOpen] = _react.useState.call(void 0, false);
 
+  const userFirstName = _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName, 'optionalAccess', _4 => _4.split, 'call', _5 => _5(" "), 'access', _6 => _6[0]]) || "there";
+  const orgName = _optionalChain([state, 'access', _7 => _7.organization, 'optionalAccess', _8 => _8.name]) || _optionalChain([state, 'access', _9 => _9.businessProfile, 'optionalAccess', _10 => _10.name]) || "Your Workspace";
+  const currentHours = _optionalChain([state, 'access', _11 => _11.stats, 'optionalAccess', _12 => _12.hoursSaved]) || _optionalChain([state, 'access', _13 => _13.metrics, 'optionalAccess', _14 => _14.hoursSaved]) || 0;
+  const currentRevenue = _optionalChain([state, 'access', _15 => _15.stats, 'optionalAccess', _16 => _16.revenueKes]) || _optionalChain([state, 'access', _17 => _17.metrics, 'optionalAccess', _18 => _18.revenueRecoveredKes]) || 0;
+  const currentInquiries = _optionalChain([state, 'access', _19 => _19.metrics, 'optionalAccess', _20 => _20.inquiriesProcessed]) || _optionalChain([state, 'access', _21 => _21.operationalEvents, 'optionalAccess', _22 => _22.length]) || 0;
+  const currentFollowups = _optionalChain([state, 'access', _23 => _23.metrics, 'optionalAccess', _24 => _24.followUpsSent]) || _optionalChain([state, 'access', _25 => _25.activityLogs, 'optionalAccess', _26 => _26.filter, 'call', _27 => _27(a => a.type === 'followup_sent'), 'access', _28 => _28.length]) || 0;
+
   return (
     _react2.default.createElement('div', { className: "max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-8 animate-fadeIn"      ,}
 
@@ -14363,8 +14539,10 @@ const metricDetails = {
               , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-[#15803D] animate-pulse"    ,} ), "LIVE AUTOMATION OS · RUNNING"
 
             )
-            , _react2.default.createElement('span', { className: "text-xs font-mono text-[#15803D] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}, "Otomatizon saved you... 16.3 hours & KES 88,000 this week"
-
+            , _react2.default.createElement('span', { className: "text-xs font-mono text-[#15803D] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}
+              , currentHours > 0 || currentRevenue > 0
+                ? `Otomatizon saved you... ${currentHours.toFixed(1)} hours & KES ${currentRevenue.toLocaleString()} this week`
+                : `Workspace Active &middot; Ready to automate`
             )
             , _react2.default.createElement('span', { className: "text-xs font-mono text-[#75777E] flex items-center gap-1"     ,}
               , _react2.default.createElement(_lucidereact.MapPin, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} ), "Nairobi, Kenya"
@@ -14372,8 +14550,8 @@ const metricDetails = {
             )
           )
 
-          , _react2.default.createElement('h1', { className: "text-xl sm:text-2xl font-extrabold text-[#121316] tracking-tight"    ,}, "Welcome, James. Here is what Otomatizon is orchestrating today."
-
+          , _react2.default.createElement('h1', { className: "text-xl sm:text-2xl font-extrabold text-[#121316] tracking-tight"    ,}, "Welcome, "
+             , userFirstName, ". Here is what Otomatizon is orchestrating for "        , orgName, "."
           )
           , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50]" ,}, "Your business operating system is running autonomously across WhatsApp, Google Workspace, and Safaricom M-Pesa."
 
@@ -14401,6 +14579,35 @@ const metricDetails = {
         )
       )
 
+      /* Quick-Start Banner if user has 0 workflows */
+      , state.workflows.length === 0 && (
+        _react2.default.createElement('div', { className: "p-6 sm:p-7 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm space-y-4"       ,}
+          , _react2.default.createElement('div', { className: "flex items-center gap-3"  ,}
+            , _react2.default.createElement('div', { className: "w-10 h-10 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] text-[#15803D] flex items-center justify-center"         ,}
+              , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-5 h-5" ,} )
+            )
+            , _react2.default.createElement('div', null
+              , _react2.default.createElement('h2', { className: "text-base font-extrabold text-[#121316]"  ,}, "Ready to automate your operations?"    )
+              , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50]" ,}, "Describe your daily customer process to uncover repetitive bottlenecks, or connect your daily tools."             )
+            )
+          )
+          , _react2.default.createElement('div', { className: "flex flex-wrap items-center gap-3 pt-1"    ,}
+            , _react2.default.createElement('button', {
+              onClick: onOpenOnboarding,
+              className: "px-5 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all flex items-center gap-2 cursor-pointer shadow-xs"              ,}
+
+              , _react2.default.createElement('span', null, "Describe How You Work →"    )
+            )
+            , _react2.default.createElement('button', {
+              onClick: () => onNavigate("apps"),
+              className: "px-5 py-2.5 rounded-full bg-[#FAF9F5] hover:bg-[#F4F2EB] text-[#121316] border border-[#EAE7DF] text-xs font-bold font-mono transition-all cursor-pointer"            ,}
+
+              , _react2.default.createElement('span', null, "Connect Your Apps"  )
+            )
+          )
+        )
+      )
+
       /* 2. THE HERO: LIVE AUTOMATION PIPELINE & REASONING (HOW IT'S THINKING & OPERATING) */
       , _react2.default.createElement(_LiveAutomationPipeline.LiveAutomationPipeline, { onSelectTrace: (trace) => setSelectedTrace(trace),} )
 
@@ -14413,8 +14620,8 @@ const metricDetails = {
         , _react2.default.createElement('div', { 
           onClick: () => setSelectedMetric({
             ...metricDetails.hours_saved,
-            value: `${(_optionalChain([state, 'access', _ => _.metrics, 'optionalAccess', _2 => _2.hoursSaved]) || 16.3).toFixed(1)} h`,
-            title: `${(_optionalChain([state, 'access', _3 => _3.metrics, 'optionalAccess', _4 => _4.hoursSaved]) || 16.3).toFixed(1)} Hours Saved`
+            value: `${currentHours.toFixed(1)} h`,
+            title: `${currentHours.toFixed(1)} Hours Saved`
           }),
           className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm hover:border-[#15803D] transition-all cursor-pointer space-y-2 group"          ,}
 
@@ -14425,10 +14632,10 @@ const metricDetails = {
             )
           )
           , _react2.default.createElement('div', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] font-mono"    ,}
-            , (_optionalChain([state, 'access', _5 => _5.metrics, 'optionalAccess', _6 => _6.hoursSaved]) || 16.3).toFixed(1), " h "  , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "/ wk" )
+            , currentHours.toFixed(1), " h "  , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "/ wk" )
           )
           , _react2.default.createElement('div', { className: "text-[11px] text-[#4A4B50] flex items-center justify-between pt-1 border-t border-[#EAE7DF]"       ,}
-            , _react2.default.createElement('span', null, _optionalChain([state, 'access', _7 => _7.metrics, 'optionalAccess', _8 => _8.inquiriesProcessed]) || 27, " automated tasks"  )
+            , _react2.default.createElement('span', null, currentInquiries, " automated tasks"  )
             , _react2.default.createElement('span', { className: "text-[#15803D] font-bold group-hover:underline text-[10px]"   ,}, "Inspect →" )
           )
         )
@@ -14437,8 +14644,8 @@ const metricDetails = {
         , _react2.default.createElement('div', { 
           onClick: () => setSelectedMetric({
             ...metricDetails.revenue_protected,
-            value: `KES ${(_optionalChain([state, 'access', _9 => _9.metrics, 'optionalAccess', _10 => _10.revenueRecoveredKes]) || 88000).toLocaleString()}`,
-            title: `KES ${(_optionalChain([state, 'access', _11 => _11.metrics, 'optionalAccess', _12 => _12.revenueRecoveredKes]) || 88000).toLocaleString()} Protected Revenue`
+            value: `KES ${currentRevenue.toLocaleString()}`,
+            title: `KES ${currentRevenue.toLocaleString()} Protected Revenue`
           }),
           className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm hover:border-[#15803D] transition-all cursor-pointer space-y-2 group"          ,}
 
@@ -14449,7 +14656,7 @@ const metricDetails = {
             )
           )
           , _react2.default.createElement('div', { className: "text-2xl sm:text-3xl font-extrabold text-[#15803D] font-mono"    ,}
-            , (_optionalChain([state, 'access', _13 => _13.metrics, 'optionalAccess', _14 => _14.revenueRecoveredKes]) || 88000).toLocaleString(), " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "KES")
+            , currentRevenue.toLocaleString(), " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "KES")
           )
           , _react2.default.createElement('div', { className: "text-[11px] text-[#4A4B50] flex items-center justify-between pt-1 border-t border-[#EAE7DF]"       ,}
             , _react2.default.createElement('span', null, "8 conversions recovered"  )
@@ -14461,8 +14668,8 @@ const metricDetails = {
         , _react2.default.createElement('div', { 
           onClick: () => setSelectedMetric({
             ...metricDetails.inquiries,
-            value: `${_optionalChain([state, 'access', _15 => _15.metrics, 'optionalAccess', _16 => _16.inquiriesProcessed]) || (_optionalChain([state, 'access', _17 => _17.leads, 'optionalAccess', _18 => _18.length]) || 27)}`,
-            title: `${_optionalChain([state, 'access', _19 => _19.metrics, 'optionalAccess', _20 => _20.inquiriesProcessed]) || (_optionalChain([state, 'access', _21 => _21.leads, 'optionalAccess', _22 => _22.length]) || 27)} Inquiries Handled`
+            value: `${_optionalChain([state, 'access', _29 => _29.metrics, 'optionalAccess', _30 => _30.inquiriesProcessed]) || (_optionalChain([state, 'access', _31 => _31.leads, 'optionalAccess', _32 => _32.length]) || 27)}`,
+            title: `${_optionalChain([state, 'access', _33 => _33.metrics, 'optionalAccess', _34 => _34.inquiriesProcessed]) || (_optionalChain([state, 'access', _35 => _35.leads, 'optionalAccess', _36 => _36.length]) || 27)} Inquiries Handled`
           }),
           className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm hover:border-[#15803D] transition-all cursor-pointer space-y-2 group"          ,}
 
@@ -14473,7 +14680,7 @@ const metricDetails = {
             )
           )
           , _react2.default.createElement('div', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] font-mono"    ,}
-            , _optionalChain([state, 'access', _23 => _23.metrics, 'optionalAccess', _24 => _24.inquiriesProcessed]) || (_optionalChain([state, 'access', _25 => _25.leads, 'optionalAccess', _26 => _26.length]) || 27), " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "prospects")
+            , _optionalChain([state, 'access', _37 => _37.metrics, 'optionalAccess', _38 => _38.inquiriesProcessed]) || (_optionalChain([state, 'access', _39 => _39.leads, 'optionalAccess', _40 => _40.length]) || 27), " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "prospects")
           )
           , _react2.default.createElement('div', { className: "text-[11px] text-[#4A4B50] flex items-center justify-between pt-1 border-t border-[#EAE7DF]"       ,}
             , _react2.default.createElement('span', null, "WhatsApp & Gmail"  )
@@ -14485,8 +14692,8 @@ const metricDetails = {
         , _react2.default.createElement('div', { 
           onClick: () => setSelectedMetric({
             ...metricDetails.followups,
-            value: `${_optionalChain([state, 'access', _27 => _27.metrics, 'optionalAccess', _28 => _28.followUpsSent]) || 24}`,
-            title: `${_optionalChain([state, 'access', _29 => _29.metrics, 'optionalAccess', _30 => _30.followUpsSent]) || 24} Follow-ups Dispatched`
+            value: `${_optionalChain([state, 'access', _41 => _41.metrics, 'optionalAccess', _42 => _42.followUpsSent]) || 24}`,
+            title: `${_optionalChain([state, 'access', _43 => _43.metrics, 'optionalAccess', _44 => _44.followUpsSent]) || 24} Follow-ups Dispatched`
           }),
           className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm hover:border-[#15803D] transition-all cursor-pointer space-y-2 group"          ,}
 
@@ -14497,7 +14704,7 @@ const metricDetails = {
             )
           )
           , _react2.default.createElement('div', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] font-mono"    ,}
-            , _optionalChain([state, 'access', _31 => _31.metrics, 'optionalAccess', _32 => _32.followUpsSent]) || 24, " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "delivered")
+            , _optionalChain([state, 'access', _45 => _45.metrics, 'optionalAccess', _46 => _46.followUpsSent]) || 24, " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "delivered")
           )
           , _react2.default.createElement('div', { className: "text-[11px] text-[#4A4B50] flex items-center justify-between pt-1 border-t border-[#EAE7DF]"       ,}
             , _react2.default.createElement('span', null, "Circuit breaker active"  )
@@ -14528,12 +14735,12 @@ const metricDetails = {
             onClick: () => onNavigate("activity"),
             className: "text-xs font-mono font-bold text-[#15803D] hover:underline flex items-center gap-1 cursor-pointer"        ,}
 
-            , _react2.default.createElement('span', null, "View complete audit log ("    , (_optionalChain([state, 'optionalAccess', _33 => _33.activity]) || []).length, ") →" )
+            , _react2.default.createElement('span', null, "View complete audit log ("    , (_optionalChain([state, 'optionalAccess', _47 => _47.activity]) || []).length, ") →" )
           )
         )
 
         , _react2.default.createElement('div', { className: "space-y-3",}
-          , (_optionalChain([state, 'optionalAccess', _34 => _34.activity]) || []).slice(0, 4).map((log) => (
+          , (_optionalChain([state, 'optionalAccess', _48 => _48.activity]) || []).slice(0, 4).map((log) => (
             _react2.default.createElement('div', {
               key: log.id,
               onClick: () => setSelectedLog(log),

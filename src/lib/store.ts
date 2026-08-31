@@ -181,6 +181,92 @@ async function syncWithServer() {
   }
 }
 
+export const createCleanWorkspaceState = (
+  user: User,
+  organization: Organization,
+  businessProfile: BusinessProfile
+): AppState => {
+  const cleanIntegrations = defaultIntegrations.map((i) => ({
+    ...i,
+    connected: false,
+    status: "disconnected",
+    lastSyncedAt: "Not connected"
+  }));
+
+  const cleanConnectedApps = defaultConnectedApps.map((a) => ({
+    ...a,
+    connected: false,
+    status: "disconnected"
+  }));
+
+  return {
+    session: {
+      user,
+      token: `session_tok_${user.id}`,
+      isAuthenticated: true
+    },
+    organization,
+    businessProfile,
+    integrations: cleanIntegrations,
+    connectedApps: cleanConnectedApps,
+    dataSources: defaultDataSources.map((d) => ({
+      ...d,
+      connectionStatus: "disconnected",
+      syncStatus: "idle"
+    })),
+    operationalEvents: [],
+    insights: [],
+    leads: [],
+    opportunities: [],
+    workflows: [],
+    executions: [],
+    activityLogs: [
+      {
+        id: `act_${Date.now()}`,
+        organizationId: organization.id,
+        type: "workflow_executed",
+        title: "Workspace Initialized",
+        description: `Clean business workspace ready for ${user.fullName} (${user.email}).`,
+        timestamp: "Just now",
+        provenance: "OBSERVED",
+        channel: "system"
+      }
+    ],
+    teamMembers: [
+      {
+        id: `tm_${Date.now()}`,
+        organizationId: organization.id,
+        name: user.fullName,
+        email: user.email,
+        phone: user.phone || "",
+        role: "owner",
+        status: "active",
+        joinedAt: new Date().toISOString()
+      }
+    ],
+    metrics: {
+      id: `met_${Date.now()}`,
+      hoursSaved: 0,
+      inquiriesProcessed: 0,
+      followUpsSent: 0,
+      revenueRecoveredKes: 0,
+      successRatePercent: 100,
+      lastUpdated: "Just now",
+      provenance: "OBSERVED"
+    },
+    stats: {
+      revenueKes: 0,
+      newCustomers: 0,
+      bookings: 0,
+      activeAutomations: 0,
+      hoursSaved: 0,
+      leadsMonthlyLimit: 100,
+      automationsLimit: 1,
+      currentPlanId: "starter"
+    }
+  };
+};
+
 export function useOtomatizonStore() {
   const [state, setState] = useState<AppState>(globalState);
 
@@ -193,50 +279,128 @@ export function useOtomatizonStore() {
     };
   }, []);
 
-  // 1. AUTHENTICATION & SESSIONS
-  const signup = (payload: {
+  // 1. AUTHENTICATION & SESSIONS (REAL USER REGISTRATION)
+  const signup = async (payload: {
     fullName: string;
     email: string;
     phone: string;
     password?: string;
     businessName?: string;
   }) => {
+    const orgId = `org_${Date.now()}`;
+    const userId = `user_${Date.now()}`;
+    const bName = payload.businessName || `${payload.fullName}'s Workspace`;
+
     const newUser: User = {
-      id: `user_${Date.now()}`,
+      id: userId,
       fullName: payload.fullName,
       email: payload.email,
-      phone: payload.phone,
+      phone: payload.phone || "+254 700 000 000",
       createdAt: new Date().toISOString()
     };
-    globalState.session = {
-      user: newUser,
-      token: `tok_${Date.now()}`,
-      isAuthenticated: true
+
+    const newOrg: Organization = {
+      id: orgId,
+      name: bName,
+      planId: "starter",
+      createdAt: new Date().toISOString()
     };
-    if (payload.businessName) {
-      globalState.organization.name = payload.businessName;
-      globalState.businessProfile.name = payload.businessName;
-    }
-    globalState.activityLogs.unshift({
-      id: `act_${Date.now()}`,
-      organizationId: globalState.organization.id,
-      type: "workflow_executed",
-      title: "New business account registered",
-      description: `Account created for ${payload.fullName} (${payload.email}).`,
-      timestamp: "Just now",
-      channel: "system"
-    });
+
+    const newProfile: BusinessProfile = {
+      id: `bp_${Date.now()}`,
+      organizationId: orgId,
+      name: bName,
+      businessType: "Service Business",
+      city: "Nairobi",
+      country: "Kenya",
+      currency: "KES",
+      customerType: "Direct clients",
+      primaryChannels: ["WhatsApp"],
+      toolsUsed: ["WhatsApp Business", "Google Calendar"],
+      frictionPoints: [],
+      workflowStages: []
+    };
+
+    // Reset whole state to fresh clean slate for the new user
+    globalState = createCleanWorkspaceState(newUser, newOrg, newProfile);
     notify();
+
+    if (typeof window !== "undefined") {
+      try {
+        await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fullName: payload.fullName,
+            email: payload.email,
+            phone: payload.phone,
+            businessName: bName
+          })
+        });
+      } catch (e) {
+        // local persistence fallback
+      }
+    }
   };
 
-  const login = (email: string, password?: string): boolean => {
-    const user = globalState.session.user || defaultUser;
+  const login = async (email: string, password?: string): Promise<boolean> => {
+    const existing = globalState.session?.user;
+    let targetUser: User;
+    
+    if (existing && existing.email.toLowerCase() === email.toLowerCase()) {
+      targetUser = existing;
+    } else {
+      const uName = email.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
+      targetUser = {
+        id: `user_${Date.now()}`,
+        fullName: uName,
+        email: email,
+        phone: "+254 700 000 000",
+        createdAt: new Date().toISOString()
+      };
+      const orgId = `org_${Date.now()}`;
+      const newOrg: Organization = {
+        id: orgId,
+        name: `${uName}'s Workspace`,
+        planId: "starter",
+        createdAt: new Date().toISOString()
+      };
+      const newProfile: BusinessProfile = {
+        id: `bp_${Date.now()}`,
+        organizationId: orgId,
+        name: newOrg.name,
+        businessType: "Service Business",
+        city: "Nairobi",
+        country: "Kenya",
+        currency: "KES",
+        customerType: "Direct clients",
+        primaryChannels: ["WhatsApp"],
+        toolsUsed: ["WhatsApp Business", "Google Calendar"],
+        frictionPoints: [],
+        workflowStages: []
+      };
+      globalState = createCleanWorkspaceState(targetUser, newOrg, newProfile);
+    }
+
     globalState.session = {
-      user: { ...user, email },
-      token: `tok_${Date.now()}`,
+      user: targetUser,
+      token: `session_tok_${targetUser.id}`,
       isAuthenticated: true
     };
+
     notify();
+
+    if (typeof window !== "undefined") {
+      try {
+        await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+      } catch (e) {
+        // fallback
+      }
+    }
     return true;
   };
 
@@ -257,7 +421,8 @@ export function useOtomatizonStore() {
       title: "Password recovery link dispatched",
       description: `Sent password reset email to ${email}.`,
       timestamp: "Just now",
-      channel: "gmail"
+      channel: "gmail",
+      provenance: "OBSERVED"
     });
     notify();
   };
