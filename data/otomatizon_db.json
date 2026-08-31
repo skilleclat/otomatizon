@@ -303,6 +303,38 @@
       "phone": "+254 722 111 222",
       "organizationId": "org_1788183387833",
       "createdAt": "2026-08-31T13:36:27.833Z"
+    },
+    {
+      "id": "user_1788198782045",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788198782045",
+      "createdAt": "2026-08-31T17:53:02.045Z"
+    },
+    {
+      "id": "user_1788198975520",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788198975520",
+      "createdAt": "2026-08-31T17:56:15.520Z"
+    },
+    {
+      "id": "user_1788199141182",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788199141182",
+      "createdAt": "2026-08-31T17:59:01.183Z"
+    },
+    {
+      "id": "user_1788204557255",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788204557255",
+      "createdAt": "2026-08-31T19:29:17.255Z"
     }
   ],
   "organizations": [
@@ -533,6 +565,30 @@
       "name": "Amina Math Coaching",
       "planId": "starter",
       "createdAt": "2026-08-31T13:36:27.833Z"
+    },
+    {
+      "id": "org_1788198782045",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-31T17:53:02.045Z"
+    },
+    {
+      "id": "org_1788198975520",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-31T17:56:15.520Z"
+    },
+    {
+      "id": "org_1788199141182",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-31T17:59:01.183Z"
+    },
+    {
+      "id": "org_1788204557255",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-08-31T19:29:17.255Z"
     }
   ],
   "businessProfiles": [
@@ -1439,6 +1495,94 @@
         "M-Pesa"
       ],
       "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788198782045",
+      "organizationId": "org_1788198782045",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788198975520",
+      "organizationId": "org_1788198975520",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788199141183",
+      "organizationId": "org_1788199141182",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788204557255",
+      "organizationId": "org_1788204557255",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
     }
   ],
   "leads": [
@@ -1506,10 +1650,10 @@
         }
       ],
       "metrics": {
-        "runsCount": 66,
-        "leadsHelped": 72,
-        "hoursSaved": 31.1,
-        "revenueRecoveredKes": 183500
+        "runsCount": 74,
+        "leadsHelped": 80,
+        "hoursSaved": 35.1,
+        "revenueRecoveredKes": 211500
       },
       "createdAt": "2026-08-10T08:00:00Z",
       "lastRunAt": "12 mins ago",
@@ -1640,6 +1784,155 @@
     }
   ],
   "executions": [
+    {
+      "id": "exec_1788204557326",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788204543670",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "run_1788199174819",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEventId": "evt_1788199174819",
+      "triggerEvent": "Inquiry from Prospective Client (SIMULATED)",
+      "entityName": "Prospective Client",
+      "status": "completed",
+      "currentStepIndex": 4,
+      "stepsTotal": 4,
+      "logSummary": "Completed automated pipeline across WhatsApp, Sheets, and Calendar.",
+      "startedAt": "Just now",
+      "completedAt": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "exec_1788199164344",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788199141400",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "run_1788198981800",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEventId": "evt_1788198981800",
+      "triggerEvent": "Inquiry from Prospective Client (SIMULATED)",
+      "entityName": "Prospective Client",
+      "status": "completed",
+      "currentStepIndex": 4,
+      "stepsTotal": 4,
+      "logSummary": "Completed automated pipeline across WhatsApp, Sheets, and Calendar.",
+      "startedAt": "Just now",
+      "completedAt": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "exec_1788198979437",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788198975645",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "run_1788198810375",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEventId": "evt_1788198810374",
+      "triggerEvent": "Inquiry from Prospective Client (SIMULATED)",
+      "entityName": "Prospective Client",
+      "status": "completed",
+      "currentStepIndex": 4,
+      "stepsTotal": 4,
+      "logSummary": "Completed automated pipeline across WhatsApp, Sheets, and Calendar.",
+      "startedAt": "Just now",
+      "completedAt": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "exec_1788198790254",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788198782149",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
     {
       "id": "exec_1788183392924",
       "workflowId": "wf_lead_autopilot",
@@ -2352,6 +2645,176 @@
     }
   ],
   "activityLogs": [
+    {
+      "id": "log_1788204557326",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788204543670",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788199192903",
+      "organizationId": "org_james",
+      "runId": "run_1788199192903",
+      "type": "subscription_upgraded",
+      "channel": "mpesa",
+      "application": "Otomatizon Billing",
+      "title": "Plan upgraded to Growth (KES 999/mo)",
+      "description": "M-Pesa Receipt: QAH9012345. Higher quota unlocked (5 Automations & 300 Follow-ups/mo).",
+      "actionTakenByOtomatizon": "Safaricom M-Pesa STK subscription payment verified & plan upgraded.",
+      "businessResult": "Subscription active until 30/09/2026",
+      "entityName": "Kamau French & Academic Tutoring",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788199174819",
+      "organizationId": "org_james",
+      "runId": "run_1788199174819",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp",
+      "title": "New inquiry received: Prospective Client",
+      "description": "Processed by Otomatizon Intelligence (SIMULATED).",
+      "actionTakenByOtomatizon": "Inquiry received & syllabus sent via WhatsApp",
+      "businessResult": "Lead captured & verified in student roster",
+      "entityName": "Prospective Client",
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "log_1788199164345",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788199141400",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788198985619",
+      "organizationId": "org_james",
+      "runId": "run_1788198985619",
+      "type": "subscription_upgraded",
+      "channel": "mpesa",
+      "application": "Otomatizon Billing",
+      "title": "Plan upgraded to Growth (KES 999/mo)",
+      "description": "M-Pesa Receipt: QAH9012345. Higher quota unlocked (5 Automations & 300 Follow-ups/mo).",
+      "actionTakenByOtomatizon": "Safaricom M-Pesa STK subscription payment verified & plan upgraded.",
+      "businessResult": "Subscription active until 30/09/2026",
+      "entityName": "Kamau French & Academic Tutoring",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788198981800",
+      "organizationId": "org_james",
+      "runId": "run_1788198981800",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp",
+      "title": "New inquiry received: Prospective Client",
+      "description": "Processed by Otomatizon Intelligence (SIMULATED).",
+      "actionTakenByOtomatizon": "Inquiry received & syllabus sent via WhatsApp",
+      "businessResult": "Lead captured & verified in student roster",
+      "entityName": "Prospective Client",
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "log_1788198979437",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788198975645",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788198827313",
+      "organizationId": "org_james",
+      "runId": "run_1788198827313",
+      "type": "subscription_upgraded",
+      "channel": "mpesa",
+      "application": "Otomatizon Billing",
+      "title": "Plan upgraded to Growth (KES 999/mo)",
+      "description": "M-Pesa Receipt: QAH9012345. Higher quota unlocked (5 Automations & 300 Follow-ups/mo).",
+      "actionTakenByOtomatizon": "Safaricom M-Pesa STK subscription payment verified & plan upgraded.",
+      "businessResult": "Subscription active until 30/09/2026",
+      "entityName": "Kamau French & Academic Tutoring",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788198810375",
+      "organizationId": "org_james",
+      "runId": "run_1788198810375",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp",
+      "title": "New inquiry received: Prospective Client",
+      "description": "Processed by Otomatizon Intelligence (SIMULATED).",
+      "actionTakenByOtomatizon": "Inquiry received & syllabus sent via WhatsApp",
+      "businessResult": "Lead captured & verified in student roster",
+      "entityName": "Prospective Client",
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "log_1788198790254",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788198782150",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
     {
       "id": "log_1788183392924",
       "organizationId": "org_james",
@@ -3164,8 +3627,8 @@
       "organizationId": "org_james",
       "planId": "growth",
       "status": "active",
-      "currentPeriodStart": "2026-08-30T07:00:15.879Z",
-      "currentPeriodEnd": "2026-09-29T07:00:15.879Z",
+      "currentPeriodStart": "2026-08-31T17:59:52.903Z",
+      "currentPeriodEnd": "2026-09-30T17:59:52.903Z",
       "priceKesMonthly": 999
     },
     {
@@ -3500,6 +3963,42 @@
       "currentPeriodStart": "2026-08-31T13:36:27.833Z",
       "currentPeriodEnd": "2026-09-30T13:36:27.833Z",
       "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788198782045",
+      "organizationId": "org_1788198782045",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-31T17:53:02.045Z",
+      "currentPeriodEnd": "2026-09-30T17:53:02.045Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788198975520",
+      "organizationId": "org_1788198975520",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-31T17:56:15.520Z",
+      "currentPeriodEnd": "2026-09-30T17:56:15.520Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788199141183",
+      "organizationId": "org_1788199141182",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-31T17:59:01.183Z",
+      "currentPeriodEnd": "2026-09-30T17:59:01.183Z",
+      "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788204557255",
+      "organizationId": "org_1788204557255",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-08-31T19:29:17.255Z",
+      "currentPeriodEnd": "2026-09-30T19:29:17.255Z",
+      "priceKesMonthly": 499
     }
   ],
   "connections": [
@@ -3663,6 +4162,45 @@
     }
   ],
   "operationalEvents": [
+    {
+      "id": "evt_1788199174819",
+      "businessId": "prof_james_01",
+      "sourceAppId": "whatsapp_business",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "customer_inquiry_received",
+      "title": "Inquiry from Prospective Client",
+      "description": "Inbound customer action processed by Otomatizon Intelligence.",
+      "entityName": "Prospective Client",
+      "payload": {},
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "evt_1788198981800",
+      "businessId": "prof_james_01",
+      "sourceAppId": "whatsapp_business",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "customer_inquiry_received",
+      "title": "Inquiry from Prospective Client",
+      "description": "Inbound customer action processed by Otomatizon Intelligence.",
+      "entityName": "Prospective Client",
+      "payload": {},
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "evt_1788198810374",
+      "businessId": "prof_james_01",
+      "sourceAppId": "whatsapp_business",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "customer_inquiry_received",
+      "title": "Inquiry from Prospective Client",
+      "description": "Inbound customer action processed by Otomatizon Intelligence.",
+      "entityName": "Prospective Client",
+      "payload": {},
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
     {
       "id": "evt_1788078952300",
       "businessId": "prof_james_01",
@@ -3906,6 +4444,39 @@
     }
   ],
   "insights": [
+    {
+      "id": "ins_1788199174819",
+      "businessId": "prof_james_01",
+      "eventId": "evt_1788199174819",
+      "type": "friction_detected",
+      "title": "Intelligence evaluation for Prospective Client",
+      "description": "Evaluated customer_inquiry_received from whatsapp_business.",
+      "confidenceScore": 96,
+      "provenance": "SIMULATED",
+      "createdAt": "2026-08-31T17:59:34.818Z"
+    },
+    {
+      "id": "ins_1788198981800",
+      "businessId": "prof_james_01",
+      "eventId": "evt_1788198981800",
+      "type": "friction_detected",
+      "title": "Intelligence evaluation for Prospective Client",
+      "description": "Evaluated customer_inquiry_received from whatsapp_business.",
+      "confidenceScore": 96,
+      "provenance": "SIMULATED",
+      "createdAt": "2026-08-31T17:56:21.800Z"
+    },
+    {
+      "id": "ins_1788198810374",
+      "businessId": "prof_james_01",
+      "eventId": "evt_1788198810374",
+      "type": "friction_detected",
+      "title": "Intelligence evaluation for Prospective Client",
+      "description": "Evaluated customer_inquiry_received from whatsapp_business.",
+      "confidenceScore": 96,
+      "provenance": "SIMULATED",
+      "createdAt": "2026-08-31T17:53:30.374Z"
+    },
     {
       "id": "ins_1788044185645",
       "businessId": "prof_james_01",
@@ -4251,6 +4822,45 @@
     }
   ],
   "invoices": [
+    {
+      "id": "INV_1788199192903",
+      "organizationId": "org_james",
+      "organizationName": "Kamau French & Academic Tutoring",
+      "planId": "growth",
+      "planName": "Growth",
+      "amountKes": 999,
+      "paymentMethod": "Safaricom M-Pesa Express (STK Push)",
+      "mpesaReceiptNumber": "QAH9012345",
+      "issuedAt": "2026-08-31T17:59:52.903Z",
+      "status": "PAID",
+      "billingPeriod": "30 Days (Monthly Recurring)"
+    },
+    {
+      "id": "INV_1788198985619",
+      "organizationId": "org_james",
+      "organizationName": "Kamau French & Academic Tutoring",
+      "planId": "growth",
+      "planName": "Growth",
+      "amountKes": 999,
+      "paymentMethod": "Safaricom M-Pesa Express (STK Push)",
+      "mpesaReceiptNumber": "QAH9012345",
+      "issuedAt": "2026-08-31T17:56:25.619Z",
+      "status": "PAID",
+      "billingPeriod": "30 Days (Monthly Recurring)"
+    },
+    {
+      "id": "INV_1788198827313",
+      "organizationId": "org_james",
+      "organizationName": "Kamau French & Academic Tutoring",
+      "planId": "growth",
+      "planName": "Growth",
+      "amountKes": 999,
+      "paymentMethod": "Safaricom M-Pesa Express (STK Push)",
+      "mpesaReceiptNumber": "QAH9012345",
+      "issuedAt": "2026-08-31T17:53:47.313Z",
+      "status": "PAID",
+      "billingPeriod": "30 Days (Monthly Recurring)"
+    },
     {
       "id": "INV_1788073215879",
       "organizationId": "org_james",
