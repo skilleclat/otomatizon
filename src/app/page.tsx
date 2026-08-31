@@ -114,7 +114,7 @@ export default function AppRoot() {
 
   const handleOnboardingComplete = () => {
     setIsOnboardingOpen(false);
-    navigateTo("/app/report");
+    navigateTo("/app/apps");
   };
 
   const handleOpenAuth = (mode: "login" | "signup" = "signup") => {

@@ -374,12 +374,15 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 ))}
               </div>
 
-              <div className="pt-4 border-t border-[#EAE7DF] flex justify-end">
+              <div className="pt-4 border-t border-[#EAE7DF] flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span className="text-xs text-[#4A4B50]">
+                  Ready to link your WhatsApp, Google &amp; M-Pesa tools.
+                </span>
                 <button
                   onClick={handleFinishOnboarding}
-                  className={DS.btnPrimary}
+                  className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <span>Go to Command Center</span>
+                  <span>Connect Selected Apps Now</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>

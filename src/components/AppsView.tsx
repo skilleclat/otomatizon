@@ -295,12 +295,170 @@ export const AppsView: React.FC<AppsViewProps> = ({ onNavigateToAutomations }) =
         </div>
       </div>
 
-      {/* 2. SYSTEM HEALTH OVERVIEW & 8-STEP JOURNEY matching Reference Image 10 */}
+      {/* 2. LIVE APPLICATION CONNECTION WIZARD */}
+      <div className="p-6 sm:p-7 rounded-3xl bg-white border border-[#EAE7DF] shadow-sm space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EAE7DF] pb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse" />
+              <h2 className="text-lg font-bold text-[#121316]">
+                Connect Your Everyday Tools in 2 Minutes
+              </h2>
+            </div>
+            <p className="text-xs text-[#4A4B50] mt-0.5">
+              Link your actual WhatsApp, Google Workspace, and M-Pesa channels to make your business system live.
+            </p>
+          </div>
+
+          <span className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] text-xs font-mono font-bold self-start sm:self-auto">
+            Live Integration Ready
+          </span>
+        </div>
+
+        {/* 4 Interactive Connection Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          
+          {/* Card 1: WhatsApp */}
+          <div className="p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center">
+                  <MessageSquare className="w-4 h-4 text-emerald-600" />
+                </div>
+                <span className="text-[10px] font-mono font-bold text-[#15803D] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]">
+                  Connected
+                </span>
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-[#121316]">WhatsApp Business</h3>
+                <p className="text-[11px] text-[#75777E] font-mono mt-0.5">+254 712 882 109</p>
+              </div>
+              <p className="text-[11px] text-[#4A4B50] leading-relaxed">
+                Captures incoming student inquiries &amp; dispatches automated 24h follow-ups.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedAppId("whatsapp_business");
+                setIsConnectModalOpen(true);
+              }}
+              className="w-full py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <span>Configure &amp; Test Live</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+
+          {/* Card 2: Google Workspace (Sheets & Calendar) */}
+          <div className="p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center">
+                  <FileSpreadsheet className="w-4 h-4 text-blue-600" />
+                </div>
+                <span className="text-[10px] font-mono font-bold text-[#15803D] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]">
+                  Connected
+                </span>
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-[#121316]">Google Workspace</h3>
+                <p className="text-[11px] text-[#75777E] font-mono mt-0.5 truncate">kamau.french.tutor@gmail.com</p>
+              </div>
+              <p className="text-[11px] text-[#4A4B50] leading-relaxed">
+                Synchronizes Google Sheets rosters &amp; reads Google Calendar booking slots.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedAppId("google_sheets");
+                setIsConnectModalOpen(true);
+              }}
+              className="w-full py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <span>Connect OAuth2</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+
+          {/* Card 3: Safaricom M-Pesa */}
+          <div className="p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-300 flex items-center justify-center">
+                  <CreditCard className="w-4 h-4 text-emerald-700" />
+                </div>
+                <span className="text-[10px] font-mono font-bold text-[#15803D] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]">
+                  Connected
+                </span>
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-[#121316]">Safaricom M-Pesa</h3>
+                <p className="text-[11px] text-[#75777E] font-mono mt-0.5">Paybill: 247247</p>
+              </div>
+              <p className="text-[11px] text-[#4A4B50] leading-relaxed">
+                Sends automated STK Push payment requests &amp; generates instant M-Pesa receipts.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedAppId("mpesa");
+                setIsConnectModalOpen(true);
+              }}
+              className="w-full py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <span>Test STK Push</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+
+          {/* Card 4: Meta Pages (Facebook & Instagram) */}
+          <div className="p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="w-9 h-9 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center">
+                  <Mail className="w-4 h-4 text-purple-600" />
+                </div>
+                <span className="text-[10px] font-mono font-bold text-[#75777E] bg-white px-2 py-0.5 rounded-full border border-[#EAE7DF]">
+                  Available
+                </span>
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-[#121316]">Instagram &amp; Facebook</h3>
+                <p className="text-[11px] text-[#75777E] font-mono mt-0.5">Direct Message Webhooks</p>
+              </div>
+              <p className="text-[11px] text-[#4A4B50] leading-relaxed">
+                Captures inquiries sent via Instagram Direct &amp; Facebook Messenger pages.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedAppId("gmail");
+                setIsConnectModalOpen(true);
+              }}
+              className="w-full py-2 rounded-full bg-white hover:bg-[#FAF9F5] text-[#121316] text-xs font-bold font-mono transition-all border border-[#EAE7DF] shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <span>Connect Meta Pages</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      {/* 3. SYSTEM HEALTH OVERVIEW & 8-STEP JOURNEY */}
       <SystemHealthOverview onNavigateTab={(tab) => {
         if (tab === "automations" && onNavigateToAutomations) onNavigateToAutomations();
       }} />
 
-      {/* 3. THE VISUAL SYSTEM ARCHITECTURE MAP matching Step 3 Reference Image */}
+      {/* 4. THE VISUAL SYSTEM ARCHITECTURE MAP */}
       <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#EAE7DF] shadow-sm space-y-6">
         
         {/* Map Diagram: Left Inbound Nodes (3) -> Center Otomatizon Hub -> Right Action/Record Nodes (3) */}

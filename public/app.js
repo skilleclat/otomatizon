@@ -10004,12 +10004,15 @@ var _designsystem = require('@/lib/design-system');
                 ))
               )
 
-              , _react2.default.createElement('div', { className: "pt-4 border-t border-[#EAE7DF] flex justify-end"    ,}
+              , _react2.default.createElement('div', { className: "pt-4 border-t border-[#EAE7DF] flex flex-col sm:flex-row items-center justify-between gap-3"        ,}
+                , _react2.default.createElement('span', { className: "text-xs text-[#4A4B50]" ,}, "Ready to link your WhatsApp, Google & M-Pesa tools."
+
+                )
                 , _react2.default.createElement('button', {
                   onClick: handleFinishOnboarding,
-                  className: _designsystem.DS.btnPrimary,}
+                  className: "w-full sm:w-auto px-6 py-3 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"                   ,}
 
-                  , _react2.default.createElement('span', null, "Go to Command Center"   )
+                  , _react2.default.createElement('span', null, "Connect Selected Apps Now"   )
                   , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5" ,} )
                 )
               )
@@ -14891,12 +14894,170 @@ const systemsMapData = {
         )
       )
 
-      /* 2. SYSTEM HEALTH OVERVIEW & 8-STEP JOURNEY matching Reference Image 10 */
+      /* 2. LIVE APPLICATION CONNECTION WIZARD */
+      , _react2.default.createElement('div', { className: "p-6 sm:p-7 rounded-3xl bg-white border border-[#EAE7DF] shadow-sm space-y-5"       ,}
+        , _react2.default.createElement('div', { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EAE7DF] pb-4"        ,}
+          , _react2.default.createElement('div', null
+            , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+              , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-[#15803D] animate-pulse"    ,} )
+              , _react2.default.createElement('h2', { className: "text-lg font-bold text-[#121316]"  ,}, "Connect Your Everyday Tools in 2 Minutes"
+
+              )
+            )
+            , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] mt-0.5"  ,}, "Link your actual WhatsApp, Google Workspace, and M-Pesa channels to make your business system live."
+
+            )
+          )
+
+          , _react2.default.createElement('span', { className: "px-3 py-1 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] text-xs font-mono font-bold self-start sm:self-auto"           ,}, "Live Integration Ready"
+
+          )
+        )
+
+        /* 4 Interactive Connection Cards */
+        , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5"    ,}
+
+          /* Card 1: WhatsApp */
+          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all"          ,}
+            , _react2.default.createElement('div', { className: "space-y-2",}
+              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
+                , _react2.default.createElement('div', { className: "w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center"        ,}
+                  , _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4 text-emerald-600"  ,} )
+                )
+                , _react2.default.createElement('span', { className: "text-[10px] font-mono font-bold text-[#15803D] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]"         ,}, "Connected"
+
+                )
+              )
+              , _react2.default.createElement('div', null
+                , _react2.default.createElement('h3', { className: "text-xs font-bold text-[#121316]"  ,}, "WhatsApp Business" )
+                , _react2.default.createElement('p', { className: "text-[11px] text-[#75777E] font-mono mt-0.5"   ,}, "+254 712 882 109"   )
+              )
+              , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] leading-relaxed"  ,}, "Captures incoming student inquiries & dispatches automated 24h follow-ups."
+
+              )
+            )
+
+            , _react2.default.createElement('button', {
+              type: "button",
+              onClick: () => {
+                setSelectedAppId("whatsapp_business");
+                setIsConnectModalOpen(true);
+              },
+              className: "w-full py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"               ,}
+
+              , _react2.default.createElement('span', null, "Configure & Test Live"   )
+              , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3 h-3" ,} )
+            )
+          )
+
+          /* Card 2: Google Workspace (Sheets & Calendar) */
+          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all"          ,}
+            , _react2.default.createElement('div', { className: "space-y-2",}
+              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
+                , _react2.default.createElement('div', { className: "w-9 h-9 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center"        ,}
+                  , _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-4 h-4 text-blue-600"  ,} )
+                )
+                , _react2.default.createElement('span', { className: "text-[10px] font-mono font-bold text-[#15803D] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]"         ,}, "Connected"
+
+                )
+              )
+              , _react2.default.createElement('div', null
+                , _react2.default.createElement('h3', { className: "text-xs font-bold text-[#121316]"  ,}, "Google Workspace" )
+                , _react2.default.createElement('p', { className: "text-[11px] text-[#75777E] font-mono mt-0.5 truncate"    ,}, "kamau.french.tutor@gmail.com")
+              )
+              , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] leading-relaxed"  ,}, "Synchronizes Google Sheets rosters & reads Google Calendar booking slots."
+
+              )
+            )
+
+            , _react2.default.createElement('button', {
+              type: "button",
+              onClick: () => {
+                setSelectedAppId("google_sheets");
+                setIsConnectModalOpen(true);
+              },
+              className: "w-full py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"               ,}
+
+              , _react2.default.createElement('span', null, "Connect OAuth2" )
+              , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3 h-3" ,} )
+            )
+          )
+
+          /* Card 3: Safaricom M-Pesa */
+          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all"          ,}
+            , _react2.default.createElement('div', { className: "space-y-2",}
+              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
+                , _react2.default.createElement('div', { className: "w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-300 flex items-center justify-center"        ,}
+                  , _react2.default.createElement(_lucidereact.CreditCard, { className: "w-4 h-4 text-emerald-700"  ,} )
+                )
+                , _react2.default.createElement('span', { className: "text-[10px] font-mono font-bold text-[#15803D] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]"         ,}, "Connected"
+
+                )
+              )
+              , _react2.default.createElement('div', null
+                , _react2.default.createElement('h3', { className: "text-xs font-bold text-[#121316]"  ,}, "Safaricom M-Pesa" )
+                , _react2.default.createElement('p', { className: "text-[11px] text-[#75777E] font-mono mt-0.5"   ,}, "Paybill: 247247" )
+              )
+              , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] leading-relaxed"  ,}, "Sends automated STK Push payment requests & generates instant M-Pesa receipts."
+
+              )
+            )
+
+            , _react2.default.createElement('button', {
+              type: "button",
+              onClick: () => {
+                setSelectedAppId("mpesa");
+                setIsConnectModalOpen(true);
+              },
+              className: "w-full py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"               ,}
+
+              , _react2.default.createElement('span', null, "Test STK Push"  )
+              , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3 h-3" ,} )
+            )
+          )
+
+          /* Card 4: Meta Pages (Facebook & Instagram) */
+          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all"          ,}
+            , _react2.default.createElement('div', { className: "space-y-2",}
+              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
+                , _react2.default.createElement('div', { className: "w-9 h-9 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center"        ,}
+                  , _react2.default.createElement(_lucidereact.Mail, { className: "w-4 h-4 text-purple-600"  ,} )
+                )
+                , _react2.default.createElement('span', { className: "text-[10px] font-mono font-bold text-[#75777E] bg-white px-2 py-0.5 rounded-full border border-[#EAE7DF]"         ,}, "Available"
+
+                )
+              )
+              , _react2.default.createElement('div', null
+                , _react2.default.createElement('h3', { className: "text-xs font-bold text-[#121316]"  ,}, "Instagram & Facebook"  )
+                , _react2.default.createElement('p', { className: "text-[11px] text-[#75777E] font-mono mt-0.5"   ,}, "Direct Message Webhooks"  )
+              )
+              , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] leading-relaxed"  ,}, "Captures inquiries sent via Instagram Direct & Facebook Messenger pages."
+
+              )
+            )
+
+            , _react2.default.createElement('button', {
+              type: "button",
+              onClick: () => {
+                setSelectedAppId("gmail");
+                setIsConnectModalOpen(true);
+              },
+              className: "w-full py-2 rounded-full bg-white hover:bg-[#FAF9F5] text-[#121316] text-xs font-bold font-mono transition-all border border-[#EAE7DF] shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer"                 ,}
+
+              , _react2.default.createElement('span', null, "Connect Meta Pages"  )
+              , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3 h-3" ,} )
+            )
+          )
+
+        )
+      )
+
+      /* 3. SYSTEM HEALTH OVERVIEW & 8-STEP JOURNEY */
       , _react2.default.createElement(_SystemHealthOverview.SystemHealthOverview, { onNavigateTab: (tab) => {
         if (tab === "automations" && onNavigateToAutomations) onNavigateToAutomations();
       },} )
 
-      /* 3. THE VISUAL SYSTEM ARCHITECTURE MAP matching Step 3 Reference Image */
+      /* 4. THE VISUAL SYSTEM ARCHITECTURE MAP */
       , _react2.default.createElement('div', { className: "p-6 sm:p-8 rounded-3xl bg-white border border-[#EAE7DF] shadow-sm space-y-6"       ,}
 
         /* Map Diagram: Left Inbound Nodes (3) -> Center Otomatizon Hub -> Right Action/Record Nodes (3) */
@@ -18581,7 +18742,7 @@ var _store = require('@/lib/store');
 
   const handleOnboardingComplete = () => {
     setIsOnboardingOpen(false);
-    navigateTo("/app/report");
+    navigateTo("/app/apps");
   };
 
   const handleOpenAuth = (mode = "signup") => {
