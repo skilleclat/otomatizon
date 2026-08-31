@@ -267,6 +267,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onClick={() => {
                           setIsUserMenuOpen(false);
                           logout();
+                          if (onNavigateHome) {
+                            onNavigateHome();
+                          }
                         }}
                         className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-700 font-medium flex items-center gap-2 cursor-pointer transition-colors"
                       >

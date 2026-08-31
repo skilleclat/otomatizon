@@ -8559,6 +8559,11 @@ var _BrandLogo = require('@/components/BrandLogo');
   const otpInputRefs = _react.useRef([]);
 
   _react.useEffect.call(void 0, () => {
+    setMode(initialMode);
+    setMessage(null);
+  }, [initialMode, isOpen]);
+
+  _react.useEffect.call(void 0, () => {
     let timer = null;
     if (mode === "verify_otp" && resendCountdown > 0) {
       timer = setInterval(() => {
@@ -9468,6 +9473,9 @@ var _BrandLogo = require('@/components/BrandLogo');
                         onClick: () => {
                           setIsUserMenuOpen(false);
                           logout();
+                          if (onNavigateHome) {
+                            onNavigateHome();
+                          }
                         },
                         className: "w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-700 font-medium flex items-center gap-2 cursor-pointer transition-colors"            ,}
 
@@ -17838,6 +17846,7 @@ var _BrandLogo = require('@/components/BrandLogo');
 
 
 
+
 const DEMO_SCENARIOS = [
   {
     id: "tutoring",
@@ -17874,7 +17883,8 @@ const DEMO_SCENARIOS = [
  const LandingPage = ({
   onOpenOnboarding,
   onEnterDashboard,
-  onOpenCheckout
+  onOpenCheckout,
+  onTriggerAuth
 }) => {
   const [selectedScenarioIndex, setSelectedScenarioIndex] = _react.useState.call(void 0, 0);
   const [visitorInput, setVisitorInput] = _react.useState.call(void 0, DEMO_SCENARIOS[0].input);
@@ -17948,7 +17958,7 @@ const DEMO_SCENARIOS = [
           /* Right: Authentication & Primary Action */
           , _react2.default.createElement('div', { className: "flex items-center gap-2.5 shrink-0"   ,}
             , _react2.default.createElement('button', {
-              onClick: onEnterDashboard,
+              onClick: () => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard(),
               className: "text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer"          ,}
 , "Sign In"
 
@@ -18613,7 +18623,8 @@ const DEMO_SCENARIOS = [
           , _react2.default.createElement('div', { className: "flex items-center gap-6 font-medium"   ,}
             , _react2.default.createElement('a', { href: "#how-it-works", className: "hover:text-[#121316] transition-colors" ,}, "How it works"  )
             , _react2.default.createElement('a', { href: "#pricing", className: "hover:text-[#121316] transition-colors" ,}, "Pricing")
-            , _react2.default.createElement('button', { onClick: onOpenOnboarding, className: "hover:text-[#121316] transition-colors" ,}, "Product")
+            , _react2.default.createElement('button', { onClick: onOpenOnboarding, className: "hover:text-[#121316] transition-colors cursor-pointer"  ,}, "Product")
+            , _react2.default.createElement('button', { onClick: () => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard(), className: "hover:text-[#121316] transition-colors cursor-pointer"  ,}, "Sign In" )
             , _react2.default.createElement('span', { className: "text-[#8C8E96]",}, "© 2026" )
           )
         )
@@ -18765,7 +18776,8 @@ var _store = require('@/lib/store');
         , _react2.default.createElement(_LandingPage.LandingPage, {
           onOpenOnboarding: () => navigateTo("/onboarding"),
           onEnterDashboard: () => navigateTo("/app"),
-          onOpenCheckout: handleOpenCheckout,}
+          onOpenCheckout: handleOpenCheckout,
+          onTriggerAuth: (mode = "login") => handleOpenAuth(mode),}
         )
         , _react2.default.createElement(_OnboardingModal.OnboardingModal, {
           isOpen: isOnboardingOpen,

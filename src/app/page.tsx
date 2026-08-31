@@ -138,6 +138,7 @@ export default function AppRoot() {
           onOpenOnboarding={() => navigateTo("/onboarding")}
           onEnterDashboard={() => navigateTo("/app")}
           onOpenCheckout={handleOpenCheckout}
+          onTriggerAuth={(mode = "login") => handleOpenAuth(mode)}
         />
         <OnboardingModal
           isOpen={isOnboardingOpen}

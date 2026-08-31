@@ -58,6 +58,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
+    setMode(initialMode);
+    setMessage(null);
+  }, [initialMode, isOpen]);
+
+  useEffect(() => {
     let timer: any = null;
     if (mode === "verify_otp" && resendCountdown > 0) {
       timer = setInterval(() => {

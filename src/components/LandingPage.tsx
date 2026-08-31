@@ -20,6 +20,7 @@ interface LandingPageProps {
   onOpenOnboarding: () => void;
   onEnterDashboard: () => void;
   onOpenCheckout?: (planId: string) => void;
+  onTriggerAuth?: (mode?: "login" | "signup") => void;
 }
 
 interface DemoScenario {
@@ -69,7 +70,8 @@ const DEMO_SCENARIOS: DemoScenario[] = [
 export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenOnboarding,
   onEnterDashboard,
-  onOpenCheckout
+  onOpenCheckout,
+  onTriggerAuth
 }) => {
   const [selectedScenarioIndex, setSelectedScenarioIndex] = useState(0);
   const [visitorInput, setVisitorInput] = useState(DEMO_SCENARIOS[0].input);
@@ -143,7 +145,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* Right: Authentication & Primary Action */}
           <div className="flex items-center gap-2.5 shrink-0">
             <button
-              onClick={onEnterDashboard}
+              onClick={() => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard()}
               className="text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer"
             >
               Sign In
@@ -808,7 +810,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="flex items-center gap-6 font-medium">
             <a href="#how-it-works" className="hover:text-[#121316] transition-colors">How it works</a>
             <a href="#pricing" className="hover:text-[#121316] transition-colors">Pricing</a>
-            <button onClick={onOpenOnboarding} className="hover:text-[#121316] transition-colors">Product</button>
+            <button onClick={onOpenOnboarding} className="hover:text-[#121316] transition-colors cursor-pointer">Product</button>
+            <button onClick={() => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard()} className="hover:text-[#121316] transition-colors cursor-pointer">Sign In</button>
             <span className="text-[#8C8E96]">&copy; 2026</span>
           </div>
         </div>
