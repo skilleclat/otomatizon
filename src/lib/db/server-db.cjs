@@ -16,7 +16,7 @@ if (!fs.existsSync(DATA_DIR)) {
 let inMemoryDb = null;
 
 function getDbTargetFile() {
-  if (process.env.VERCEL) {
+  if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.VERCEL_ENV || process.env.NOW_REGION) {
     return path.join("/tmp", "otomatizon_db.json");
   }
   return DB_FILE;

@@ -18,7 +18,7 @@ const googleConnector = new GoogleWorkspaceConnector();
 const whatsAppConnector = new WhatsAppConnector();
 const mpesaConnector = new MpesaDarajaConnector();
 
-if (!process.env.VERCEL) {
+if (!process.env.VERCEL && !process.env.AWS_LAMBDA_FUNCTION_NAME && !process.env.VERCEL_ENV && !process.env.NOW_REGION) {
   try {
     persistentJobQueue.init();
     persistentJobQueue.startWorkerLoop(15000);
@@ -71,6 +71,12 @@ function verifyHmacSignature(payload, secret, receivedSignature) {
 }
 
 function parseJsonBody(req) {
+  if (req.body !== undefined && req.body !== null) {
+    if (typeof req.body === "object") return Promise.resolve(req.body);
+    if (typeof req.body === "string") {
+      try { return Promise.resolve(JSON.parse(req.body)); } catch { return Promise.resolve({}); }
+    }
+  }
   return new Promise((resolve, reject) => {
     let data = "";
     req.on("data", chunk => { data += chunk; });
@@ -82,32 +88,40 @@ function parseJsonBody(req) {
         reject(err);
       }
     });
+    req.on("error", err => reject(err));
   });
 }
 
 function sendJson(res, statusCode, data) {
-  res.writeHead(statusCode, { 
-    "Content-Type": "application/json",
-    "Cache-Control": "no-store"
-  });
+  if (!res.headersSent) {
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Cache-Control", "no-store");
+    res.statusCode = statusCode;
+  }
   res.end(JSON.stringify(data));
 }
 
 async function handleRequest(req, res) {
-  const clientIp = req.socket.remoteAddress || "127.0.0.1";
+  const clientIp = (req.headers && (req.headers["x-forwarded-for"] || req.headers["x-real-ip"])) || (req.socket && req.socket.remoteAddress) || "127.0.0.1";
 
   if (isRateLimited(clientIp)) {
-    res.writeHead(429, { "Content-Type": "application/json", "Retry-After": "60" });
+    if (!res.headersSent) {
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Retry-After", "60");
+      res.statusCode = 429;
+    }
     return res.end(JSON.stringify({ error: "Too many requests. Please try again later." }));
   }
 
   // Modern Security Headers
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("X-XSS-Protection", "1; mode=block");
-  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  if (!res.headersSent) {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("X-XSS-Protection", "1; mode=block");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  }
 
-  const [urlPath, queryString] = req.url.split("?");
+  const [urlPath, queryString] = (req.url || "/").split("?");
 
   // ==========================================
   // REST API ENDPOINTS
