@@ -359,7 +359,8 @@ function readDb() {
       inMemoryDb = JSON.parse(JSON.stringify(initialDb));
       return inMemoryDb;
     }
-    return initialDb;
+    inMemoryDb = JSON.parse(JSON.stringify(initialDb));
+    return inMemoryDb;
   }
   try {
     const raw = fs.readFileSync(targetFile, "utf8");

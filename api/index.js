@@ -9,8 +9,13 @@ export default async function handler(req, res) {
     return await handleRequest(req, res);
   } catch (err) {
     console.error("Vercel Serverless Function Error:", err);
-    res.statusCode = 500;
-    res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify({ error: "Internal Server Error", message: err.message }));
+    if (!res.headersSent) {
+      res.statusCode = 500;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ 
+        error: "Internal Server Error", 
+        message: err.message || "An unexpected error occurred in the serverless handler"
+      }));
+    }
   }
 }

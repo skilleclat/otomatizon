@@ -3,11 +3,7 @@
   "outputDirectory": "public",
   "rewrites": [
     {
-      "source": "/api/:match*",
-      "destination": "/api"
-    },
-    {
-      "source": "/:path*",
+      "source": "/((?!api/|.*\\..*).*)",
       "destination": "/index.html"
     }
   ],

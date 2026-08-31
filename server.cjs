@@ -1316,6 +1316,10 @@ async function handleRequest(req, res) {
   // ==========================================
   let filePath = path.join(PUBLIC_DIR, urlPath === "/" ? "index.html" : urlPath);
 
+  if (urlPath.startsWith("/api/")) {
+    return sendJson(res, 404, { error: "API route not found", path: urlPath });
+  }
+
   // Fallback to index.html for all SPA routes (/app, /login, /onboarding, etc.)
   if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
     filePath = path.join(PUBLIC_DIR, "index.html");
