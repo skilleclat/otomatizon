@@ -1362,7 +1362,7 @@ function startServer(port) {
   });
 }
 
-if (require.main === module) {
+if (require.main === module && !process.env.VERCEL && !process.env.AWS_LAMBDA_FUNCTION_NAME) {
   startServer(PORT);
 }
 
