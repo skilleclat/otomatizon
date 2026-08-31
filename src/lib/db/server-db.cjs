@@ -4,9 +4,22 @@ const path = require("path");
 const DATA_DIR = path.join(__dirname, "../../../data");
 const DB_FILE = path.join(DATA_DIR, "otomatizon_db.json");
 
-// Ensure data directory exists
+// Ensure data directory exists safely
 if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+  try {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  } catch (e) {
+    // Read-only filesystem in Vercel lambda
+  }
+}
+
+let inMemoryDb = null;
+
+function getDbTargetFile() {
+  if (process.env.VERCEL) {
+    return path.join("/tmp", "otomatizon_db.json");
+  }
+  return DB_FILE;
 }
 
 // Initial Database Structure
@@ -333,12 +346,23 @@ const initialDb = {
 };
 
 function readDb() {
-  if (!fs.existsSync(DB_FILE)) {
-    fs.writeFileSync(DB_FILE, JSON.stringify(initialDb, null, 2), "utf8");
+  if (inMemoryDb) {
+    return inMemoryDb;
+  }
+
+  const targetFile = getDbTargetFile();
+
+  if (!fs.existsSync(targetFile)) {
+    try {
+      fs.writeFileSync(targetFile, JSON.stringify(initialDb, null, 2), "utf8");
+    } catch (e) {
+      inMemoryDb = JSON.parse(JSON.stringify(initialDb));
+      return inMemoryDb;
+    }
     return initialDb;
   }
   try {
-    const raw = fs.readFileSync(DB_FILE, "utf8");
+    const raw = fs.readFileSync(targetFile, "utf8");
     const parsed = JSON.parse(raw);
     
     // Ensure connections array exists
@@ -382,6 +406,7 @@ function readDb() {
       });
     }
 
+    inMemoryDb = parsed;
     return parsed;
   } catch (err) {
     console.error("Error reading db file, restoring initialDb:", err);
@@ -390,11 +415,17 @@ function readDb() {
 }
 
 function writeDb(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf8");
+  inMemoryDb = data;
+  const targetFile = getDbTargetFile();
+  try {
+    fs.writeFileSync(targetFile, JSON.stringify(data, null, 2), "utf8");
+  } catch (e) {
+    // Keep in-memory on serverless read-only filesystem
+  }
 }
 
 module.exports = {
   readDb,
   writeDb,
-  getDbFilePath: () => DB_FILE
+  getDbFilePath: () => getDbTargetFile()
 };

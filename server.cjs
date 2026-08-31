@@ -18,8 +18,14 @@ const googleConnector = new GoogleWorkspaceConnector();
 const whatsAppConnector = new WhatsAppConnector();
 const mpesaConnector = new MpesaDarajaConnector();
 
-persistentJobQueue.init();
-persistentJobQueue.startWorkerLoop(15000);
+if (!process.env.VERCEL) {
+  try {
+    persistentJobQueue.init();
+    persistentJobQueue.startWorkerLoop(15000);
+  } catch (e) {
+    console.warn("Worker queue initialization skipped:", e.message);
+  }
+}
 
 let PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 const PUBLIC_DIR = path.join(__dirname, "public");

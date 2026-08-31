@@ -7,7 +7,7 @@
       "destination": "/api/index.js"
     },
     {
-      "source": "/((?!api|style\\.css|vendor\\.js|app\\.js|logo\\.png|logo-mark\\.png|logo-official\\.png|report-logo\\.png|intelligence-core-logo\\.png|favicon\\.ico).*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ],
