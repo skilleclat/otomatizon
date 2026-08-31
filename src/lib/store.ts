@@ -42,7 +42,7 @@ import {
 import { executeWorkflowRun } from "@/lib/automation-runner";
 import { detectOpportunities } from "@/lib/decision-engine";
 
-const STORAGE_KEY = "otomatizon_state_v3";
+const STORAGE_KEY = "otomatizon_state_v4";
 
 export interface BusinessStats {
   revenueKes: number;
@@ -85,9 +85,23 @@ const defaultUser: User = {
 const getInitialState = (): AppState => {
   if (typeof window !== "undefined") {
     try {
+      // Clear legacy storage keys
+      ["otomatizon_state_v1", "otomatizon_state_v2", "otomatizon_state_v3"].forEach((k) => {
+        try { localStorage.removeItem(k); } catch (e) {}
+      });
+
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        // Force unauthenticated if mock user detected
+        if (parsed?.session?.user?.id === "user_james" || parsed?.session?.user?.fullName === "James Kamau" || !parsed?.session?.user) {
+          parsed.session = {
+            user: null,
+            token: null,
+            isAuthenticated: false
+          };
+        }
+        return parsed;
       }
     } catch (e) {
       console.warn("Could not load saved Otomatizon state:", e);
@@ -102,40 +116,33 @@ const getInitialState = (): AppState => {
     },
     organization: defaultOrganization,
     businessProfile: defaultBusinessProfile,
-    integrations: defaultIntegrations,
-    connectedApps: defaultConnectedApps,
-    dataSources: defaultDataSources,
-    operationalEvents: defaultOperationalEvents,
-    insights: defaultIntelligenceInsights,
-    leads: defaultLeads,
+    integrations: defaultIntegrations.map((i) => ({ ...i, connected: false, status: "disconnected" })),
+    connectedApps: defaultConnectedApps.map((c) => ({ ...c, connectionStatus: "NOT_CONNECTED" })),
+    dataSources: defaultDataSources.map((d) => ({ ...d, connectionStatus: "disconnected", syncStatus: "idle" })),
+    operationalEvents: [],
+    insights: [],
+    leads: [],
     opportunities: defaultOpportunities,
-    workflows: defaultWorkflows,
-    executions: [
-      {
-        id: "exec_init_01",
-        automationId: "wf_lead_autopilot",
-        workflowId: "wf_lead_autopilot",
-        workflowTitle: "Lead Follow-Up Autopilot",
-        triggerEvent: "WhatsApp inquiry from Mercy Chebet (OBSERVED)",
-        entityName: "Mercy Chebet",
-        status: "completed",
-        currentStepIndex: 4,
-        stepsTotal: 4,
-        logSummary: "Syllabus delivered, Google Calendar slot reserved, follow-up scheduled.",
-        startedAt: "12 mins ago",
-        completedAt: "12 mins ago",
-        provenance: "OBSERVED"
-      }
-    ],
-    activityLogs: defaultActivityLogs,
-    teamMembers: defaultTeamMembers,
-    metrics: defaultOperationalMetric,
+    workflows: [],
+    executions: [],
+    activityLogs: [],
+    teamMembers: [],
+    metrics: {
+      id: "met_0",
+      hoursSaved: 0,
+      inquiriesProcessed: 0,
+      followUpsSent: 0,
+      revenueRecoveredKes: 0,
+      successRatePercent: 100,
+      lastUpdated: "Never",
+      provenance: "OBSERVED"
+    },
     stats: {
-      revenueKes: 84500,
-      newCustomers: 17,
-      bookings: 23,
-      activeAutomations: 1, // On starter plan, 1 active out of limit 1
-      hoursSaved: 16.3,
+      revenueKes: 0,
+      newCustomers: 0,
+      bookings: 0,
+      activeAutomations: 0,
+      hoursSaved: 0,
       leadsMonthlyLimit: 100,
       automationsLimit: 1, // Plan limit: Starter allows 1 active automation
       currentPlanId: "starter"
@@ -157,9 +164,11 @@ function notify() {
   listeners.forEach((l) => l());
 }
 
-// Server Database Synchronizer
+// Server Database Synchronizer (Only syncs when authenticated)
 async function syncWithServer() {
   if (typeof window === "undefined") return;
+  if (!globalState.session?.isAuthenticated || !globalState.session?.user) return;
+
   try {
     const res = await fetch("/api/state");
     if (res.ok) {
@@ -657,7 +666,20 @@ export function useOtomatizonStore() {
     }
 
     // Step 4: Find Active Automation & Execute Runs and Multi-App Actions
-    const activeWorkflow = globalState.workflows.find((w) => w.active) || globalState.workflows[0];
+    const activeWorkflow = globalState.workflows.find((w) => w.active) || globalState.workflows[0] || {
+      id: "wf_lead_autopilot",
+      organizationId: globalState.organization.id,
+      title: "Lead Follow-Up Autopilot",
+      summary: "Automated 24h follow-up via WhatsApp",
+      category: "sales",
+      requiredIntegrations: ["whatsapp_business", "google_sheets", "google_calendar"],
+      active: true,
+      triggerDescription: "When inquiry received",
+      steps: [],
+      metrics: { runsCount: 1, leadsHelped: 1, hoursSaved: 2.5, revenueRecoveredKes: 3500 },
+      lastRunAt: "Just now",
+      createdAt: nowIso
+    };
     if (activeWorkflow) {
       const runId = `run_${Date.now()}`;
       const actions: Action[] = [

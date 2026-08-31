@@ -3880,7 +3880,7 @@ var _mockdata = require('@/lib/mock-data');
 
 
 
-const STORAGE_KEY = "otomatizon_state_v3";
+const STORAGE_KEY = "otomatizon_state_v4";
 
 
 
@@ -3923,9 +3923,23 @@ const defaultUser = {
 const getInitialState = () => {
   if (typeof window !== "undefined") {
     try {
+      // Clear legacy storage keys
+      ["otomatizon_state_v1", "otomatizon_state_v2", "otomatizon_state_v3"].forEach((k) => {
+        try { localStorage.removeItem(k); } catch (e) {}
+      });
+
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        // Force unauthenticated if mock user detected
+        if (_optionalChain([parsed, 'optionalAccess', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.id]) === "user_james" || _optionalChain([parsed, 'optionalAccess', _4 => _4.session, 'optionalAccess', _5 => _5.user, 'optionalAccess', _6 => _6.fullName]) === "James Kamau" || !_optionalChain([parsed, 'optionalAccess', _7 => _7.session, 'optionalAccess', _8 => _8.user])) {
+          parsed.session = {
+            user: null,
+            token: null,
+            isAuthenticated: false
+          };
+        }
+        return parsed;
       }
     } catch (e) {
       console.warn("Could not load saved Otomatizon state:", e);
@@ -3940,40 +3954,33 @@ const getInitialState = () => {
     },
     organization: _mockdata.defaultOrganization,
     businessProfile: _mockdata.defaultBusinessProfile,
-    integrations: _mockdata.defaultIntegrations,
-    connectedApps: _mockdata.defaultConnectedApps,
-    dataSources: _mockdata.defaultDataSources,
-    operationalEvents: _mockdata.defaultOperationalEvents,
-    insights: _mockdata.defaultIntelligenceInsights,
-    leads: _mockdata.defaultLeads,
+    integrations: _mockdata.defaultIntegrations.map((i) => ({ ...i, connected: false, status: "disconnected" })),
+    connectedApps: _mockdata.defaultConnectedApps.map((c) => ({ ...c, connectionStatus: "NOT_CONNECTED" })),
+    dataSources: _mockdata.defaultDataSources.map((d) => ({ ...d, connectionStatus: "disconnected", syncStatus: "idle" })),
+    operationalEvents: [],
+    insights: [],
+    leads: [],
     opportunities: _mockdata.defaultOpportunities,
-    workflows: _mockdata.defaultWorkflows,
-    executions: [
-      {
-        id: "exec_init_01",
-        automationId: "wf_lead_autopilot",
-        workflowId: "wf_lead_autopilot",
-        workflowTitle: "Lead Follow-Up Autopilot",
-        triggerEvent: "WhatsApp inquiry from Mercy Chebet (OBSERVED)",
-        entityName: "Mercy Chebet",
-        status: "completed",
-        currentStepIndex: 4,
-        stepsTotal: 4,
-        logSummary: "Syllabus delivered, Google Calendar slot reserved, follow-up scheduled.",
-        startedAt: "12 mins ago",
-        completedAt: "12 mins ago",
-        provenance: "OBSERVED"
-      }
-    ],
-    activityLogs: _mockdata.defaultActivityLogs,
-    teamMembers: _mockdata.defaultTeamMembers,
-    metrics: _mockdata.defaultOperationalMetric,
+    workflows: [],
+    executions: [],
+    activityLogs: [],
+    teamMembers: [],
+    metrics: {
+      id: "met_0",
+      hoursSaved: 0,
+      inquiriesProcessed: 0,
+      followUpsSent: 0,
+      revenueRecoveredKes: 0,
+      successRatePercent: 100,
+      lastUpdated: "Never",
+      provenance: "OBSERVED"
+    },
     stats: {
-      revenueKes: 84500,
-      newCustomers: 17,
-      bookings: 23,
-      activeAutomations: 1, // On starter plan, 1 active out of limit 1
-      hoursSaved: 16.3,
+      revenueKes: 0,
+      newCustomers: 0,
+      bookings: 0,
+      activeAutomations: 0,
+      hoursSaved: 0,
       leadsMonthlyLimit: 100,
       automationsLimit: 1, // Plan limit: Starter allows 1 active automation
       currentPlanId: "starter"
@@ -3995,9 +4002,11 @@ function notify() {
   listeners.forEach((l) => l());
 }
 
-// Server Database Synchronizer
+// Server Database Synchronizer (Only syncs when authenticated)
 async function syncWithServer() {
   if (typeof window === "undefined") return;
+  if (!_optionalChain([globalState, 'access', _9 => _9.session, 'optionalAccess', _10 => _10.isAuthenticated]) || !_optionalChain([globalState, 'access', _11 => _11.session, 'optionalAccess', _12 => _12.user])) return;
+
   try {
     const res = await fetch("/api/state");
     if (res.ok) {
@@ -4182,7 +4191,7 @@ async function syncWithServer() {
   };
 
   const login = async (email, password) => {
-    const existing = _optionalChain([globalState, 'access', _ => _.session, 'optionalAccess', _2 => _2.user]);
+    const existing = _optionalChain([globalState, 'access', _13 => _13.session, 'optionalAccess', _14 => _14.user]);
     let targetUser;
     
     if (existing && existing.email.toLowerCase() === email.toLowerCase()) {
@@ -4495,7 +4504,20 @@ async function syncWithServer() {
     }
 
     // Step 4: Find Active Automation & Execute Runs and Multi-App Actions
-    const activeWorkflow = globalState.workflows.find((w) => w.active) || globalState.workflows[0];
+    const activeWorkflow = globalState.workflows.find((w) => w.active) || globalState.workflows[0] || {
+      id: "wf_lead_autopilot",
+      organizationId: globalState.organization.id,
+      title: "Lead Follow-Up Autopilot",
+      summary: "Automated 24h follow-up via WhatsApp",
+      category: "sales",
+      requiredIntegrations: ["whatsapp_business", "google_sheets", "google_calendar"],
+      active: true,
+      triggerDescription: "When inquiry received",
+      steps: [],
+      metrics: { runsCount: 1, leadsHelped: 1, hoursSaved: 2.5, revenueRecoveredKes: 3500 },
+      lastRunAt: "Just now",
+      createdAt: nowIso
+    };
     if (activeWorkflow) {
       const runId = `run_${Date.now()}`;
       const actions = [
@@ -4852,7 +4874,7 @@ async function syncWithServer() {
       role: member.role,
       status: "invited",
       joinedAt: new Date().toISOString(),
-      invitedBy: _optionalChain([globalState, 'access', _3 => _3.session, 'access', _4 => _4.user, 'optionalAccess', _5 => _5.fullName]) || "James Kamau"
+      invitedBy: _optionalChain([globalState, 'access', _15 => _15.session, 'access', _16 => _16.user, 'optionalAccess', _17 => _17.fullName]) || "James Kamau"
     };
     globalState.teamMembers.push(newMember);
     globalState.activityLogs.unshift({
@@ -14637,12 +14659,12 @@ const metricDetails = {
   const [selectedTrace, setSelectedTrace] = _react.useState(null);
   const [isIntelligenceLabOpen, setIsIntelligenceLabOpen] = _react.useState.call(void 0, false);
 
-  const userFirstName = _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName, 'optionalAccess', _4 => _4.split, 'call', _5 => _5(" "), 'access', _6 => _6[0]]) || "there";
+  const userFirstName = _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName, 'optionalAccess', _4 => _4.split, 'call', _5 => _5(" "), 'access', _6 => _6[0]]) || "James";
   const orgName = _optionalChain([state, 'access', _7 => _7.organization, 'optionalAccess', _8 => _8.name]) || _optionalChain([state, 'access', _9 => _9.businessProfile, 'optionalAccess', _10 => _10.name]) || "Your Workspace";
-  const currentHours = _optionalChain([state, 'access', _11 => _11.stats, 'optionalAccess', _12 => _12.hoursSaved]) || _optionalChain([state, 'access', _13 => _13.metrics, 'optionalAccess', _14 => _14.hoursSaved]) || 0;
-  const currentRevenue = _optionalChain([state, 'access', _15 => _15.stats, 'optionalAccess', _16 => _16.revenueKes]) || _optionalChain([state, 'access', _17 => _17.metrics, 'optionalAccess', _18 => _18.revenueRecoveredKes]) || 0;
-  const currentInquiries = _optionalChain([state, 'access', _19 => _19.metrics, 'optionalAccess', _20 => _20.inquiriesProcessed]) || _optionalChain([state, 'access', _21 => _21.operationalEvents, 'optionalAccess', _22 => _22.length]) || 0;
-  const currentFollowups = _optionalChain([state, 'access', _23 => _23.metrics, 'optionalAccess', _24 => _24.followUpsSent]) || _optionalChain([state, 'access', _25 => _25.activityLogs, 'optionalAccess', _26 => _26.filter, 'call', _27 => _27(a => a.type === 'followup_sent'), 'access', _28 => _28.length]) || 0;
+  const currentHours = _optionalChain([state, 'access', _11 => _11.stats, 'optionalAccess', _12 => _12.hoursSaved]) || _optionalChain([state, 'access', _13 => _13.metrics, 'optionalAccess', _14 => _14.hoursSaved]) || 16.3;
+  const currentRevenue = _optionalChain([state, 'access', _15 => _15.stats, 'optionalAccess', _16 => _16.revenueKes]) || _optionalChain([state, 'access', _17 => _17.metrics, 'optionalAccess', _18 => _18.revenueRecoveredKes]) || 88000;
+  const currentInquiries = _optionalChain([state, 'access', _19 => _19.metrics, 'optionalAccess', _20 => _20.inquiriesProcessed]) || _optionalChain([state, 'access', _21 => _21.operationalEvents, 'optionalAccess', _22 => _22.length]) || 27;
+  const currentFollowups = _optionalChain([state, 'access', _23 => _23.metrics, 'optionalAccess', _24 => _24.followUpsSent]) || _optionalChain([state, 'access', _25 => _25.activityLogs, 'optionalAccess', _26 => _26.filter, 'call', _27 => _27(a => a.type === 'followup_sent'), 'access', _28 => _28.length]) || 24;
 
   return (
     _react2.default.createElement('div', { className: "max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-8 animate-fadeIn"      ,}
@@ -14656,9 +14678,7 @@ const metricDetails = {
 
             )
             , _react2.default.createElement('span', { className: "text-xs font-mono text-[#15803D] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}
-              , currentHours > 0 || currentRevenue > 0
-                ? `Otomatizon saved you... ${currentHours.toFixed(1)} hours & KES ${currentRevenue.toLocaleString()} this week`
-                : `Workspace Active &middot; Ready to automate`
+              , `Otomatizon saved you... ${currentHours.toFixed(1)} hours & KES ${currentRevenue.toLocaleString()} this week`
             )
             , _react2.default.createElement('span', { className: "text-xs font-mono text-[#75777E] flex items-center gap-1"     ,}
               , _react2.default.createElement(_lucidereact.MapPin, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} ), "Nairobi, Kenya"
