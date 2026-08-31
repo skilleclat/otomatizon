@@ -8723,6 +8723,9 @@ var _BrandLogo = require('@/components/BrandLogo');
   const [resendCountdown, setResendCountdown] = _react.useState(45);
   const otpInputRefs = _react.useRef([]);
 
+  const [googleEmail, setGoogleEmail] = _react.useState.call(void 0, "");
+  const [googleName, setGoogleName] = _react.useState.call(void 0, "");
+
   _react.useEffect.call(void 0, () => {
     setMode(initialMode);
     setMessage(null);
@@ -8740,49 +8743,54 @@ var _BrandLogo = require('@/components/BrandLogo');
 
   if (!isOpen) return null;
 
-  const handleFillDemo = (demoType) => {
-    if (demoType === "owner") {
-      setFullName("James Kamau");
-      setBusinessName("Kamau French & Academic Tutoring");
-      setEmail("james@otomatizon.co.ke");
-      setPhone("+254 722 000 123");
-      setPassword("NairobiSecure2026!");
+  const handleGoogleAuth = () => {
+    if (email.trim() && isValidEmail(email)) {
+      setGoogleEmail(email.trim());
+      setGoogleName(fullName.trim() || email.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase()));
+      performGoogleSignIn(email.trim(), fullName.trim() || email.split("@")[0]);
     } else {
-      setFullName("Sarah Njeri");
-      setBusinessName("Nairobi Elite Coaching Practice");
-      setEmail("sarah.njeri@otomatizon.co.ke");
-      setPhone("+254 718 234 567");
-      setPassword("KenyaTutoring2026!");
+      setMode("google_picker");
+      setMessage(null);
     }
-    setMessage({ type: "success", text: "Demo credentials loaded. Tap button below to continue." });
   };
 
-  const handleGoogleAuth = () => {
+  const performGoogleSignIn = (gEmail, gName) => {
     setIsGoogleLoading(true);
     setMessage(null);
 
     setTimeout(() => {
-      // Dynamic Google OAuth 2.0 Identity Resolution
-      const userGoogleEmail = email || (typeof window !== "undefined" && window.prompt ? window.prompt("Enter your Google Account email:", "user@gmail.com") : null) || "user@gmail.com";
-      const userGoogleName = fullName || userGoogleEmail.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
-      const userBusiness = businessName || `${userGoogleName}'s Workspace`;
+      const resolvedName = gName || gEmail.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
+      const resolvedBusiness = businessName || `${resolvedName}'s Workspace`;
 
       const googleUser = {
-        fullName: userGoogleName,
-        email: userGoogleEmail,
+        fullName: resolvedName,
+        email: gEmail,
         phone: phone || "+254 700 000 000",
         password: "google_oauth_authenticated_session",
-        businessName: userBusiness
+        businessName: resolvedBusiness
       };
 
       signup(googleUser);
       setIsGoogleLoading(false);
-      setMessage({ type: "success", text: `Authenticated via Google (${googleUser.email}). Launching your workspace...` });
+      setMessage({ type: "success", text: `Authenticated via Google (${googleUser.email})! Returning to landing page...` });
       
       setTimeout(() => {
         onSuccess();
       }, 100);
     }, 120);
+  };
+
+  const handleGoogleSubmitDirect = (e) => {
+    e.preventDefault();
+    if (!googleEmail.trim()) {
+      setMessage({ type: "error", text: "Please enter your Google Account email." });
+      return;
+    }
+    if (!isValidEmail(googleEmail)) {
+      setMessage({ type: "error", text: "Please enter a valid Google Account email (e.g. name@gmail.com)." });
+      return;
+    }
+    performGoogleSignIn(googleEmail.trim(), googleName.trim());
   };
 
   const isValidEmail = (em) => {
@@ -8950,7 +8958,7 @@ var _BrandLogo = require('@/components/BrandLogo');
         )
 
         /* Mode Switcher Pills (Sign In / Sign Up) */
-        , mode !== "forgot" && mode !== "verify_otp" && (
+        , mode !== "forgot" && mode !== "verify_otp" && mode !== "google_picker" && (
           _react2.default.createElement('div', { className: "px-6 pt-5" ,}
             , _react2.default.createElement('div', { className: "grid grid-cols-2 p-1 bg-[#F4F2EB] rounded-full border border-[#EAE7DF] text-xs font-mono font-bold"         ,}
               , _react2.default.createElement('button', {
@@ -8996,9 +9004,91 @@ var _BrandLogo = require('@/components/BrandLogo');
         )
 
         /* ========================================================================= */
+        /* VIEW 0: GOOGLE ACCOUNT CHOOSER (NO BROWSER PROMPT) */
+        /* ========================================================================= */
+        , mode === "google_picker" && (
+          _react2.default.createElement('div', { className: "p-6 sm:p-7 space-y-5 text-xs animate-fadeIn"    ,}
+            , _react2.default.createElement('div', { className: "text-center space-y-2" ,}
+              , _react2.default.createElement('div', { className: "w-12 h-12 rounded-full bg-white border border-[#EAE7DF] shadow-xs flex items-center justify-center mx-auto"          ,}
+                , _react2.default.createElement('svg', { className: "w-6 h-6 shrink-0"  , viewBox: "0 0 24 24"   ,}
+                  , _react2.default.createElement('path', { fill: "#4285F4", d: "M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"      ,} )
+                  , _react2.default.createElement('path', { fill: "#34A853", d: "M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"            ,} )
+                  , _react2.default.createElement('path', { fill: "#FBBC05", d: "M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"         ,} )
+                  , _react2.default.createElement('path', { fill: "#EA4335", d: "M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"                   ,} )
+                )
+              )
+              , _react2.default.createElement('h3', { className: "text-lg font-extrabold text-[#121316] tracking-tight"   ,}, "Sign in with Google"
+
+              )
+              , _react2.default.createElement('p', { className: "text-[#4A4B50] text-xs max-w-xs mx-auto"   ,}, "Enter your Google / Gmail account to authenticate with your Otomatizon workspace."
+
+              )
+            )
+
+            , _react2.default.createElement('form', { onSubmit: handleGoogleSubmitDirect, className: "space-y-3.5",}
+              , _react2.default.createElement('div', null
+                , _react2.default.createElement('label', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-1"      ,}, "Google Account Email *"
+
+                )
+                , _react2.default.createElement('div', { className: "relative",}
+                  , _react2.default.createElement(_lucidereact.Mail, { className: "w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2"      ,} )
+                  , _react2.default.createElement('input', {
+                    type: "email",
+                    required: true,
+                    value: googleEmail,
+                    onChange: (e) => setGoogleEmail(e.target.value),
+                    placeholder: "your.email@gmail.com",
+                    className: `${_designsystem.DS.input} pl-10`,
+                    autoFocus: true,}
+                  )
+                )
+              )
+
+              , _react2.default.createElement('div', null
+                , _react2.default.createElement('label', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-1"      ,}, "Your Full Name"
+
+                )
+                , _react2.default.createElement('div', { className: "relative",}
+                  , _react2.default.createElement(_lucidereact.User, { className: "w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2"      ,} )
+                  , _react2.default.createElement('input', {
+                    type: "text",
+                    value: googleName,
+                    onChange: (e) => setGoogleName(e.target.value),
+                    placeholder: "e.g. Sarah Mwangi"  ,
+                    className: `${_designsystem.DS.input} pl-10`,}
+                  )
+                )
+              )
+
+              , _react2.default.createElement('div', { className: "pt-2 space-y-2" ,}
+                , _react2.default.createElement('button', {
+                  type: "submit",
+                  disabled: isGoogleLoading,
+                  className: "w-full py-3.5 rounded-full bg-[#121316] hover:bg-[#002E25] text-white text-xs font-bold font-mono transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"                 ,}
+
+                  , isGoogleLoading ? (
+                    _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-4 h-4 animate-spin text-emerald-400"   ,} )
+                  ) : (
+                    _react2.default.createElement('span', null, "Continue with Google →"   )
+                  )
+                )
+
+                , _react2.default.createElement('button', {
+                  type: "button",
+                  onClick: () => { setMode("login"); setMessage(null); },
+                  className: "w-full py-2.5 rounded-full bg-transparent hover:bg-[#F4F2EB] text-[#75777E] hover:text-[#121316] text-xs font-semibold font-mono transition-all cursor-pointer"           ,}
+, "Back to standard login"
+
+                )
+              )
+            )
+          )
+        )
+
+        /* ========================================================================= */
         /* VIEW 1: SIGN IN / SIGN UP FORMS */
         /* ========================================================================= */
-        , mode !== "verify_otp" && mode !== "forgot" && (
+        , mode !== "verify_otp" && mode !== "forgot" && mode !== "google_picker" && (
           _react2.default.createElement('div', { className: "p-6 sm:p-7 space-y-4 text-xs"   ,}
 
             /* 1. Continue with Google Button */
@@ -9045,24 +9135,6 @@ var _BrandLogo = require('@/components/BrandLogo');
               , _react2.default.createElement('div', { className: "flex-grow border-t border-[#EAE7DF]"  ,})
             )
 
-            /* Quick Demo Credentials Helper */
-            , _react2.default.createElement('div', { className: "flex items-center justify-between p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]"       ,}
-              , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
-                , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
-                , _react2.default.createElement('span', { className: "text-[11px] font-bold text-[#121316]"  ,}, "Testing Otomatizon?"
-
-                )
-              )
-              , _react2.default.createElement('button', {
-                type: "button",
-                onClick: () => handleFillDemo(mode === "signup" ? "tutor" : "owner"),
-                className: "text-[11px] font-mono font-bold text-[#15803D] hover:underline cursor-pointer flex items-center gap-1"        ,}
-
-                , _react2.default.createElement('span', null, "1-Click Demo Fill"  )
-                , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3 h-3" ,} )
-              )
-            )
-
             /* Form Fields */
             , _react2.default.createElement('form', { onSubmit: mode === "signup" ? handleSignupSubmit : handleLoginSubmit, className: "space-y-3.5",}
               , mode === "signup" && (
@@ -9078,7 +9150,7 @@ var _BrandLogo = require('@/components/BrandLogo');
                         required: true,
                         value: fullName,
                         onChange: (e) => setFullName(e.target.value),
-                        placeholder: "e.g. James Kamau"  ,
+                        placeholder: "e.g. Sarah Mwangi"  ,
                         className: `${_designsystem.DS.input} pl-10`,}
                       )
                     )
@@ -9094,7 +9166,7 @@ var _BrandLogo = require('@/components/BrandLogo');
                         type: "text",
                         value: businessName,
                         onChange: (e) => setBusinessName(e.target.value),
-                        placeholder: "e.g. Kamau French & Exam Tutoring"     ,
+                        placeholder: "e.g. Mwangi Consulting Practice"   ,
                         className: `${_designsystem.DS.input} pl-10`,}
                       )
                     )
@@ -9113,7 +9185,7 @@ var _BrandLogo = require('@/components/BrandLogo');
                     required: true,
                     value: email,
                     onChange: (e) => setEmail(e.target.value),
-                    placeholder: "james.kamau@gmail.com",
+                    placeholder: "your.email@gmail.com",
                     className: `${_designsystem.DS.input} pl-10`,}
                   )
                 )
@@ -9130,7 +9202,7 @@ var _BrandLogo = require('@/components/BrandLogo');
                       type: "tel",
                       value: phone,
                       onChange: (e) => setPhone(e.target.value),
-                      placeholder: "+254 722 000 123"   ,
+                      placeholder: "+254 712 345 678"   ,
                       className: `${_designsystem.DS.input} pl-10`,}
                     )
                   )
@@ -9181,12 +9253,10 @@ var _BrandLogo = require('@/components/BrandLogo');
                   , isLoading ? (
                     _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-4 h-4 animate-spin"  ,} )
                   ) : (
-                    _react2.default.createElement(_react2.default.Fragment, null
-                      , _react2.default.createElement('span', null
-                        , mode === "signup" 
-                          ? "Continue to Email Verification &rarr;" 
-                          : "Sign In to Workspace &rarr;"
-                      )
+                    _react2.default.createElement('span', null
+                      , mode === "signup" 
+                        ? "Continue to Email Verification →" 
+                        : "Sign In to Workspace →"
                     )
                   )
                 )
