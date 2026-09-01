@@ -199,11 +199,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           password,
           businessName: businessName || `${fullName}'s Workspace`
         });
-        setMessage({ type: "success", text: "Email verified & authenticated! Returning to landing page..." });
+        setMessage({ type: "success", text: "Compte vérifié ! Redirection vers votre tableau de bord..." });
         setTimeout(() => {
           setIsLoading(false);
           onSuccess();
-        }, 100);
+        }, 120);
       } else {
         setMessage({ type: "error", text: "Invalid 6-digit verification code. Please check your code or tap Autofill." });
         setIsLoading(false);
@@ -609,10 +609,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <KeyRound className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-extrabold text-[#121316] tracking-tight">
-                Verify Your Work Email
+                Vérification du code de sécurité
               </h3>
               <p className="text-[#4A4B50] text-xs max-w-xs mx-auto">
-                We sent a 6-digit security code to <strong className="text-[#121316]">{email}</strong> to verify your account identity.
+                Un code de vérification à 6 chiffres a été envoyé au <strong className="text-[#121316]">{phone || email}</strong>.
               </p>
             </div>
 
@@ -620,10 +620,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <div className="p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#A7F3D0] flex items-center justify-between">
               <div className="space-y-0.5">
                 <span className="text-[10px] font-mono uppercase text-[#15803D] font-bold block">
-                  Simulated Inbox Delivery
+                  Code reçu sur votre téléphone
                 </span>
                 <span className="text-xs font-mono font-bold text-[#121316]">
-                  Code: {generatedOtp}
+                  Code : {generatedOtp}
                 </span>
               </div>
               <button
@@ -631,7 +631,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 onClick={handleAutofillOtp}
                 className="px-3 py-1.5 rounded-full bg-[#002E25] text-white text-[11px] font-mono font-bold hover:bg-[#15803D] transition-colors cursor-pointer"
               >
-                1-Tap Autofill
+                Remplir en 1 clic
               </button>
             </div>
 
@@ -663,7 +663,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   ) : (
                     <>
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>Verify Email &amp; Launch Workspace</span>
+                      <span>Valider &amp; Lancer mon tableau de bord &rarr;</span>
                     </>
                   )}
                 </button>

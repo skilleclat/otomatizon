@@ -8994,11 +8994,11 @@ var _BrandLogo = require('@/components/BrandLogo');
           password,
           businessName: businessName || `${fullName}'s Workspace`
         });
-        setMessage({ type: "success", text: "Email verified & authenticated! Returning to landing page..." });
+        setMessage({ type: "success", text: "Compte vérifié ! Redirection vers votre tableau de bord..." });
         setTimeout(() => {
           setIsLoading(false);
           onSuccess();
-        }, 100);
+        }, 120);
       } else {
         setMessage({ type: "error", text: "Invalid 6-digit verification code. Please check your code or tap Autofill." });
         setIsLoading(false);
@@ -9403,29 +9403,29 @@ var _BrandLogo = require('@/components/BrandLogo');
               , _react2.default.createElement('div', { className: "w-12 h-12 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[#15803D] flex items-center justify-center mx-auto"          ,}
                 , _react2.default.createElement(_lucidereact.KeyRound, { className: "w-6 h-6" ,} )
               )
-              , _react2.default.createElement('h3', { className: "text-lg font-extrabold text-[#121316] tracking-tight"   ,}, "Verify Your Work Email"
+              , _react2.default.createElement('h3', { className: "text-lg font-extrabold text-[#121316] tracking-tight"   ,}, "Vérification du code de sécurité"
 
               )
-              , _react2.default.createElement('p', { className: "text-[#4A4B50] text-xs max-w-xs mx-auto"   ,}, "We sent a 6-digit security code to "
-                       , _react2.default.createElement('strong', { className: "text-[#121316]",}, email), " to verify your account identity."
+              , _react2.default.createElement('p', { className: "text-[#4A4B50] text-xs max-w-xs mx-auto"   ,}, "Un code de vérification à 6 chiffres a été envoyé au "
+                           , _react2.default.createElement('strong', { className: "text-[#121316]",}, phone || email), "."
               )
             )
 
             /* Simulated Live Inbox Code Toast / Helper */
             , _react2.default.createElement('div', { className: "p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#A7F3D0] flex items-center justify-between"       ,}
               , _react2.default.createElement('div', { className: "space-y-0.5",}
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#15803D] font-bold block"     ,}, "Simulated Inbox Delivery"
+                , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#15803D] font-bold block"     ,}, "Code reçu sur votre téléphone"
 
                 )
-                , _react2.default.createElement('span', { className: "text-xs font-mono font-bold text-[#121316]"   ,}, "Code: "
-                   , generatedOtp
+                , _react2.default.createElement('span', { className: "text-xs font-mono font-bold text-[#121316]"   ,}, "Code : "
+                    , generatedOtp
                 )
               )
               , _react2.default.createElement('button', {
                 type: "button",
                 onClick: handleAutofillOtp,
                 className: "px-3 py-1.5 rounded-full bg-[#002E25] text-white text-[11px] font-mono font-bold hover:bg-[#15803D] transition-colors cursor-pointer"          ,}
-, "1-Tap Autofill"
+, "Remplir en 1 clic"
 
               )
             )
@@ -9458,7 +9458,7 @@ var _BrandLogo = require('@/components/BrandLogo');
                   ) : (
                     _react2.default.createElement(_react2.default.Fragment, null
                       , _react2.default.createElement(_lucidereact.CheckCircle2, { className: "w-4 h-4" ,} )
-                      , _react2.default.createElement('span', null, "Verify Email & Launch Workspace"    )
+                      , _react2.default.createElement('span', null, "Valider & Lancer mon tableau de bord →"       )
                     )
                   )
                 )
@@ -18400,6 +18400,17 @@ const DEMO_SCENARIOS = [
     onOpenOnboarding();
   };
 
+  const handleFreePlanClick = () => {
+    if (_optionalChain([state, 'access', _8 => _8.session, 'optionalAccess', _9 => _9.isAuthenticated])) {
+      upgradePlan("free");
+      onEnterDashboard();
+    } else if (onTriggerAuth) {
+      onTriggerAuth("signup");
+    } else {
+      onOpenOnboarding();
+    }
+  };
+
   const plans = _config.getAllPlans.call(void 0, );
 
   return (
@@ -18447,7 +18458,7 @@ const DEMO_SCENARIOS = [
                     , _react2.default.createElement('div', { className: "w-6 h-6 rounded-full bg-[#002E25] text-white flex items-center justify-center text-[10px] font-mono font-bold shrink-0 notranslate"            , translate: "no",}
                       , userInitials
                     )
-                    , _react2.default.createElement('span', { className: "max-w-[90px] sm:max-w-[120px] truncate hidden md:inline"    ,}, _optionalChain([user, 'optionalAccess', _8 => _8.fullName]) || "My Account")
+                    , _react2.default.createElement('span', { className: "max-w-[90px] sm:max-w-[120px] truncate hidden md:inline"    ,}, _optionalChain([user, 'optionalAccess', _10 => _10.fullName]) || "My Account")
                     , _react2.default.createElement(_lucidereact.ChevronDown, { className: "w-3.5 h-3.5 text-[#75777E] shrink-0"   ,} )
                   )
 
@@ -18468,11 +18479,11 @@ const DEMO_SCENARIOS = [
                     )
                     , _react2.default.createElement('div', { className: "absolute right-0 mt-2 w-60 bg-white rounded-2xl border border-[#EAE7DF] shadow-xl py-2 px-2 z-50 animate-fadeIn text-xs"             ,}
                       , _react2.default.createElement('div', { className: "px-3 py-2.5 border-b border-[#EAE7DF] mb-1"    ,}
-                        , _react2.default.createElement('div', { className: "font-bold text-[#121316] truncate"  ,}, _optionalChain([user, 'optionalAccess', _9 => _9.fullName]))
-                        , _react2.default.createElement('div', { className: "text-[10px] text-[#75777E] truncate font-mono"   ,}, _optionalChain([user, 'optionalAccess', _10 => _10.email]))
+                        , _react2.default.createElement('div', { className: "font-bold text-[#121316] truncate"  ,}, _optionalChain([user, 'optionalAccess', _11 => _11.fullName]))
+                        , _react2.default.createElement('div', { className: "text-[10px] text-[#75777E] truncate font-mono"   ,}, _optionalChain([user, 'optionalAccess', _12 => _12.email]))
                         , _react2.default.createElement('div', { className: "mt-1.5 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] text-[10px] font-mono font-bold border border-[#A7F3D0]"             ,}
                           , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse"    ,} )
-                          , _react2.default.createElement('span', null, _optionalChain([state, 'access', _11 => _11.organization, 'optionalAccess', _12 => _12.name]) || "Workspace Active")
+                          , _react2.default.createElement('span', null, _optionalChain([state, 'access', _13 => _13.organization, 'optionalAccess', _14 => _14.name]) || "Workspace Active")
                         )
                       )
 
@@ -19145,7 +19156,7 @@ const DEMO_SCENARIOS = [
                     , _react2.default.createElement('button', {
                       onClick: () => {
                         if (isFree) {
-                          handleCtaClick();
+                          handleFreePlanClick();
                         } else if (onOpenCheckout) {
                           onOpenCheckout(plan.id);
                         } else {
@@ -19341,7 +19352,7 @@ var _store = require('@/lib/store');
 
   const handleAuthSuccess = () => {
     setIsAuthOpen(false);
-    navigateTo("/");
+    navigateTo("/app");
   };
 
   const handleOpenCheckout = (planId = "starter") => {

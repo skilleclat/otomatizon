@@ -133,6 +133,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     onOpenOnboarding();
   };
 
+  const handleFreePlanClick = () => {
+    if (state.session?.isAuthenticated) {
+      upgradePlan("free");
+      onEnterDashboard();
+    } else if (onTriggerAuth) {
+      onTriggerAuth("signup");
+    } else {
+      onOpenOnboarding();
+    }
+  };
+
   const plans = getAllPlans();
 
   return (
@@ -878,7 +889,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     <button
                       onClick={() => {
                         if (isFree) {
-                          handleCtaClick();
+                          handleFreePlanClick();
                         } else if (onOpenCheckout) {
                           onOpenCheckout(plan.id);
                         } else {
