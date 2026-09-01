@@ -1,6 +1,21 @@
 const { readDb, writeDb } = require("../db/server-db.cjs");
 
 const PLAN_TIERS = {
+  free: {
+    id: "free",
+    name: "Free",
+    priceKesMonthly: 0,
+    maxActiveAutomations: 1,
+    maxMonthlyFollowUps: 20,
+    maxConnectedApps: 2,
+    supportLevel: "Community Support",
+    features: [
+      "1 Active Automation",
+      "Up to 20 Automated Follow-Ups / mo",
+      "WhatsApp & Google Sheets Sync",
+      "Standard Decision Engine Access"
+    ]
+  },
   starter: {
     id: "starter",
     name: "Starter",

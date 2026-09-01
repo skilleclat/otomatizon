@@ -1,6 +1,6 @@
 // Billing & Subscription Types for Otomatizon
 
-export type PlanId = "starter" | "growth" | "pro";
+export type PlanId = "free" | "starter" | "growth" | "pro";
 
 export interface PlanFeature {
   text: string;

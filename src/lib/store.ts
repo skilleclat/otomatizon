@@ -52,7 +52,7 @@ export interface BusinessStats {
   hoursSaved: number;
   leadsMonthlyLimit: number;
   automationsLimit: number;
-  currentPlanId: "starter" | "growth" | "pro";
+  currentPlanId: "free" | "starter" | "growth" | "pro";
 }
 
 export interface AppState {
@@ -1138,17 +1138,29 @@ export function useOtomatizonStore() {
     return newWf;
   };
 
-  const upgradePlan = (planId: "growth" | "pro") => {
+  const upgradePlan = (planId: "free" | "starter" | "growth" | "pro") => {
     globalState.stats.currentPlanId = planId;
-    globalState.stats.automationsLimit = planId === "growth" ? 5 : 999;
-    globalState.stats.leadsMonthlyLimit = planId === "growth" ? 500 : 9999;
+    let autoLimit = 1;
+    let leadLimit = 20;
+    if (planId === "starter") {
+      autoLimit = 1;
+      leadLimit = 100;
+    } else if (planId === "growth") {
+      autoLimit = 5;
+      leadLimit = 500;
+    } else if (planId === "pro") {
+      autoLimit = 999;
+      leadLimit = 9999;
+    }
+    globalState.stats.automationsLimit = autoLimit;
+    globalState.stats.leadsMonthlyLimit = leadLimit;
     globalState.organization.planId = planId;
     globalState.activityLogs.unshift({
       id: `act_${Date.now()}`,
       organizationId: globalState.organization.id,
       type: "workflow_executed",
-      title: `Plan upgraded to ${planId.toUpperCase()}`,
-      description: `Your active automations limit increased to ${globalState.stats.automationsLimit}.`,
+      title: `Plan changed to ${planId.toUpperCase()}`,
+      description: `Your active automations limit is now ${globalState.stats.automationsLimit} and leads limit is ${globalState.stats.leadsMonthlyLimit}.`,
       timestamp: "Just now",
       channel: "system"
     });

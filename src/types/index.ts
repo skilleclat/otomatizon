@@ -56,7 +56,7 @@ export interface Organization {
   slug: string;
   currency: "KES" | "USD" | "EUR";
   timezone: string; // e.g. "Africa/Nairobi"
-  planId: "starter" | "growth" | "pro";
+  planId: "free" | "starter" | "growth" | "pro";
   createdAt: string;
 }
 
@@ -510,7 +510,7 @@ export interface Report extends BusinessReport {
 }
 
 export interface PricingPlan {
-  id: "starter" | "growth" | "pro";
+  id: "free" | "starter" | "growth" | "pro";
   name: string;
   priceKes: number;
   priceKesMonthly: number;

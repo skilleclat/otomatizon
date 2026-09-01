@@ -1008,6 +1008,25 @@ export const defaultOperationalMetric: OperationalMetric = {
 
 export const pricingPlans: PricingPlan[] = [
   {
+    id: "free",
+    name: "Free",
+    priceKes: 0,
+    priceKesMonthly: 0,
+    priceKesYearly: 0,
+    billingPeriod: "month",
+    description: "For solo professionals testing their first automated workflows",
+    tagline: "For exploring and testing your first automated workflows",
+    features: [
+      "1 active automation",
+      "Up to 20 customer inquiries / month",
+      "WhatsApp & Google Sheets capture",
+      "Standard Decision Engine access",
+      "Community & email support"
+    ],
+    maxActiveAutomations: 1,
+    leadsPerMonthLimit: 20
+  },
+  {
     id: "starter",
     name: "Starter",
     priceKes: 499,

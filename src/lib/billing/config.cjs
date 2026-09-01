@@ -11,6 +11,26 @@
 }; exports.earlyAccessConfig = earlyAccessConfig;
 
  const defaultPlansConfig = {
+  free: {
+    id: "free",
+    name: "Free",
+    priceKesMonthly: 0,
+    priceKesYearly: 0,
+    tagline: "For exploring and testing your first automated workflows",
+    badge: "Free Forever",
+    limits: {
+      maxActiveAutomations: 1,
+      leadsMonthlyLimit: 20,
+      connectedAppsLimit: 2
+    },
+    features: [
+      "1 active automation",
+      "Up to 20 customer inquiries / month",
+      "WhatsApp & Google Sheets capture",
+      "Opportunity Discovery Engine access",
+      "Community & documentation support"
+    ]
+  },
   starter: {
     id: "starter",
     name: "Starter",

@@ -72,6 +72,19 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setTimeout(() => setCopiedField(null), 2000);
   };
 
+  const handleFreeActivation = () => {
+    setIsProcessing(true);
+    setTimeout(() => {
+      upgradePlan("free");
+      trackFunnelEvent("free_plan_activated", { planId: "free" });
+      setIsProcessing(false);
+      setStep("success");
+      setTimeout(() => {
+        onSuccess();
+      }, 600);
+    }, 300);
+  };
+
   const handleMpesaStkPush = (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
@@ -81,7 +94,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       setStep("mpesa_prompt_sent");
 
       setTimeout(() => {
-        upgradePlan(plan.id === "pro" ? "pro" : "growth");
+        upgradePlan(plan.id as any);
         trackFunnelEvent("paid_subscription", { planId: plan.id, method: "mpesa_stk", amountKes });
         setStep("success");
         setTimeout(() => {
@@ -96,7 +109,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setIsProcessing(true);
 
     setTimeout(() => {
-      upgradePlan(plan.id === "pro" ? "pro" : "growth");
+      upgradePlan(plan.id as any);
       trackFunnelEvent("paid_subscription", { planId: plan.id, method: "mpesa_paybill", amountKes, txCode: mpesaTransCode });
       setIsProcessing(false);
       setStep("success");
@@ -111,7 +124,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setIsProcessing(true);
 
     setTimeout(() => {
-      upgradePlan(plan.id === "pro" ? "pro" : "growth");
+      upgradePlan(plan.id as any);
       trackFunnelEvent("paid_subscription", { planId: plan.id, method: "paypal", amountUsd, payer: paypalPayerEmail });
       setIsProcessing(false);
       setStep("success");
@@ -126,7 +139,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setIsProcessing(true);
 
     setTimeout(() => {
-      upgradePlan(plan.id === "pro" ? "pro" : "growth");
+      upgradePlan(plan.id as any);
       trackFunnelEvent("paid_subscription", { planId: plan.id, method: "stripe_card", amountKes });
       setIsProcessing(false);
       setStep("success");
@@ -169,23 +182,64 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             <div className="flex items-center gap-2">
               <h3 className="text-base font-bold text-[#121316]">{plan.name} Plan</h3>
               <span className="px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[#15803D] text-[10px] font-mono font-bold">
-                Billed Monthly
+                {plan.id === "free" ? "Free Forever" : "Billed Monthly"}
               </span>
             </div>
             <p className="text-xs text-[#4A4B50] mt-0.5">{plan.tagline}</p>
           </div>
           <div className="text-right">
             <div className="text-xl font-extrabold text-[#121316]">
-              KES {amountKes.toLocaleString()}
+              {amountKes === 0 ? "KES 0" : `KES ${amountKes.toLocaleString()}`}
             </div>
             <div className="text-[11px] font-mono text-[#75777E]">
-              ~ ${amountUsd} USD / mo
+              {amountKes === 0 ? "No credit card needed" : `~ $${amountUsd} USD / mo`}
             </div>
           </div>
         </div>
 
+        {/* Free Plan Instant Activation */}
+        {step === "checkout" && plan.id === "free" && (
+          <div className="p-6 space-y-5 text-xs">
+            <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3">
+              <div className="flex items-center gap-2 text-sm font-bold text-[#121316]">
+                <Sparkles className="w-4 h-4 text-[#15803D]" />
+                <span>Free Plan Includes:</span>
+              </div>
+              <ul className="space-y-2 text-[#4A4B50]">
+                {plan.features.map((feat, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[#15803D] shrink-0" />
+                    <span>{feat}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleFreeActivation}
+              disabled={isProcessing}
+              className="w-full py-3.5 rounded-full bg-[#002E25] hover:bg-[#001D17] text-white text-xs font-bold font-mono transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {isProcessing ? (
+                <RefreshCw className="w-4 h-4 animate-spin" />
+              ) : (
+                <>
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Activate Free Workspace Now &rarr;</span>
+                </>
+              )}
+            </button>
+
+            <div className="pt-2 flex items-center justify-center gap-2 text-[10px] font-mono text-[#75777E]">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#15803D]" />
+              <span>No payment info required &bull; Upgrade anytime</span>
+            </div>
+          </div>
+        )}
+
         {/* Payment Method Selector Tabs */}
-        {step === "checkout" && (
+        {step === "checkout" && plan.id !== "free" && (
           <div className="p-6 space-y-5 text-xs">
             <div>
               <label className="text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-2">

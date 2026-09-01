@@ -256,15 +256,16 @@ export const SettingsView = () => {
               Change Subscription Plan
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {plans.map((p) => {
                 const isSelected = p.id === state.stats.currentPlanId;
                 const isGrowth = p.id === "growth";
+                const isFree = p.id === "free";
 
                 return (
                   <div
                     key={p.id}
-                    className={`p-6 rounded-3xl bg-white border transition-all flex flex-col justify-between space-y-5 ${
+                    className={`p-5 rounded-3xl bg-white border transition-all flex flex-col justify-between space-y-4 ${
                       isSelected
                         ? "border-[#15803D] ring-2 ring-[#15803D]/20 shadow-md"
                         : "border-[#EAE7DF] shadow-sm"
@@ -282,19 +283,24 @@ export const SettingsView = () => {
                         )}
                         {!isSelected && isGrowth && (
                           <span className={DS.badgeNeutral}>
-                            Recommended
+                            Popular
+                          </span>
+                        )}
+                        {!isSelected && isFree && (
+                          <span className="text-[10px] font-mono font-bold text-[#75777E] px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF]">
+                            Free
                           </span>
                         )}
                       </div>
 
                       <div>
-                        <span className="text-2xl font-extrabold text-[#121316]">
-                          KES {p.priceKesMonthly.toLocaleString()}
+                        <span className="text-xl font-extrabold text-[#121316]">
+                          {p.priceKesMonthly === 0 ? "KES 0" : `KES ${p.priceKesMonthly.toLocaleString()}`}
                         </span>
                         <span className="text-xs text-[#75777E] font-mono"> / mo</span>
                       </div>
 
-                      <p className="text-xs text-[#4A4B50] leading-relaxed">
+                      <p className="text-xs text-[#4A4B50] leading-relaxed line-clamp-2">
                         {p.tagline}
                       </p>
 
@@ -302,7 +308,7 @@ export const SettingsView = () => {
                         {p.features.slice(0, 3).map((f, i) => (
                           <div key={i} className="flex items-start gap-1.5">
                             <Check className="w-3.5 h-3.5 text-[#15803D] shrink-0 mt-0.5" />
-                            <span>{f}</span>
+                            <span className="line-clamp-1">{f}</span>
                           </div>
                         ))}
                       </div>

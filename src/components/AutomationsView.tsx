@@ -132,7 +132,7 @@ export const AutomationsView: React.FC<AutomationsViewProps> = ({
             <strong className="text-[#121316]">{activeCount} of {limit} active</strong>
           </div>
 
-          {activeCount >= limit && state.stats.currentPlanId === "starter" && (
+          {activeCount >= limit && (state.stats.currentPlanId === "free" || state.stats.currentPlanId === "starter") && (
             <button
               onClick={() => upgradePlan("growth")}
               className={DS.btnPrimary}

@@ -591,20 +591,23 @@ Les opportunités suivent un cycle de vie strict :
   & $git push
   ```
 
-### Étape 16 : Résolution de l'Incident Production Vercel (FUNCTION_INVOCATION_FAILED)
-- **Diagnostic de la Cause Racine** :
-  1. Présence d'un fichier fantôme `next.config.mjs` à la racine entraînant l'auto-détection par Vercel du framework Next.js, créant des fonctions serverless Next.js inexistantes qui crashent sur la route racine `/`.
-  2. Dans `api/index.js`, tentative d'évaluation de `__dirname` dans un environnement ES Module (`package.json` en `"type": "module"`), levant une `ReferenceError: __dirname is not defined` fatale non interceptée.
-  3. Imports dynamiques variables empêchant le traçage des dépendances (`@vercel/nft`) vers `server.cjs`.
-  4. Sensibilité de `server.cjs` à `req.socket` non défini et blocage de `parseJsonBody` sur des corps déjà parsés par Vercel.
-- **Correctifs Implémentés & Déployés** :
-  1. Suppression définitive de `next.config.mjs` et ajout de `"framework": null` dans `vercel.json`.
-  2. Réécriture complète de `api/index.js` et `api/[...path].js` avec dérivation ESM sécurisée (`fileURLToPath`), importation statique de `server.cjs` et endpoints directs `/api/health` et `/api/ping`.
-  3. Durcissement de `server.cjs` : extraction IP tolérante aux proxies/serverless, gestion des corps pré-parsés et isolation stricte de la boucle de travail en arrière-plan (`persistentJobQueue`).
-  4. Création de la suite d'audit de non-régression `test-vercel-serverless.cjs` (25/25 tests passés avec succès).
-- **Validation Production** :
-  - Déploiement en direct sur `https://otomatizon.vercel.app/` confirmé 100% opérationnel (HTTP 200 OK sur toutes les routes statiques, SPA et REST APIs).
+### Étape 17 : Implémentation du Forfait Gratuit (Free Tier / Paquet Gratuit)
+- **Modélisation & Définition du Forfait Gratuit** :
+  * Identifiant : `free` | Nom : `Free` (Badge : *Free Forever*).
+  * Tarification : **KES 0 / mois** (sans carte bancaire ni information de paiement requise).
+  * Quotas & Limites : 1 automatisation active, jusqu'à 20 demandes clients / mois, 2 applications connectées (WhatsApp & Google Sheets).
+  * Inclus : Moteur de découverte d'opportunités, synchronisation de capture, support communautaire et documentation.
+- **Mise à Jour de l'Architecture & de la Persistance** :
+  * Types TypeScript unifiés : `PlanId = "free" | "starter" | "growth" | "pro"` dans [`src/types/index.ts`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/types/index.ts) et [`src/lib/billing/types.ts`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/lib/billing/types.ts).
+  * Configuration de facturation et gestionnaire d'abonnements : [`src/lib/billing/config.ts`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/lib/billing/config.ts), [`src/lib/billing/config.cjs`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/lib/billing/config.cjs) et [`src/lib/billing/subscription-manager.cjs`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/lib/billing/subscription-manager.cjs).
+  * Store unifié : `currentPlanId` géré avec calcul direct des quotas de capacité (1 automatisation, 20 demandes/mois pour `free`).
+- **Harmonisation UI & Expérience Utilisateur** :
+  * Grille de tarification Landing Page ([`LandingPage.tsx`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/components/LandingPage.tsx)) : grille responsive 4 colonnes (`Free`, `Starter`, `Growth`, `Pro`) avec bouton d'activation immédiate *« Get Started Free »*.
+  * Sélecteur de forfait Paramètres ([`SettingsView.tsx`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/components/SettingsView.tsx)) : affichage des 4 forfaits avec badge *Free*, bascule instantanée et gestion fine des jauges de quotas.
+  * Modal de Checkout ([`CheckoutModal.tsx`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/components/CheckoutModal.tsx)) : vue dédiée d'activation immédiate en 1 clic sans moyen de paiement requis pour le forfait gratuit.
+- **Validation Globale** :
+  * 14/14 suites de tests validées à 100% via `test-all-systems.cjs`.
 
 ---
 *Règle permanente : À chaque changement majeur, compiler, tester, commiter et pousser automatiquement le code (ou rappeler l'ajout du remote si non configuré).*
-*Dernière mise à jour : 31 Août 2026 — Incident Vercel Résolu & Déploiement Production 100% Opérationnel.*
+*Dernière mise à jour : 1er Septembre 2026 — Forfait Gratuit (Free Tier) Implémenté & Synchronisé (14/14 Tests Validés).*

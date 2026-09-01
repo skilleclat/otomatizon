@@ -809,20 +809,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       {/* 10. SECTION 8 — PRICING */}
       <section id="pricing" className="py-20 sm:py-24 border-t border-[#EAE7DF] bg-[#F4F2EB]/50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
           
           <div className="text-center space-y-2">
             <h2 className="text-2xl sm:text-4xl font-extrabold text-[#121316] tracking-tight">
               Start small. Automate more as you grow.
             </h2>
             <p className="text-xs sm:text-sm text-[#4A4B50]">
-              Clear pricing in KES. No hidden enterprise tiers.
+              Clear pricing in KES. Free plan available forever. No hidden enterprise tiers.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-stretch">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
             {plans.map((plan) => {
               const isGrowth = plan.id === "growth";
+              const isFree = plan.id === "free";
 
               return (
                 <div
@@ -830,6 +831,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   className={`bg-white p-6 sm:p-7 rounded-3xl border transition-all flex flex-col justify-between ${
                     isGrowth
                       ? "border-[#15803D] shadow-md ring-2 ring-[#15803D]/20"
+                      : isFree
+                      ? "border-[#EAE7DF] shadow-sm bg-[#FCFCFA]"
                       : "border-[#EAE7DF] shadow-sm"
                   }`}
                 >
@@ -843,11 +846,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                           Popular
                         </span>
                       )}
+                      {isFree && (
+                        <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[#75777E] px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF]">
+                          Free Forever
+                        </span>
+                      )}
                     </div>
 
                     <div>
                       <span className="text-2xl sm:text-3xl font-extrabold text-[#121316]">
-                        KES {plan.priceKesMonthly.toLocaleString()}
+                        {plan.priceKesMonthly === 0 ? "KES 0" : `KES ${plan.priceKesMonthly.toLocaleString()}`}
                       </span>
                       <span className="text-xs text-[#75777E] font-mono"> / month</span>
                     </div>
@@ -868,14 +876,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
                   <div className="pt-6">
                     <button
-                      onClick={() => onOpenCheckout ? onOpenCheckout(plan.id) : handleCtaClick()}
+                      onClick={() => {
+                        if (isFree) {
+                          handleCtaClick();
+                        } else if (onOpenCheckout) {
+                          onOpenCheckout(plan.id);
+                        } else {
+                          handleCtaClick();
+                        }
+                      }}
                       className={`w-full py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                         isGrowth
                           ? "bg-[#15803D] hover:bg-[#166534] text-white shadow-sm"
+                          : isFree
+                          ? "bg-[#002E25] hover:bg-[#001D17] text-white shadow-xs"
                           : "bg-[#FAF9F5] hover:bg-[#EFECE6] text-[#121316] border border-[#EAE7DF]"
                       }`}
                     >
-                      Start with {plan.name}
+                      {isFree ? "Get Started Free" : `Start with ${plan.name}`}
                     </button>
                   </div>
                 </div>

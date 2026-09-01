@@ -751,6 +751,26 @@
 }; exports.earlyAccessConfig = earlyAccessConfig;
 
  const defaultPlansConfig = {
+  free: {
+    id: "free",
+    name: "Free",
+    priceKesMonthly: 0,
+    priceKesYearly: 0,
+    tagline: "For exploring and testing your first automated workflows",
+    badge: "Free Forever",
+    limits: {
+      maxActiveAutomations: 1,
+      leadsMonthlyLimit: 20,
+      connectedAppsLimit: 2
+    },
+    features: [
+      "1 active automation",
+      "Up to 20 customer inquiries / month",
+      "WhatsApp & Google Sheets capture",
+      "Opportunity Discovery Engine access",
+      "Community & documentation support"
+    ]
+  },
   starter: {
     id: "starter",
     name: "Starter",
@@ -2975,6 +2995,25 @@ var _engine = require('./engine'); _createStarExport(_engine);
 
  const pricingPlans = [
   {
+    id: "free",
+    name: "Free",
+    priceKes: 0,
+    priceKesMonthly: 0,
+    priceKesYearly: 0,
+    billingPeriod: "month",
+    description: "For solo professionals testing their first automated workflows",
+    tagline: "For exploring and testing your first automated workflows",
+    features: [
+      "1 active automation",
+      "Up to 20 customer inquiries / month",
+      "WhatsApp & Google Sheets capture",
+      "Standard Decision Engine access",
+      "Community & email support"
+    ],
+    maxActiveAutomations: 1,
+    leadsPerMonthLimit: 20
+  },
+  {
     id: "starter",
     name: "Starter",
     priceKes: 499,
@@ -4978,15 +5017,27 @@ async function syncWithServer() {
 
   const upgradePlan = (planId) => {
     globalState.stats.currentPlanId = planId;
-    globalState.stats.automationsLimit = planId === "growth" ? 5 : 999;
-    globalState.stats.leadsMonthlyLimit = planId === "growth" ? 500 : 9999;
+    let autoLimit = 1;
+    let leadLimit = 20;
+    if (planId === "starter") {
+      autoLimit = 1;
+      leadLimit = 100;
+    } else if (planId === "growth") {
+      autoLimit = 5;
+      leadLimit = 500;
+    } else if (planId === "pro") {
+      autoLimit = 999;
+      leadLimit = 9999;
+    }
+    globalState.stats.automationsLimit = autoLimit;
+    globalState.stats.leadsMonthlyLimit = leadLimit;
     globalState.organization.planId = planId;
     globalState.activityLogs.unshift({
       id: `act_${Date.now()}`,
       organizationId: globalState.organization.id,
       type: "workflow_executed",
-      title: `Plan upgraded to ${planId.toUpperCase()}`,
-      description: `Your active automations limit increased to ${globalState.stats.automationsLimit}.`,
+      title: `Plan changed to ${planId.toUpperCase()}`,
+      description: `Your active automations limit is now ${globalState.stats.automationsLimit} and leads limit is ${globalState.stats.leadsMonthlyLimit}.`,
       timestamp: "Just now",
       channel: "system"
     });
@@ -5452,6 +5503,19 @@ var _BrandLogo = require('@/components/BrandLogo');
     setTimeout(() => setCopiedField(null), 2000);
   };
 
+  const handleFreeActivation = () => {
+    setIsProcessing(true);
+    setTimeout(() => {
+      upgradePlan("free");
+      _funnel.trackFunnelEvent.call(void 0, "free_plan_activated", { planId: "free" });
+      setIsProcessing(false);
+      setStep("success");
+      setTimeout(() => {
+        onSuccess();
+      }, 600);
+    }, 300);
+  };
+
   const handleMpesaStkPush = (e) => {
     e.preventDefault();
     setIsProcessing(true);
@@ -5461,7 +5525,7 @@ var _BrandLogo = require('@/components/BrandLogo');
       setStep("mpesa_prompt_sent");
 
       setTimeout(() => {
-        upgradePlan(plan.id === "pro" ? "pro" : "growth");
+        upgradePlan(plan.id );
         _funnel.trackFunnelEvent.call(void 0, "paid_subscription", { planId: plan.id, method: "mpesa_stk", amountKes });
         setStep("success");
         setTimeout(() => {
@@ -5476,7 +5540,7 @@ var _BrandLogo = require('@/components/BrandLogo');
     setIsProcessing(true);
 
     setTimeout(() => {
-      upgradePlan(plan.id === "pro" ? "pro" : "growth");
+      upgradePlan(plan.id );
       _funnel.trackFunnelEvent.call(void 0, "paid_subscription", { planId: plan.id, method: "mpesa_paybill", amountKes, txCode: mpesaTransCode });
       setIsProcessing(false);
       setStep("success");
@@ -5491,7 +5555,7 @@ var _BrandLogo = require('@/components/BrandLogo');
     setIsProcessing(true);
 
     setTimeout(() => {
-      upgradePlan(plan.id === "pro" ? "pro" : "growth");
+      upgradePlan(plan.id );
       _funnel.trackFunnelEvent.call(void 0, "paid_subscription", { planId: plan.id, method: "paypal", amountUsd, payer: paypalPayerEmail });
       setIsProcessing(false);
       setStep("success");
@@ -5506,7 +5570,7 @@ var _BrandLogo = require('@/components/BrandLogo');
     setIsProcessing(true);
 
     setTimeout(() => {
-      upgradePlan(plan.id === "pro" ? "pro" : "growth");
+      upgradePlan(plan.id );
       _funnel.trackFunnelEvent.call(void 0, "paid_subscription", { planId: plan.id, method: "stripe_card", amountKes });
       setIsProcessing(false);
       setStep("success");
@@ -5548,24 +5612,65 @@ var _BrandLogo = require('@/components/BrandLogo');
           , _react2.default.createElement('div', null
             , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
               , _react2.default.createElement('h3', { className: "text-base font-bold text-[#121316]"  ,}, plan.name, " Plan" )
-              , _react2.default.createElement('span', { className: "px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[#15803D] text-[10px] font-mono font-bold"         ,}, "Billed Monthly"
-
+              , _react2.default.createElement('span', { className: "px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[#15803D] text-[10px] font-mono font-bold"         ,}
+                , plan.id === "free" ? "Free Forever" : "Billed Monthly"
               )
             )
             , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] mt-0.5"  ,}, plan.tagline)
           )
           , _react2.default.createElement('div', { className: "text-right",}
-            , _react2.default.createElement('div', { className: "text-xl font-extrabold text-[#121316]"  ,}, "KES "
-               , amountKes.toLocaleString()
+            , _react2.default.createElement('div', { className: "text-xl font-extrabold text-[#121316]"  ,}
+              , amountKes === 0 ? "KES 0" : `KES ${amountKes.toLocaleString()}`
             )
-            , _react2.default.createElement('div', { className: "text-[11px] font-mono text-[#75777E]"  ,}, "~ $"
-               , amountUsd, " USD / mo"
+            , _react2.default.createElement('div', { className: "text-[11px] font-mono text-[#75777E]"  ,}
+              , amountKes === 0 ? "No credit card needed" : `~ $${amountUsd} USD / mo`
+            )
+          )
+        )
+
+        /* Free Plan Instant Activation */
+        , step === "checkout" && plan.id === "free" && (
+          _react2.default.createElement('div', { className: "p-6 space-y-5 text-xs"  ,}
+            , _react2.default.createElement('div', { className: "p-5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3"     ,}
+              , _react2.default.createElement('div', { className: "flex items-center gap-2 text-sm font-bold text-[#121316]"     ,}
+                , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-4 h-4 text-[#15803D]"  ,} )
+                , _react2.default.createElement('span', null, "Free Plan Includes:"  )
+              )
+              , _react2.default.createElement('ul', { className: "space-y-2 text-[#4A4B50]" ,}
+                , plan.features.map((feat, i) => (
+                  _react2.default.createElement('li', { key: i, className: "flex items-center gap-2"  ,}
+                    , _react2.default.createElement(_lucidereact.Check, { className: "w-3.5 h-3.5 text-[#15803D] shrink-0"   ,} )
+                    , _react2.default.createElement('span', null, feat)
+                  )
+                ))
+              )
+            )
+
+            , _react2.default.createElement('button', {
+              type: "button",
+              onClick: handleFreeActivation,
+              disabled: isProcessing,
+              className: "w-full py-3.5 rounded-full bg-[#002E25] hover:bg-[#001D17] text-white text-xs font-bold font-mono transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"               ,}
+
+              , isProcessing ? (
+                _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-4 h-4 animate-spin"  ,} )
+              ) : (
+                _react2.default.createElement(_react2.default.Fragment, null
+                  , _react2.default.createElement(_lucidereact.CheckCircle2, { className: "w-4 h-4" ,} )
+                  , _react2.default.createElement('span', null, "Activate Free Workspace Now →"    )
+                )
+              )
+            )
+
+            , _react2.default.createElement('div', { className: "pt-2 flex items-center justify-center gap-2 text-[10px] font-mono text-[#75777E]"       ,}
+              , _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
+              , _react2.default.createElement('span', null, "No payment info required • Upgrade anytime"      )
             )
           )
         )
 
         /* Payment Method Selector Tabs */
-        , step === "checkout" && (
+        , step === "checkout" && plan.id !== "free" && (
           _react2.default.createElement('div', { className: "p-6 space-y-5 text-xs"  ,}
             , _react2.default.createElement('div', null
               , _react2.default.createElement('label', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-2"      ,}, "Select Payment Method"
@@ -13417,7 +13522,7 @@ var _AutomationDetailView = require('./AutomationDetailView');
             , _react2.default.createElement('strong', { className: "text-[#121316]",}, activeCount, " of "  , limit, " active" )
           )
 
-          , activeCount >= limit && state.stats.currentPlanId === "starter" && (
+          , activeCount >= limit && (state.stats.currentPlanId === "free" || state.stats.currentPlanId === "starter") && (
             _react2.default.createElement('button', {
               onClick: () => upgradePlan("growth"),
               className: _designsystem.DS.btnPrimary,}
@@ -17173,15 +17278,16 @@ var _designsystem = require('@/lib/design-system');
 
             )
 
-            , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-3 gap-5"   ,}
+            , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"    ,}
               , plans.map((p) => {
                 const isSelected = p.id === state.stats.currentPlanId;
                 const isGrowth = p.id === "growth";
+                const isFree = p.id === "free";
 
                 return (
                   _react2.default.createElement('div', {
                     key: p.id,
-                    className: `p-6 rounded-3xl bg-white border transition-all flex flex-col justify-between space-y-5 ${
+                    className: `p-5 rounded-3xl bg-white border transition-all flex flex-col justify-between space-y-4 ${
                       isSelected
                         ? "border-[#15803D] ring-2 ring-[#15803D]/20 shadow-md"
                         : "border-[#EAE7DF] shadow-sm"
@@ -17198,20 +17304,25 @@ var _designsystem = require('@/lib/design-system');
                           )
                         )
                         , !isSelected && isGrowth && (
-                          _react2.default.createElement('span', { className: _designsystem.DS.badgeNeutral,}, "Recommended"
+                          _react2.default.createElement('span', { className: _designsystem.DS.badgeNeutral,}, "Popular"
+
+                          )
+                        )
+                        , !isSelected && isFree && (
+                          _react2.default.createElement('span', { className: "text-[10px] font-mono font-bold text-[#75777E] px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF]"         ,}, "Free"
 
                           )
                         )
                       )
 
                       , _react2.default.createElement('div', null
-                        , _react2.default.createElement('span', { className: "text-2xl font-extrabold text-[#121316]"  ,}, "KES "
-                           , p.priceKesMonthly.toLocaleString()
+                        , _react2.default.createElement('span', { className: "text-xl font-extrabold text-[#121316]"  ,}
+                          , p.priceKesMonthly === 0 ? "KES 0" : `KES ${p.priceKesMonthly.toLocaleString()}`
                         )
                         , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-mono"  ,}, " / mo"  )
                       )
 
-                      , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] leading-relaxed"  ,}
+                      , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] leading-relaxed line-clamp-2"   ,}
                         , p.tagline
                       )
 
@@ -17219,7 +17330,7 @@ var _designsystem = require('@/lib/design-system');
                         , p.features.slice(0, 3).map((f, i) => (
                           _react2.default.createElement('div', { key: i, className: "flex items-start gap-1.5"  ,}
                             , _react2.default.createElement(_lucidereact.Check, { className: "w-3.5 h-3.5 text-[#15803D] shrink-0 mt-0.5"    ,} )
-                            , _react2.default.createElement('span', null, f)
+                            , _react2.default.createElement('span', { className: "line-clamp-1",}, f)
                           )
                         ))
                       )
@@ -18965,20 +19076,21 @@ const DEMO_SCENARIOS = [
 
       /* 10. SECTION 8 — PRICING */
       , _react2.default.createElement('section', { id: "pricing", className: "py-20 sm:py-24 border-t border-[#EAE7DF] bg-[#F4F2EB]/50"    ,}
-        , _react2.default.createElement('div', { className: "max-w-4xl mx-auto px-4 sm:px-6 space-y-12"    ,}
+        , _react2.default.createElement('div', { className: "max-w-6xl mx-auto px-4 sm:px-6 space-y-12"    ,}
 
           , _react2.default.createElement('div', { className: "text-center space-y-2" ,}
             , _react2.default.createElement('h2', { className: "text-2xl sm:text-4xl font-extrabold text-[#121316] tracking-tight"    ,}, "Start small. Automate more as you grow."
 
             )
-            , _react2.default.createElement('p', { className: "text-xs sm:text-sm text-[#4A4B50]"  ,}, "Clear pricing in KES. No hidden enterprise tiers."
+            , _react2.default.createElement('p', { className: "text-xs sm:text-sm text-[#4A4B50]"  ,}, "Clear pricing in KES. Free plan available forever. No hidden enterprise tiers."
 
             )
           )
 
-          , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-3 gap-5 items-stretch"    ,}
+          , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch"     ,}
             , plans.map((plan) => {
               const isGrowth = plan.id === "growth";
+              const isFree = plan.id === "free";
 
               return (
                 _react2.default.createElement('div', {
@@ -18986,6 +19098,8 @@ const DEMO_SCENARIOS = [
                   className: `bg-white p-6 sm:p-7 rounded-3xl border transition-all flex flex-col justify-between ${
                     isGrowth
                       ? "border-[#15803D] shadow-md ring-2 ring-[#15803D]/20"
+                      : isFree
+                      ? "border-[#EAE7DF] shadow-sm bg-[#FCFCFA]"
                       : "border-[#EAE7DF] shadow-sm"
                   }`,}
 
@@ -18999,11 +19113,16 @@ const DEMO_SCENARIOS = [
 
                         )
                       )
+                      , isFree && (
+                        _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-wider font-bold text-[#75777E] px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF]"           ,}, "Free Forever"
+
+                        )
+                      )
                     )
 
                     , _react2.default.createElement('div', null
-                      , _react2.default.createElement('span', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316]"   ,}, "KES "
-                         , plan.priceKesMonthly.toLocaleString()
+                      , _react2.default.createElement('span', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316]"   ,}
+                        , plan.priceKesMonthly === 0 ? "KES 0" : `KES ${plan.priceKesMonthly.toLocaleString()}`
                       )
                       , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-mono"  ,}, " / month"  )
                     )
@@ -19024,14 +19143,24 @@ const DEMO_SCENARIOS = [
 
                   , _react2.default.createElement('div', { className: "pt-6",}
                     , _react2.default.createElement('button', {
-                      onClick: () => onOpenCheckout ? onOpenCheckout(plan.id) : handleCtaClick(),
+                      onClick: () => {
+                        if (isFree) {
+                          handleCtaClick();
+                        } else if (onOpenCheckout) {
+                          onOpenCheckout(plan.id);
+                        } else {
+                          handleCtaClick();
+                        }
+                      },
                       className: `w-full py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                         isGrowth
                           ? "bg-[#15803D] hover:bg-[#166534] text-white shadow-sm"
+                          : isFree
+                          ? "bg-[#002E25] hover:bg-[#001D17] text-white shadow-xs"
                           : "bg-[#FAF9F5] hover:bg-[#EFECE6] text-[#121316] border border-[#EAE7DF]"
                       }`,}
-, "Start with "
-                        , plan.name
+
+                      , isFree ? "Get Started Free" : `Start with ${plan.name}`
                     )
                   )
                 )

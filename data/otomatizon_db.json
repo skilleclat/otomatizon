@@ -431,6 +431,14 @@
       "phone": "+254 722 111 222",
       "organizationId": "org_1788212115211",
       "createdAt": "2026-08-31T21:35:15.211Z"
+    },
+    {
+      "id": "user_1788248750044",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788248750044",
+      "createdAt": "2026-09-01T07:45:50.044Z"
     }
   ],
   "organizations": [
@@ -757,6 +765,12 @@
       "name": "Amina Math Coaching",
       "planId": "starter",
       "createdAt": "2026-08-31T21:35:15.211Z"
+    },
+    {
+      "id": "org_1788248750044",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-09-01T07:45:50.044Z"
     }
   ],
   "businessProfiles": [
@@ -2015,6 +2029,28 @@
         "M-Pesa"
       ],
       "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
+    },
+    {
+      "id": "bp_1788248750044",
+      "organizationId": "org_1788248750044",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book."
     }
   ],
   "leads": [
@@ -2082,10 +2118,10 @@
         }
       ],
       "metrics": {
-        "runsCount": 99,
-        "leadsHelped": 105,
-        "hoursSaved": 47.6,
-        "revenueRecoveredKes": 299000
+        "runsCount": 101,
+        "leadsHelped": 107,
+        "hoursSaved": 48.6,
+        "revenueRecoveredKes": 306000
       },
       "createdAt": "2026-08-10T08:00:00Z",
       "lastRunAt": "12 mins ago",
@@ -2216,6 +2252,47 @@
     }
   ],
   "executions": [
+    {
+      "id": "run_1788248755378",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEventId": "evt_1788248755378",
+      "triggerEvent": "Inquiry from Prospective Client (SIMULATED)",
+      "entityName": "Prospective Client",
+      "status": "completed",
+      "currentStepIndex": 4,
+      "stepsTotal": 4,
+      "logSummary": "Completed automated pipeline across WhatsApp, Sheets, and Calendar.",
+      "startedAt": "Just now",
+      "completedAt": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "exec_1788248752665",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788248750115",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 5,
+      "stepsTotal": 5,
+      "logSummary": "Completed all 5 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
     {
       "id": "run_1788212128509",
       "workflowId": "wf_lead_autopilot",
@@ -3582,6 +3659,86 @@
     }
   ],
   "activityLogs": [
+    {
+      "id": "act_1788248758655",
+      "organizationId": "org_james",
+      "runId": "run_1788248758655",
+      "type": "subscription_upgraded",
+      "channel": "mpesa",
+      "application": "Otomatizon Billing",
+      "title": "Plan upgraded to Growth (KES 999/mo)",
+      "description": "M-Pesa Receipt: QAH9012345. Higher quota unlocked (5 Automations & 300 Follow-ups/mo).",
+      "actionTakenByOtomatizon": "Safaricom M-Pesa STK subscription payment verified & plan upgraded.",
+      "businessResult": "Subscription active until 01/10/2026",
+      "entityName": "Kamau French & Academic Tutoring",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788248755378",
+      "organizationId": "org_james",
+      "runId": "run_1788248755378",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp",
+      "title": "New inquiry received: Prospective Client",
+      "description": "Processed by Otomatizon Intelligence (SIMULATED).",
+      "actionTakenByOtomatizon": "Inquiry received & syllabus sent via WhatsApp",
+      "businessResult": "Lead captured & verified in student roster",
+      "entityName": "Prospective Client",
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "log_1788248752665",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788248750115",
+      "organizationId": "org_james",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788248709686",
+      "organizationId": "org_james",
+      "runId": "run_1788248709686",
+      "type": "subscription_upgraded",
+      "channel": "mpesa",
+      "application": "Otomatizon Billing",
+      "title": "Plan upgraded to Growth (KES 999/mo)",
+      "description": "M-Pesa Receipt: QAH9012345. Higher quota unlocked (5 Automations & 300 Follow-ups/mo).",
+      "actionTakenByOtomatizon": "Safaricom M-Pesa STK subscription payment verified & plan upgraded.",
+      "businessResult": "Subscription active until 01/10/2026",
+      "entityName": "Kamau French & Academic Tutoring",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788248288850",
+      "organizationId": "org_james",
+      "runId": "run_1788248288850",
+      "type": "subscription_upgraded",
+      "channel": "mpesa",
+      "application": "Otomatizon Billing",
+      "title": "Plan upgraded to Growth (KES 999/mo)",
+      "description": "M-Pesa Receipt: QAH9012345. Higher quota unlocked (5 Automations & 300 Follow-ups/mo).",
+      "actionTakenByOtomatizon": "Safaricom M-Pesa STK subscription payment verified & plan upgraded.",
+      "businessResult": "Subscription active until 01/10/2026",
+      "entityName": "Kamau French & Academic Tutoring",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
     {
       "id": "act_1788212134676",
       "organizationId": "org_james",
@@ -5174,8 +5331,8 @@
       "organizationId": "org_james",
       "planId": "growth",
       "status": "active",
-      "currentPeriodStart": "2026-08-31T21:35:34.676Z",
-      "currentPeriodEnd": "2026-09-30T21:35:34.676Z",
+      "currentPeriodStart": "2026-09-01T07:45:58.655Z",
+      "currentPeriodEnd": "2026-10-01T07:45:58.655Z",
       "priceKesMonthly": 999
     },
     {
@@ -5654,6 +5811,15 @@
       "currentPeriodStart": "2026-08-31T21:35:15.211Z",
       "currentPeriodEnd": "2026-09-30T21:35:15.211Z",
       "priceKesMonthly": 499
+    },
+    {
+      "id": "sub_1788248750044",
+      "organizationId": "org_1788248750044",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-09-01T07:45:50.044Z",
+      "currentPeriodEnd": "2026-10-01T07:45:50.044Z",
+      "priceKesMonthly": 499
     }
   ],
   "connections": [
@@ -5817,6 +5983,19 @@
     }
   ],
   "operationalEvents": [
+    {
+      "id": "evt_1788248755378",
+      "businessId": "prof_james_01",
+      "sourceAppId": "whatsapp_business",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "customer_inquiry_received",
+      "title": "Inquiry from Prospective Client",
+      "description": "Inbound customer action processed by Otomatizon Intelligence.",
+      "entityName": "Prospective Client",
+      "payload": {},
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
     {
       "id": "evt_1788212128508",
       "businessId": "prof_james_01",
@@ -6255,6 +6434,17 @@
     }
   ],
   "insights": [
+    {
+      "id": "ins_1788248755378",
+      "businessId": "prof_james_01",
+      "eventId": "evt_1788248755378",
+      "type": "friction_detected",
+      "title": "Intelligence evaluation for Prospective Client",
+      "description": "Evaluated customer_inquiry_received from whatsapp_business.",
+      "confidenceScore": 96,
+      "provenance": "SIMULATED",
+      "createdAt": "2026-09-01T07:45:55.378Z"
+    },
     {
       "id": "ins_1788212128508",
       "businessId": "prof_james_01",
@@ -6765,6 +6955,45 @@
     }
   ],
   "invoices": [
+    {
+      "id": "INV_1788248758655",
+      "organizationId": "org_james",
+      "organizationName": "Kamau French & Academic Tutoring",
+      "planId": "growth",
+      "planName": "Growth",
+      "amountKes": 999,
+      "paymentMethod": "Safaricom M-Pesa Express (STK Push)",
+      "mpesaReceiptNumber": "QAH9012345",
+      "issuedAt": "2026-09-01T07:45:58.655Z",
+      "status": "PAID",
+      "billingPeriod": "30 Days (Monthly Recurring)"
+    },
+    {
+      "id": "INV_1788248709686",
+      "organizationId": "org_james",
+      "organizationName": "Kamau French & Academic Tutoring",
+      "planId": "growth",
+      "planName": "Growth",
+      "amountKes": 999,
+      "paymentMethod": "Safaricom M-Pesa Express (STK Push)",
+      "mpesaReceiptNumber": "QAH9012345",
+      "issuedAt": "2026-09-01T07:45:09.686Z",
+      "status": "PAID",
+      "billingPeriod": "30 Days (Monthly Recurring)"
+    },
+    {
+      "id": "INV_1788248288850",
+      "organizationId": "org_james",
+      "organizationName": "Kamau French & Academic Tutoring",
+      "planId": "growth",
+      "planName": "Growth",
+      "amountKes": 999,
+      "paymentMethod": "Safaricom M-Pesa Express (STK Push)",
+      "mpesaReceiptNumber": "QAH9012345",
+      "issuedAt": "2026-09-01T07:38:08.850Z",
+      "status": "PAID",
+      "billingPeriod": "30 Days (Monthly Recurring)"
+    },
     {
       "id": "INV_1788212134676",
       "organizationId": "org_james",
