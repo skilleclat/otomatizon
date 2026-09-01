@@ -37,7 +37,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   onClose,
   onSuccess
 }) => {
-  const { upgradePlan } = useOtomatizonStore();
+  const { state, upgradePlan } = useOtomatizonStore();
   const plan = getPlanConfig(planId);
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("mpesa");

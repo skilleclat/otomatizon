@@ -5469,7 +5469,7 @@ var _BrandLogo = require('@/components/BrandLogo');
   onClose,
   onSuccess
 }) => {
-  const { upgradePlan } = _store.useOtomatizonStore.call(void 0, );
+  const { state, upgradePlan } = _store.useOtomatizonStore.call(void 0, );
   const plan = _config.getPlanConfig.call(void 0, planId);
 
   const [paymentMethod, setPaymentMethod] = _react.useState("mpesa");
