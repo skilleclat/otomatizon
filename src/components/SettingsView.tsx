@@ -37,7 +37,7 @@ export const SettingsView = () => {
   const [activeTab, setActiveTab] = useState<SettingsTab>("billing");
 
   // Profile Form State
-  const [businessName, setBusinessName] = useState(state.businessProfile.name || "Kamau French & Academic Tutoring");
+  const [businessName, setBusinessName] = useState(state.businessProfile.name || "My Business Workspace");
   const [city, setCity] = useState(state.businessProfile.city || "Nairobi");
   const [dealSize, setDealSize] = useState(state.businessProfile.averageDealSizeKes || 3500);
   const [saveNotice, setSaveNotice] = useState(false);
@@ -633,7 +633,8 @@ export const SettingsView = () => {
               </label>
               <input
                 type="text"
-                defaultValue={state.session?.user?.fullName || "James Kamau"}
+                defaultValue={state.session?.user?.fullName || ""}
+                placeholder="Your Full Name"
                 className={DS.input}
               />
             </div>
@@ -644,7 +645,8 @@ export const SettingsView = () => {
               </label>
               <input
                 type="email"
-                defaultValue={state.session?.user?.email || "james.kamau.nairobi@gmail.com"}
+                defaultValue={state.session?.user?.email || ""}
+                placeholder="your.email@gmail.com"
                 className={DS.input}
               />
             </div>
@@ -655,7 +657,8 @@ export const SettingsView = () => {
               </label>
               <input
                 type="tel"
-                defaultValue={state.session?.user?.phone || "+254 722 000 123"}
+                defaultValue={state.session?.user?.phone || ""}
+                placeholder="+254 700 000 000"
                 className={DS.input}
               />
             </div>

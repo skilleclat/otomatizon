@@ -205,11 +205,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                   title="Open Account Menu"
                 >
                   <div className="w-7 h-7 rounded-full bg-[#002E25] border border-[#15803D]/40 text-emerald-300 flex items-center justify-center font-bold font-mono text-xs shadow-2xs shrink-0">
-                    {user?.fullName ? user.fullName[0] : "J"}
+                    {user?.fullName ? user.fullName[0].toUpperCase() : "U"}
                   </div>
                   <div className="hidden xl:block text-left">
                     <span className="block text-xs font-bold text-[#121316] leading-none group-hover:text-[#15803D] transition-colors truncate max-w-[100px]">
-                      {user?.fullName || "James Kamau"}
+                      {user?.fullName || "Account"}
                     </span>
                     <span className="block text-[10px] font-mono text-[#75777E] leading-none mt-0.5">
                       {state.businessProfile.city || "Nairobi"}
@@ -227,11 +227,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                     />
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl border border-[#EAE7DF] shadow-xl z-50 p-2 text-xs animate-fadeIn">
                       <div className="px-3 py-2 border-b border-[#EAE7DF] mb-1">
-                        <p className="font-bold text-[#121316] truncate">{user?.fullName || "James Kamau"}</p>
-                        <p className="text-[11px] font-mono text-[#75777E] truncate">{user?.email || "james@otomatizon.co.ke"}</p>
+                        <p className="font-bold text-[#121316] truncate">{user?.fullName || "My Account"}</p>
+                        <p className="text-[11px] font-mono text-[#75777E] truncate">{user?.email || "user@workspace.com"}</p>
                         <div className="mt-1.5 flex items-center gap-1.5">
                           <span className="px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] text-[9px] font-bold font-mono">
-                            {state.stats?.currentPlanId?.toUpperCase() || "PRO"} TIER
+                            {state.stats?.currentPlanId?.toUpperCase() || "FREE"} TIER
                           </span>
                           <span className="text-[10px] font-mono text-[#75777E]">Nairobi, Kenya</span>
                         </div>

@@ -56,7 +56,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [paypalTxId, setPaypalTxId] = useState("");
 
   // Stripe state
-  const [cardName, setCardName] = useState("James Kamau");
+  const [cardName, setCardName] = useState(state.session?.user?.fullName || "");
   const [cardNumber, setCardNumber] = useState("4242 •••• •••• 4242");
   const [cardExpiry, setCardExpiry] = useState("12/28");
   const [cardCvc, setCardCvc] = useState("382");
@@ -564,7 +564,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     value={cardName}
                     onChange={(e) => setCardName(e.target.value)}
                     className={DS.input}
-                    placeholder="James Kamau"
+                    placeholder="Full Name on Card"
                   />
                 </div>
 

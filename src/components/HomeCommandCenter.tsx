@@ -119,7 +119,7 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
   const [selectedTrace, setSelectedTrace] = useState<DecisionTrace | null>(null);
   const [isIntelligenceLabOpen, setIsIntelligenceLabOpen] = useState(false);
 
-  const userFirstName = state.session?.user?.fullName?.split(" ")[0] || "James";
+  const userFirstName = state.session?.user?.fullName?.split(" ")[0] || "";
   const orgName = state.organization?.name || state.businessProfile?.name || "Your Workspace";
   const currentHours = state.stats?.hoursSaved || state.metrics?.hoursSaved || 16.3;
   const currentRevenue = state.stats?.revenueKes || state.metrics?.revenueRecoveredKes || 88000;
@@ -147,7 +147,7 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
           </div>
 
           <h1 className="text-xl sm:text-2xl font-extrabold text-[#121316] tracking-tight">
-            Welcome, {userFirstName}. Here is what Otomatizon is orchestrating for {orgName}.
+            Welcome{userFirstName ? `, ${userFirstName}` : ""}. Here is what Otomatizon is orchestrating for {orgName}.
           </h1>
           <p className="text-xs text-[#4A4B50]">
             Your business operating system is running autonomously across WhatsApp, Google Workspace, and Safaricom M-Pesa.

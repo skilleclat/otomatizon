@@ -19,21 +19,21 @@ import {
 } from "@/types";
 
 export const defaultOrganization: Organization = {
-  id: "org_james_nairobi",
-  name: "James Tutoring & Coaching",
-  slug: "james-tutoring",
+  id: "org_workspace_01",
+  name: "My Business Workspace",
+  slug: "my-workspace",
   currency: "KES",
   timezone: "Africa/Nairobi",
-  planId: "starter",
+  planId: "free",
   createdAt: "2026-01-15T08:00:00Z"
 };
 
 export const defaultBusinessProfile: BusinessProfile = {
-  id: "prof_james_01",
-  organizationId: "org_james_nairobi",
-  businessType: "Private French Tutor & Exam Coach",
-  name: "James Kamau",
-  description: "Private one-on-one professional tutoring, language lessons, and DELF/DALF exam coaching in Nairobi.",
+  id: "prof_workspace_01",
+  organizationId: "org_workspace_01",
+  businessType: "Solo Consultant & Service Business",
+  name: "My Service Business",
+  description: "Independent service and consulting business operating in Nairobi.",
   location: "Kilimani, Nairobi",
   city: "Nairobi",
   country: "Kenya",

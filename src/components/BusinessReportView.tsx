@@ -99,7 +99,7 @@ export const BusinessReportView: React.FC<BusinessReportViewProps> = ({
           </h1>
 
           <p className="text-xs text-[#75777E] font-mono">
-            Prepared on August 30, 2026 for {report.businessName || "James French & Exam Tutoring"} &middot; {report.city || "Nairobi"}, {report.country || "Kenya"}
+            Prepared for {report.businessName || state.organization.name || "Your Workspace"} &middot; {report.city || "Nairobi"}, {report.country || "Kenya"}
           </p>
         </div>
 

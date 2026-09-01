@@ -70,7 +70,7 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
         body: JSON.stringify({
           code: "auth_code_live_" + Date.now(),
           userEmail: googleEmail,
-          userName: "James Kamau"
+          userName: state.session?.user?.fullName || googleEmail.split("@")[0]
         })
       });
       const data = await res.json();

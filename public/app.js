@@ -2006,21 +2006,21 @@ var _engine = require('./engine'); _createStarExport(_engine);
 
 
  const defaultOrganization = {
-  id: "org_james_nairobi",
-  name: "James Tutoring & Coaching",
-  slug: "james-tutoring",
+  id: "org_workspace_01",
+  name: "My Business Workspace",
+  slug: "my-workspace",
   currency: "KES",
   timezone: "Africa/Nairobi",
-  planId: "starter",
+  planId: "free",
   createdAt: "2026-01-15T08:00:00Z"
 }; exports.defaultOrganization = defaultOrganization;
 
  const defaultBusinessProfile = {
-  id: "prof_james_01",
-  organizationId: "org_james_nairobi",
-  businessType: "Private French Tutor & Exam Coach",
-  name: "James Kamau",
-  description: "Private one-on-one professional tutoring, language lessons, and DELF/DALF exam coaching in Nairobi.",
+  id: "prof_workspace_01",
+  organizationId: "org_workspace_01",
+  businessType: "Solo Consultant & Service Business",
+  name: "My Service Business",
+  description: "Independent service and consulting business operating in Nairobi.",
   location: "Kilimani, Nairobi",
   city: "Nairobi",
   country: "Kenya",
@@ -5430,7 +5430,7 @@ var _designsystem = require('@/lib/design-system');
 
   // Module: @/components/CheckoutModal
   define("@/components/CheckoutModal", function(require, exports) {
-    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }"use client";
+    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }"use client";
 
 var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
@@ -5488,7 +5488,7 @@ var _BrandLogo = require('@/components/BrandLogo');
   const [paypalTxId, setPaypalTxId] = _react.useState.call(void 0, "");
 
   // Stripe state
-  const [cardName, setCardName] = _react.useState.call(void 0, "James Kamau");
+  const [cardName, setCardName] = _react.useState.call(void 0, _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName]) || "");
   const [cardNumber, setCardNumber] = _react.useState.call(void 0, "4242 •••• •••• 4242");
   const [cardExpiry, setCardExpiry] = _react.useState.call(void 0, "12/28");
   const [cardCvc, setCardCvc] = _react.useState.call(void 0, "382");
@@ -5996,7 +5996,7 @@ var _BrandLogo = require('@/components/BrandLogo');
                     value: cardName,
                     onChange: (e) => setCardName(e.target.value),
                     className: _designsystem.DS.input,
-                    placeholder: "James Kamau" ,}
+                    placeholder: "Full Name on Card"   ,}
                   )
                 )
 
@@ -9804,11 +9804,11 @@ var _BrandLogo = require('@/components/BrandLogo');
                   title: "Open Account Menu"  ,}
 
                   , _react2.default.createElement('div', { className: "w-7 h-7 rounded-full bg-[#002E25] border border-[#15803D]/40 text-emerald-300 flex items-center justify-center font-bold font-mono text-xs shadow-2xs shrink-0"              ,}
-                    , _optionalChain([user, 'optionalAccess', _7 => _7.fullName]) ? user.fullName[0] : "J"
+                    , _optionalChain([user, 'optionalAccess', _7 => _7.fullName]) ? user.fullName[0].toUpperCase() : "U"
                   )
                   , _react2.default.createElement('div', { className: "hidden xl:block text-left"  ,}
                     , _react2.default.createElement('span', { className: "block text-xs font-bold text-[#121316] leading-none group-hover:text-[#15803D] transition-colors truncate max-w-[100px]"        ,}
-                      , _optionalChain([user, 'optionalAccess', _8 => _8.fullName]) || "James Kamau"
+                      , _optionalChain([user, 'optionalAccess', _8 => _8.fullName]) || "Account"
                     )
                     , _react2.default.createElement('span', { className: "block text-[10px] font-mono text-[#75777E] leading-none mt-0.5"     ,}
                       , state.businessProfile.city || "Nairobi"
@@ -9826,11 +9826,11 @@ var _BrandLogo = require('@/components/BrandLogo');
                     )
                     , _react2.default.createElement('div', { className: "absolute right-0 mt-2 w-56 bg-white rounded-2xl border border-[#EAE7DF] shadow-xl z-50 p-2 text-xs animate-fadeIn"            ,}
                       , _react2.default.createElement('div', { className: "px-3 py-2 border-b border-[#EAE7DF] mb-1"    ,}
-                        , _react2.default.createElement('p', { className: "font-bold text-[#121316] truncate"  ,}, _optionalChain([user, 'optionalAccess', _9 => _9.fullName]) || "James Kamau")
-                        , _react2.default.createElement('p', { className: "text-[11px] font-mono text-[#75777E] truncate"   ,}, _optionalChain([user, 'optionalAccess', _10 => _10.email]) || "james@otomatizon.co.ke")
+                        , _react2.default.createElement('p', { className: "font-bold text-[#121316] truncate"  ,}, _optionalChain([user, 'optionalAccess', _9 => _9.fullName]) || "My Account")
+                        , _react2.default.createElement('p', { className: "text-[11px] font-mono text-[#75777E] truncate"   ,}, _optionalChain([user, 'optionalAccess', _10 => _10.email]) || "user@workspace.com")
                         , _react2.default.createElement('div', { className: "mt-1.5 flex items-center gap-1.5"   ,}
                           , _react2.default.createElement('span', { className: "px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] text-[9px] font-bold font-mono"         ,}
-                            , _optionalChain([state, 'access', _11 => _11.stats, 'optionalAccess', _12 => _12.currentPlanId, 'optionalAccess', _13 => _13.toUpperCase, 'call', _14 => _14()]) || "PRO", " TIER"
+                            , _optionalChain([state, 'access', _11 => _11.stats, 'optionalAccess', _12 => _12.currentPlanId, 'optionalAccess', _13 => _13.toUpperCase, 'call', _14 => _14()]) || "FREE", " TIER"
                           )
                           , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#75777E]"  ,}, "Nairobi, Kenya" )
                         )
@@ -12558,7 +12558,7 @@ var _lucidereact = require('lucide-react');
 
   // Module: @/components/ConnectAppModal
   define("@/components/ConnectAppModal", function(require, exports) {
-    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }"use client";
+    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }"use client";
 
 var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
@@ -12630,7 +12630,7 @@ var _lucidereact = require('lucide-react');
         body: JSON.stringify({
           code: "auth_code_live_" + Date.now(),
           userEmail: googleEmail,
-          userName: "James Kamau"
+          userName: _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName]) || googleEmail.split("@")[0]
         })
       });
       const data = await res.json();
@@ -14781,7 +14781,7 @@ const metricDetails = {
   const [selectedTrace, setSelectedTrace] = _react.useState(null);
   const [isIntelligenceLabOpen, setIsIntelligenceLabOpen] = _react.useState.call(void 0, false);
 
-  const userFirstName = _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName, 'optionalAccess', _4 => _4.split, 'call', _5 => _5(" "), 'access', _6 => _6[0]]) || "James";
+  const userFirstName = _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName, 'optionalAccess', _4 => _4.split, 'call', _5 => _5(" "), 'access', _6 => _6[0]]) || "";
   const orgName = _optionalChain([state, 'access', _7 => _7.organization, 'optionalAccess', _8 => _8.name]) || _optionalChain([state, 'access', _9 => _9.businessProfile, 'optionalAccess', _10 => _10.name]) || "Your Workspace";
   const currentHours = _optionalChain([state, 'access', _11 => _11.stats, 'optionalAccess', _12 => _12.hoursSaved]) || _optionalChain([state, 'access', _13 => _13.metrics, 'optionalAccess', _14 => _14.hoursSaved]) || 16.3;
   const currentRevenue = _optionalChain([state, 'access', _15 => _15.stats, 'optionalAccess', _16 => _16.revenueKes]) || _optionalChain([state, 'access', _17 => _17.metrics, 'optionalAccess', _18 => _18.revenueRecoveredKes]) || 88000;
@@ -14808,8 +14808,8 @@ const metricDetails = {
             )
           )
 
-          , _react2.default.createElement('h1', { className: "text-xl sm:text-2xl font-extrabold text-[#121316] tracking-tight"    ,}, "Welcome, "
-             , userFirstName, ". Here is what Otomatizon is orchestrating for "        , orgName, "."
+          , _react2.default.createElement('h1', { className: "text-xl sm:text-2xl font-extrabold text-[#121316] tracking-tight"    ,}, "Welcome"
+            , userFirstName ? `, ${userFirstName}` : "", ". Here is what Otomatizon is orchestrating for "        , orgName, "."
           )
           , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50]" ,}, "Your business operating system is running autonomously across WhatsApp, Google Workspace, and Safaricom M-Pesa."
 
@@ -17076,7 +17076,7 @@ var _designsystem = require('@/lib/design-system');
   const [activeTab, setActiveTab] = _react.useState("billing");
 
   // Profile Form State
-  const [businessName, setBusinessName] = _react.useState.call(void 0, state.businessProfile.name || "Kamau French & Academic Tutoring");
+  const [businessName, setBusinessName] = _react.useState.call(void 0, state.businessProfile.name || "My Business Workspace");
   const [city, setCity] = _react.useState.call(void 0, state.businessProfile.city || "Nairobi");
   const [dealSize, setDealSize] = _react.useState.call(void 0, state.businessProfile.averageDealSizeKes || 3500);
   const [saveNotice, setSaveNotice] = _react.useState.call(void 0, false);
@@ -17672,7 +17672,8 @@ var _designsystem = require('@/lib/design-system');
               )
               , _react2.default.createElement('input', {
                 type: "text",
-                defaultValue: _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName]) || "James Kamau",
+                defaultValue: _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName]) || "",
+                placeholder: "Your Full Name"  ,
                 className: _designsystem.DS.input,}
               )
             )
@@ -17683,7 +17684,8 @@ var _designsystem = require('@/lib/design-system');
               )
               , _react2.default.createElement('input', {
                 type: "email",
-                defaultValue: _optionalChain([state, 'access', _4 => _4.session, 'optionalAccess', _5 => _5.user, 'optionalAccess', _6 => _6.email]) || "james.kamau.nairobi@gmail.com",
+                defaultValue: _optionalChain([state, 'access', _4 => _4.session, 'optionalAccess', _5 => _5.user, 'optionalAccess', _6 => _6.email]) || "",
+                placeholder: "your.email@gmail.com",
                 className: _designsystem.DS.input,}
               )
             )
@@ -17694,7 +17696,8 @@ var _designsystem = require('@/lib/design-system');
               )
               , _react2.default.createElement('input', {
                 type: "tel",
-                defaultValue: _optionalChain([state, 'access', _7 => _7.session, 'optionalAccess', _8 => _8.user, 'optionalAccess', _9 => _9.phone]) || "+254 722 000 123",
+                defaultValue: _optionalChain([state, 'access', _7 => _7.session, 'optionalAccess', _8 => _8.user, 'optionalAccess', _9 => _9.phone]) || "",
+                placeholder: "+254 700 000 000"   ,
                 className: _designsystem.DS.input,}
               )
             )
@@ -17870,8 +17873,8 @@ var _generatereportpdf = require('@/lib/pdf/generate-report-pdf');
 
           )
 
-          , _react2.default.createElement('p', { className: "text-xs text-[#75777E] font-mono"  ,}, "Prepared on August 30, 2026 for "
-                  , report.businessName || "James French & Exam Tutoring", " · "  , report.city || "Nairobi", ", " , report.country || "Kenya"
+          , _react2.default.createElement('p', { className: "text-xs text-[#75777E] font-mono"  ,}, "Prepared for "
+              , report.businessName || state.organization.name || "Your Workspace", " · "  , report.city || "Nairobi", ", " , report.country || "Kenya"
           )
         )
 
