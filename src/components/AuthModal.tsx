@@ -88,30 +88,33 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  const performGoogleSignIn = (gEmail: string, gName?: string) => {
+  const performGoogleSignIn = async (gEmail: string, gName?: string) => {
     setIsGoogleLoading(true);
     setMessage(null);
 
-    setTimeout(() => {
-      const resolvedName = gName || gEmail.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
-      const resolvedBusiness = businessName || `${resolvedName}'s Workspace`;
+    const resolvedName = gName || gEmail.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
+    const resolvedBusiness = businessName || `${resolvedName}'s Workspace`;
 
-      const googleUser = {
-        fullName: resolvedName,
-        email: gEmail,
-        phone: phone || "+254 700 000 000",
-        password: "google_oauth_authenticated_session",
-        businessName: resolvedBusiness
-      };
+    setFullName(resolvedName);
+    setEmail(gEmail);
+    setBusinessName(resolvedBusiness);
 
-      signup(googleUser);
-      setIsGoogleLoading(false);
-      setMessage({ type: "success", text: `Authenticated via Google (${googleUser.email})! Returning to landing page...` });
-      
-      setTimeout(() => {
-        onSuccess();
-      }, 100);
-    }, 120);
+    try {
+      await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: gEmail, fullName: resolvedName, phone })
+      });
+    } catch (err) {}
+
+    setIsGoogleLoading(false);
+    setOtpDigits(["", "", "", "", "", ""]);
+    setResendCountdown(45);
+    setMode("verify_otp");
+    setMessage({
+      type: "success",
+      text: `Code de sécurité envoyé à votre compte Google (${gEmail}). Veuillez consulter votre boîte de réception.`
+    });
   };
 
   const handleGoogleSubmitDirect = (e: React.FormEvent) => {

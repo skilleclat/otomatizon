@@ -36,19 +36,19 @@ const initialDb = {
   ],
   organizations: [
     {
-      id: "org_james",
-      name: "Kamau French & Academic Tutoring",
+      id: "org_workspace_01",
+      name: "My Business Workspace",
       planId: "starter",
       createdAt: "2026-08-01"
     }
   ],
   businessProfiles: [
     {
-      id: "bp_james",
-      organizationId: "org_james",
-      businessName: "Kamau French & Academic Tutoring",
-      businessType: "Private French Tutor & Exam Coach",
-      description: "Private DELF/DALF French lessons & exam preparation in Nairobi.",
+      id: "bp_workspace_01",
+      organizationId: "org_workspace_01",
+      businessName: "My Service Business",
+      businessType: "Solo Consultant & Service Business",
+      description: "Professional consulting, coaching, and client service business in Nairobi.",
       city: "Nairobi",
       country: "Kenya",
       currency: "KES",

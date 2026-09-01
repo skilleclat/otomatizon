@@ -4042,15 +4042,16 @@ async function syncWithServer() {
     const res = await fetch("/api/state");
     if (res.ok) {
       const data = await res.json();
-      if (data && data.organization) {
-        if (data.organization) globalState.organization = data.organization;
-        if (data.businessProfile) globalState.businessProfile = data.businessProfile;
-        if (data.connections && data.connections.length > 0) globalState.integrations = data.connections;
-        if (data.workflows && data.workflows.length > 0) globalState.workflows = data.workflows;
-        if (data.opportunities && data.opportunities.length > 0) globalState.opportunities = data.opportunities;
-        if (data.leads && data.leads.length > 0) globalState.leads = data.leads;
-        if (data.executions && data.executions.length > 0) globalState.executions = data.executions;
-        if (data.activityLogs && data.activityLogs.length > 0) globalState.activityLogs = data.activityLogs;
+      if (data) {
+        if (data.organization && globalState.organization.id === data.organization.id) {
+          globalState.organization = data.organization;
+        }
+        if (data.businessProfile && globalState.businessProfile.organizationId === data.businessProfile.organizationId) {
+          globalState.businessProfile = data.businessProfile;
+        }
+        if (data.connections && data.connections.length > 0 && globalState.integrations.length === 0) {
+          globalState.integrations = data.connections;
+        }
         notify();
       }
     }
@@ -8889,30 +8890,33 @@ var _BrandLogo = require('@/components/BrandLogo');
     }
   };
 
-  const performGoogleSignIn = (gEmail, gName) => {
+  const performGoogleSignIn = async (gEmail, gName) => {
     setIsGoogleLoading(true);
     setMessage(null);
 
-    setTimeout(() => {
-      const resolvedName = gName || gEmail.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
-      const resolvedBusiness = businessName || `${resolvedName}'s Workspace`;
+    const resolvedName = gName || gEmail.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
+    const resolvedBusiness = businessName || `${resolvedName}'s Workspace`;
 
-      const googleUser = {
-        fullName: resolvedName,
-        email: gEmail,
-        phone: phone || "+254 700 000 000",
-        password: "google_oauth_authenticated_session",
-        businessName: resolvedBusiness
-      };
+    setFullName(resolvedName);
+    setEmail(gEmail);
+    setBusinessName(resolvedBusiness);
 
-      signup(googleUser);
-      setIsGoogleLoading(false);
-      setMessage({ type: "success", text: `Authenticated via Google (${googleUser.email})! Returning to landing page...` });
-      
-      setTimeout(() => {
-        onSuccess();
-      }, 100);
-    }, 120);
+    try {
+      await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: gEmail, fullName: resolvedName, phone })
+      });
+    } catch (err) {}
+
+    setIsGoogleLoading(false);
+    setOtpDigits(["", "", "", "", "", ""]);
+    setResendCountdown(45);
+    setMode("verify_otp");
+    setMessage({
+      type: "success",
+      text: `Code de sécurité envoyé à votre compte Google (${gEmail}). Veuillez consulter votre boîte de réception.`
+    });
   };
 
   const handleGoogleSubmitDirect = (e) => {
