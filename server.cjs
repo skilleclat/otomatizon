@@ -2,6 +2,26 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+
+// Auto-load .env or .env.local in development
+[path.join(__dirname, ".env"), path.join(__dirname, ".env.local")].forEach(envFile => {
+  if (fs.existsSync(envFile)) {
+    try {
+      const content = fs.readFileSync(envFile, "utf8");
+      content.split("\n").forEach(line => {
+        const trimmed = line.trim();
+        if (trimmed && !trimmed.startsWith("#") && trimmed.includes("=")) {
+          const [key, ...rest] = trimmed.split("=");
+          const val = rest.join("=").trim().replace(/^["']|["']$/g, "");
+          if (key && val && !process.env[key.trim()]) {
+            process.env[key.trim()] = val;
+          }
+        }
+      });
+    } catch (e) {}
+  }
+});
+
 const { readDb, writeDb } = require("./src/lib/db/server-db.cjs");
 const { GoogleWorkspaceConnector } = require("./src/lib/connectors/google-connector.cjs");
 const { WhatsAppConnector } = require("./src/lib/connectors/whatsapp-connector.cjs");
