@@ -61,19 +61,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [googleName, setGoogleName] = useState("");
 
   useEffect(() => {
-    setMode(initialMode);
-    setMessage(null);
-  }, [initialMode, isOpen]);
+    if (isOpen) {
+      setMode(initialMode);
+      setMessage(null);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
-    let timer: any = null;
-    if (mode === "verify_otp" && resendCountdown > 0) {
-      timer = setInterval(() => {
-        setResendCountdown((prev) => prev - 1);
-      }, 1000);
-    }
+    if (mode !== "verify_otp") return;
+    const timer = setInterval(() => {
+      setResendCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
     return () => clearInterval(timer);
-  }, [mode, resendCountdown]);
+  }, [mode]);
 
   if (!isOpen) return null;
 

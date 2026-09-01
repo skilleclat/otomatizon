@@ -215,14 +215,18 @@ async function sendOtpEmail({ email, fullName, code }) {
         })
       });
       const data = await response.json();
-      console.log(`[EMAIL DISPATCH] Resend API response for ${normalizedEmail}:`, data);
-      return { success: true, provider: "resend", id: data.id };
+      if (!response.ok) {
+        console.error(`[EMAIL DISPATCH WARNING] Resend HTTP ${response.status}:`, data);
+      } else {
+        console.log(`[EMAIL DISPATCH SUCCESS] Resend dispatched to ${normalizedEmail} (id: ${data.id})`);
+        return { success: true, provider: "resend", id: data.id };
+      }
     } catch (err) {
       console.error("[EMAIL DISPATCH ERROR] Failed via Resend:", err);
     }
   }
 
-  console.log(`[EMAIL DISPATCH] 6-digit OTP for ${normalizedEmail}: ${code}`);
+  console.log(`[EMAIL DISPATCH] 6-digit OTP generated for ${normalizedEmail}: ${code}`);
   return { success: true, provider: "system", code };
 }
 
