@@ -122,8 +122,14 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
           </div>
 
           <button
-            onClick={onClose}
-            className="p-1.5 rounded-full text-[#75777E] hover:text-[#121316] transition-colors"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+            className="p-1.5 rounded-full text-[#75777E] hover:text-[#121316] transition-colors cursor-pointer"
+            title="Close"
           >
             <X className="w-5 h-5" />
           </button>

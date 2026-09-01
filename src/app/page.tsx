@@ -52,27 +52,50 @@ export default function AppRoot() {
       setView("app");
       setCurrentTab("settings");
       setIsCheckoutOpen(true);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/report")) {
       setView("app");
       setCurrentTab("report");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/opportunities")) {
       setView("app");
       setCurrentTab("opportunities");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/automations")) {
       setView("app");
       setCurrentTab("automations");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/apps")) {
       setView("app");
       setCurrentTab("apps");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/activity")) {
       setView("app");
       setCurrentTab("activity");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/settings")) {
       setView("app");
       setCurrentTab("settings");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app")) {
       setView("app");
       setCurrentTab("home");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else {
       setView("landing");
       setIsAuthOpen(false);
@@ -118,7 +141,15 @@ export default function AppRoot() {
   };
 
   const handleOpenAuth = (mode: "login" | "signup" = "signup") => {
-    navigateTo(mode === "login" ? "/login" : "/signup");
+    setAuthMode(mode);
+    setIsAuthOpen(true);
+  };
+
+  const handleCloseAuth = () => {
+    setIsAuthOpen(false);
+    if (typeof window !== "undefined" && (window.location.pathname === "/login" || window.location.pathname === "/signup")) {
+      window.history.pushState(null, "", view === "app" ? "/app" : "/");
+    }
   };
 
   const handleAuthSuccess = () => {
@@ -128,34 +159,48 @@ export default function AppRoot() {
 
   const handleOpenCheckout = (planId: string = "starter") => {
     setSelectedCheckoutPlan(planId);
-    navigateTo("/app/settings/billing");
+    setIsCheckoutOpen(true);
+  };
+
+  const handleCloseCheckout = () => {
+    setIsCheckoutOpen(false);
+    if (typeof window !== "undefined" && window.location.pathname.includes("/billing")) {
+      window.history.pushState(null, "", view === "app" ? "/app/settings" : "/");
+    }
+  };
+
+  const handleCloseOnboarding = () => {
+    setIsOnboardingOpen(false);
+    if (typeof window !== "undefined" && window.location.pathname === "/onboarding") {
+      window.history.pushState(null, "", view === "app" ? "/app" : "/");
+    }
   };
 
   if (view === "landing") {
     return (
       <main className="min-h-screen">
         <LandingPage
-          onOpenOnboarding={() => navigateTo("/onboarding")}
+          onOpenOnboarding={() => setIsOnboardingOpen(true)}
           onEnterDashboard={() => navigateTo("/app")}
           onOpenCheckout={handleOpenCheckout}
           onTriggerAuth={(mode = "login") => handleOpenAuth(mode)}
         />
         <OnboardingModal
           isOpen={isOnboardingOpen}
-          onClose={() => navigateTo("/")}
+          onClose={handleCloseOnboarding}
           onComplete={handleOnboardingComplete}
           onTriggerAuth={(mode = "signup") => handleOpenAuth(mode)}
         />
         <AuthModal
           isOpen={isAuthOpen}
           initialMode={authMode}
-          onClose={() => navigateTo("/")}
+          onClose={handleCloseAuth}
           onSuccess={handleAuthSuccess}
         />
         <CheckoutModal
           isOpen={isCheckoutOpen}
           planId={selectedCheckoutPlan}
-          onClose={() => navigateTo("/")}
+          onClose={handleCloseCheckout}
           onSuccess={() => {
             setIsCheckoutOpen(false);
             navigateTo("/app");
@@ -219,7 +264,7 @@ export default function AppRoot() {
       {/* Onboarding Wizard Modal */}
       <OnboardingModal
         isOpen={isOnboardingOpen}
-        onClose={() => navigateTo("/app")}
+        onClose={handleCloseOnboarding}
         onComplete={handleOnboardingComplete}
       />
 
@@ -227,7 +272,7 @@ export default function AppRoot() {
       <AuthModal
         isOpen={isAuthOpen}
         initialMode={authMode}
-        onClose={() => navigateTo("/app")}
+        onClose={handleCloseAuth}
         onSuccess={handleAuthSuccess}
       />
 
@@ -235,7 +280,7 @@ export default function AppRoot() {
       <CheckoutModal
         isOpen={isCheckoutOpen}
         planId={selectedCheckoutPlan}
-        onClose={() => navigateTo("/app/settings")}
+        onClose={handleCloseCheckout}
         onSuccess={() => {
           setIsCheckoutOpen(false);
           navigateTo("/app");

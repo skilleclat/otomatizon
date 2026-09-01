@@ -5600,7 +5600,12 @@ var _BrandLogo = require('@/components/BrandLogo');
           )
 
           , _react2.default.createElement('button', {
-            onClick: onClose,
+            type: "button",
+            onClick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            },
             className: "p-2 rounded-full text-[#75777E] hover:text-[#121316] hover:bg-[#EAE7DF]/60 transition-colors cursor-pointer"      ,
             title: "Close",}
 
@@ -9079,7 +9084,12 @@ var _BrandLogo = require('@/components/BrandLogo');
           )
 
           , _react2.default.createElement('button', {
-            onClick: onClose,
+            type: "button",
+            onClick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            },
             className: "p-2 rounded-full text-[#75777E] hover:text-[#121316] hover:bg-[#EAE7DF]/60 transition-colors cursor-pointer"      ,
             title: "Close",}
 
@@ -10143,8 +10153,14 @@ var _designsystem = require('@/lib/design-system');
           )
 
           , _react2.default.createElement('button', {
-            onClick: onClose,
-            className: "p-1.5 rounded-full text-[#75777E] hover:text-[#121316] transition-colors"    ,}
+            type: "button",
+            onClick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            },
+            className: "p-1.5 rounded-full text-[#75777E] hover:text-[#121316] transition-colors cursor-pointer"     ,
+            title: "Close",}
 
             , _react2.default.createElement(_lucidereact.X, { className: "w-5 h-5" ,} )
           )
@@ -19282,27 +19298,50 @@ var _store = require('@/lib/store');
       setView("app");
       setCurrentTab("settings");
       setIsCheckoutOpen(true);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/report")) {
       setView("app");
       setCurrentTab("report");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/opportunities")) {
       setView("app");
       setCurrentTab("opportunities");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/automations")) {
       setView("app");
       setCurrentTab("automations");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/apps")) {
       setView("app");
       setCurrentTab("apps");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/activity")) {
       setView("app");
       setCurrentTab("activity");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app/settings")) {
       setView("app");
       setCurrentTab("settings");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else if (clean.startsWith("/app")) {
       setView("app");
       setCurrentTab("home");
+      setIsCheckoutOpen(false);
+      setIsAuthOpen(false);
+      setIsOnboardingOpen(false);
     } else {
       setView("landing");
       setIsAuthOpen(false);
@@ -19348,7 +19387,15 @@ var _store = require('@/lib/store');
   };
 
   const handleOpenAuth = (mode = "signup") => {
-    navigateTo(mode === "login" ? "/login" : "/signup");
+    setAuthMode(mode);
+    setIsAuthOpen(true);
+  };
+
+  const handleCloseAuth = () => {
+    setIsAuthOpen(false);
+    if (typeof window !== "undefined" && (window.location.pathname === "/login" || window.location.pathname === "/signup")) {
+      window.history.pushState(null, "", view === "app" ? "/app" : "/");
+    }
   };
 
   const handleAuthSuccess = () => {
@@ -19358,34 +19405,48 @@ var _store = require('@/lib/store');
 
   const handleOpenCheckout = (planId = "starter") => {
     setSelectedCheckoutPlan(planId);
-    navigateTo("/app/settings/billing");
+    setIsCheckoutOpen(true);
+  };
+
+  const handleCloseCheckout = () => {
+    setIsCheckoutOpen(false);
+    if (typeof window !== "undefined" && window.location.pathname.includes("/billing")) {
+      window.history.pushState(null, "", view === "app" ? "/app/settings" : "/");
+    }
+  };
+
+  const handleCloseOnboarding = () => {
+    setIsOnboardingOpen(false);
+    if (typeof window !== "undefined" && window.location.pathname === "/onboarding") {
+      window.history.pushState(null, "", view === "app" ? "/app" : "/");
+    }
   };
 
   if (view === "landing") {
     return (
       _react2.default.createElement('main', { className: "min-h-screen",}
         , _react2.default.createElement(_LandingPage.LandingPage, {
-          onOpenOnboarding: () => navigateTo("/onboarding"),
+          onOpenOnboarding: () => setIsOnboardingOpen(true),
           onEnterDashboard: () => navigateTo("/app"),
           onOpenCheckout: handleOpenCheckout,
           onTriggerAuth: (mode = "login") => handleOpenAuth(mode),}
         )
         , _react2.default.createElement(_OnboardingModal.OnboardingModal, {
           isOpen: isOnboardingOpen,
-          onClose: () => navigateTo("/"),
+          onClose: handleCloseOnboarding,
           onComplete: handleOnboardingComplete,
           onTriggerAuth: (mode = "signup") => handleOpenAuth(mode),}
         )
         , _react2.default.createElement(_AuthModal.AuthModal, {
           isOpen: isAuthOpen,
           initialMode: authMode,
-          onClose: () => navigateTo("/"),
+          onClose: handleCloseAuth,
           onSuccess: handleAuthSuccess,}
         )
         , _react2.default.createElement(_CheckoutModal.CheckoutModal, {
           isOpen: isCheckoutOpen,
           planId: selectedCheckoutPlan,
-          onClose: () => navigateTo("/"),
+          onClose: handleCloseCheckout,
           onSuccess: () => {
             setIsCheckoutOpen(false);
             navigateTo("/app");
@@ -19449,7 +19510,7 @@ var _store = require('@/lib/store');
       /* Onboarding Wizard Modal */
       , _react2.default.createElement(_OnboardingModal.OnboardingModal, {
         isOpen: isOnboardingOpen,
-        onClose: () => navigateTo("/app"),
+        onClose: handleCloseOnboarding,
         onComplete: handleOnboardingComplete,}
       )
 
@@ -19457,7 +19518,7 @@ var _store = require('@/lib/store');
       , _react2.default.createElement(_AuthModal.AuthModal, {
         isOpen: isAuthOpen,
         initialMode: authMode,
-        onClose: () => navigateTo("/app"),
+        onClose: handleCloseAuth,
         onSuccess: handleAuthSuccess,}
       )
 
@@ -19465,7 +19526,7 @@ var _store = require('@/lib/store');
       , _react2.default.createElement(_CheckoutModal.CheckoutModal, {
         isOpen: isCheckoutOpen,
         planId: selectedCheckoutPlan,
-        onClose: () => navigateTo("/app/settings"),
+        onClose: handleCloseCheckout,
         onSuccess: () => {
           setIsCheckoutOpen(false);
           navigateTo("/app");

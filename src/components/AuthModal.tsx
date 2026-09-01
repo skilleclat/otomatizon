@@ -283,7 +283,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
 
           <button
-            onClick={onClose}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
             className="p-2 rounded-full text-[#75777E] hover:text-[#121316] hover:bg-[#EAE7DF]/60 transition-colors cursor-pointer"
             title="Close"
           >
