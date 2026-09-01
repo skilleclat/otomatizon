@@ -462,7 +462,7 @@ export const SettingsView = () => {
                     <input
                       type="email"
                       required
-                      placeholder="grace@otomatizon.co.ke"
+                      placeholder="grace@otomatizon.com"
                       value={inviteEmail}
                       onChange={(e) => setInviteEmail(e.target.value)}
                       className={DS.input}

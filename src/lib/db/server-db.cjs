@@ -26,11 +26,11 @@ function getDbTargetFile() {
 const initialDb = {
   users: [
     {
-      id: "user_james",
-      fullName: "James Kamau",
-      email: "james@otomatizon.co.ke",
-      phone: "+254 722 000 123",
-      organizationId: "org_james",
+      id: "user_admin_01",
+      fullName: "Admin User",
+      email: "admin@otomatizon.com",
+      phone: "+254 700 000 000",
+      organizationId: "org_workspace_01",
       createdAt: "2026-08-01"
     }
   ],

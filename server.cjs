@@ -1380,9 +1380,9 @@ async function sendOtpEmail({ email, fullName, code }) {
     const members = db.teamMembers || [
       {
         id: "tm_01",
-        organizationId: "org_james_nairobi",
-        name: "James Kamau",
-        email: "james@otomatizon.co.ke",
+        organizationId: "org_workspace_01",
+        name: "Admin User",
+        email: "admin@otomatizon.com",
         phone: "+254 722 000 123",
         role: "admin",
         status: "active",
@@ -1390,9 +1390,9 @@ async function sendOtpEmail({ email, fullName, code }) {
       },
       {
         id: "tm_02",
-        organizationId: "org_james_nairobi",
+        organizationId: "org_workspace_01",
         name: "Sarah Njeri",
-        email: "sarah.njeri@otomatizon.co.ke",
+        email: "sarah.njeri@otomatizon.com",
         phone: "+254 718 234 567",
         role: "collaborator",
         status: "active",

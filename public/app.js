@@ -3081,7 +3081,7 @@ var _engine = require('./engine'); _createStarExport(_engine);
     id: "tm_01",
     organizationId: "org_james_nairobi",
     name: "James Kamau",
-    email: "james@otomatizon.co.ke",
+    email: "james@otomatizon.com",
     phone: "+254 722 000 123",
     role: "admin",
     status: "active",
@@ -3093,7 +3093,7 @@ var _engine = require('./engine'); _createStarExport(_engine);
     id: "tm_02",
     organizationId: "org_james_nairobi",
     name: "Sarah Njeri",
-    email: "sarah.njeri@otomatizon.co.ke",
+    email: "sarah.njeri@otomatizon.com",
     phone: "+254 718 234 567",
     role: "collaborator",
     status: "active",
@@ -17518,7 +17518,7 @@ var _designsystem = require('@/lib/design-system');
                     , _react2.default.createElement('input', {
                       type: "email",
                       required: true,
-                      placeholder: "grace@otomatizon.co.ke",
+                      placeholder: "grace@otomatizon.com",
                       value: inviteEmail,
                       onChange: (e) => setInviteEmail(e.target.value),
                       className: _designsystem.DS.input,}
