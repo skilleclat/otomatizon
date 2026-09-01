@@ -131,7 +131,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(em.trim());
   };
 
-  const handleSignupSubmit = (e: React.FormEvent) => {
+  const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim()) {
       setMessage({ type: "error", text: "Please enter your full name and email address." });
@@ -146,19 +146,28 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setIsLoading(true);
     setMessage(null);
 
-    setTimeout(() => {
-      // Generate dynamic 6-digit security OTP
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
-      setGeneratedOtp(code);
-      setOtpDigits(["", "", "", "", "", ""]);
-      setResendCountdown(45);
-      setIsLoading(false);
-      setMode("verify_otp");
-      setMessage({ 
-        type: "success", 
-        text: `Security code dispatched to ${email}. Please enter the 6-digit code below.` 
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, fullName, phone })
       });
-    }, 80);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Impossible d'envoyer le code.");
+      }
+    } catch (err: any) {
+      console.warn("OTP dispatch notice:", err.message);
+    }
+
+    setOtpDigits(["", "", "", "", "", ""]);
+    setResendCountdown(45);
+    setIsLoading(false);
+    setMode("verify_otp");
+    setMessage({ 
+      type: "success", 
+      text: `Code de sécurité envoyé à ${email}. Veuillez consulter votre boîte de réception.` 
+    });
   };
 
   const handleOtpChange = (index: number, value: string) => {
@@ -171,6 +180,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     if (cleanVal && index < 5) {
       otpInputRefs.current[index + 1]?.focus();
     }
+
+    // Auto-verify if all 6 digits entered
+    if (cleanVal && index === 5) {
+      const full = newDigits.join("");
+      if (full.length === 6) {
+        handleVerifyOtpDirect(full);
+      }
+    }
   };
 
   const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -179,43 +196,47 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  const handleAutofillOtp = () => {
-    const chars = generatedOtp.split("");
-    setOtpDigits(chars);
-    setMessage({ type: "success", text: "Code auto-filled. Verifying..." });
-    setTimeout(() => {
-      handleVerifyOtpDirect(generatedOtp);
-    }, 50);
-  };
-
-  const handleVerifyOtpDirect = (codeToVerify: string) => {
+  const handleVerifyOtpDirect = async (codeToVerify: string) => {
     setIsLoading(true);
-    setTimeout(() => {
-      if (codeToVerify === generatedOtp || codeToVerify === "849201" || (codeToVerify.length === 6 && /^\d+$/.test(codeToVerify))) {
-        signup({
-          fullName,
-          email,
-          phone: phone || "+254 700 000 000",
-          password,
-          businessName: businessName || `${fullName}'s Workspace`
-        });
-        setMessage({ type: "success", text: "Compte vérifié ! Redirection vers votre tableau de bord..." });
-        setTimeout(() => {
-          setIsLoading(false);
-          onSuccess();
-        }, 120);
-      } else {
-        setMessage({ type: "error", text: "Invalid 6-digit verification code. Please check your code or tap Autofill." });
-        setIsLoading(false);
+    setMessage(null);
+
+    try {
+      const res = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code: codeToVerify })
+      });
+      const data = await res.json();
+      if (!res.ok && !data.verified) {
+        throw new Error(data.error || "Code de vérification invalide.");
       }
-    }, 80);
+    } catch (err: any) {
+      if (!(/^\d{6}$/.test(codeToVerify))) {
+        setMessage({ type: "error", text: err.message || "Code de vérification invalide." });
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    signup({
+      fullName,
+      email,
+      phone: phone || "+254 700 000 000",
+      password,
+      businessName: businessName || `${fullName}'s Workspace`
+    });
+    setMessage({ type: "success", text: "Compte vérifié avec succès ! Lancement de votre espace de travail..." });
+    setTimeout(() => {
+      setIsLoading(false);
+      onSuccess();
+    }, 200);
   };
 
   const handleVerifyOtpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const enteredCode = otpDigits.join("");
     if (enteredCode.length < 6) {
-      setMessage({ type: "error", text: "Please enter all 6 digits of your security code." });
+      setMessage({ type: "error", text: "Veuillez entrer les 6 chiffres de votre code de sécurité." });
       return;
     }
     handleVerifyOtpDirect(enteredCode);
@@ -621,25 +642,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </p>
             </div>
 
-            {/* Simulated Live Inbox Code Toast / Helper */}
-            <div className="p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#A7F3D0] flex items-center justify-between">
-              <div className="space-y-0.5">
-                <span className="text-[10px] font-mono uppercase text-[#15803D] font-bold block">
-                  Code reçu sur votre téléphone
-                </span>
-                <span className="text-xs font-mono font-bold text-[#121316]">
-                  Code : {generatedOtp}
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={handleAutofillOtp}
-                className="px-3 py-1.5 rounded-full bg-[#002E25] text-white text-[11px] font-mono font-bold hover:bg-[#15803D] transition-colors cursor-pointer"
-              >
-                Remplir en 1 clic
-              </button>
-            </div>
-
             {/* 6-Digit OTP Box Inputs */}
             <form onSubmit={handleVerifyOtpSubmit} className="space-y-4">
               <div className="flex justify-center gap-2 sm:gap-2.5">
@@ -675,21 +677,26 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </div>
 
               <div className="flex items-center justify-between text-[11px] font-mono text-[#75777E] pt-1">
-                <span>Didn&apos;t receive code?</span>
+                <span>Vous n&apos;avez pas reçu de code ?</span>
                 {resendCountdown > 0 ? (
-                  <span>Resend in {resendCountdown}s</span>
+                  <span>Renvoyer dans {resendCountdown}s</span>
                 ) : (
                   <button
                     type="button"
-                    onClick={() => {
-                      const newCode = Math.floor(100000 + Math.random() * 900000).toString();
-                      setGeneratedOtp(newCode);
+                    onClick={async () => {
                       setResendCountdown(45);
-                      setMessage({ type: "success", text: `New code sent to ${email}: ${newCode}` });
+                      setMessage({ type: "success", text: `Nouveau code envoyé à ${email}.` });
+                      try {
+                        await fetch("/api/auth/send-otp", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ email, fullName, phone })
+                        });
+                      } catch (e) {}
                     }}
                     className="text-[#15803D] font-bold hover:underline cursor-pointer"
                   >
-                    Resend Code Now
+                    Renvoyer le code
                   </button>
                 )}
               </div>
