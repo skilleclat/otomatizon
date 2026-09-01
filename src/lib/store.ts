@@ -42,7 +42,7 @@ import {
 import { executeWorkflowRun } from "@/lib/automation-runner";
 import { detectOpportunities } from "@/lib/decision-engine";
 
-const STORAGE_KEY = "otomatizon_state_v4";
+const STORAGE_KEY = "otomatizon_state_v5";
 
 export interface BusinessStats {
   revenueKes: number;
@@ -74,27 +74,19 @@ export interface AppState {
   stats: BusinessStats;
 }
 
-const defaultUser: User = {
-  id: "user_james",
-  fullName: "James Kamau",
-  email: "james@otomatizon.co.ke",
-  phone: "+254 722 000 123",
-  createdAt: "2026-08-01"
-};
-
 const getInitialState = (): AppState => {
   if (typeof window !== "undefined") {
     try {
-      // Clear legacy storage keys
-      ["otomatizon_state_v1", "otomatizon_state_v2", "otomatizon_state_v3"].forEach((k) => {
+      // Clear ALL legacy storage keys
+      ["otomatizon_state_v1", "otomatizon_state_v2", "otomatizon_state_v3", "otomatizon_state_v4"].forEach((k) => {
         try { localStorage.removeItem(k); } catch (e) {}
       });
 
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Force unauthenticated if mock user detected
-        if (parsed?.session?.user?.id === "user_james" || parsed?.session?.user?.fullName === "James Kamau" || !parsed?.session?.user) {
+        // Ensure that mock users or default test names NEVER default to logged in
+        if (!parsed?.session?.user || !parsed?.session?.token || parsed?.session?.user?.fullName === "James Kamau" || parsed?.session?.user?.id === "user_james" || parsed?.session?.user?.id === "usr_james_kamau") {
           parsed.session = {
             user: null,
             token: null,
@@ -1170,33 +1162,42 @@ export function useOtomatizonStore() {
   const resetToDefaults = () => {
     globalState = {
       session: {
-        user: defaultUser,
-        token: "tok_james_reset",
-        isAuthenticated: true
+        user: null,
+        token: null,
+        isAuthenticated: false
       },
       organization: defaultOrganization,
       businessProfile: defaultBusinessProfile,
-      integrations: defaultIntegrations,
-      leads: defaultLeads,
+      integrations: defaultIntegrations.map((i) => ({ ...i, connected: false, status: "disconnected" })),
+      connectedApps: defaultConnectedApps.map((c) => ({ ...c, connectionStatus: "NOT_CONNECTED" })),
+      dataSources: defaultDataSources.map((d) => ({ ...d, connectionStatus: "disconnected", syncStatus: "idle" })),
+      operationalEvents: [],
+      insights: [],
+      leads: [],
       opportunities: defaultOpportunities,
-      workflows: defaultWorkflows,
+      workflows: [],
       executions: [],
-      activityLogs: defaultActivityLogs,
-      teamMembers: defaultTeamMembers,
-      connectedApps: defaultConnectedApps,
-      dataSources: defaultDataSources,
-      operationalEvents: defaultOperationalEvents,
-      insights: defaultIntelligenceInsights,
-      metrics: defaultOperationalMetric,
+      activityLogs: [],
+      teamMembers: [],
+      metrics: {
+        id: "met_0",
+        hoursSaved: 0,
+        inquiriesProcessed: 0,
+        followUpsSent: 0,
+        revenueRecoveredKes: 0,
+        successRatePercent: 100,
+        lastUpdated: "Never",
+        provenance: "OBSERVED"
+      },
       stats: {
-        revenueKes: 84500,
-        newCustomers: 17,
-        bookings: 23,
-        activeAutomations: 3,
-        hoursSaved: 16.3,
-        leadsMonthlyLimit: 100,
-        automationsLimit: 5,
-        currentPlanId: "growth"
+        revenueKes: 0,
+        newCustomers: 0,
+        bookings: 0,
+        activeAutomations: 0,
+        hoursSaved: 0,
+        leadsMonthlyLimit: 20,
+        automationsLimit: 1,
+        currentPlanId: "free"
       }
     };
     notify();

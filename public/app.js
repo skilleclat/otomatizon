@@ -3919,7 +3919,7 @@ var _mockdata = require('@/lib/mock-data');
 
 
 
-const STORAGE_KEY = "otomatizon_state_v4";
+const STORAGE_KEY = "otomatizon_state_v5";
 
 
 
@@ -3950,28 +3950,20 @@ const STORAGE_KEY = "otomatizon_state_v4";
 
 
 
-
-const defaultUser = {
-  id: "user_james",
-  fullName: "James Kamau",
-  email: "james@otomatizon.co.ke",
-  phone: "+254 722 000 123",
-  createdAt: "2026-08-01"
-};
 
 const getInitialState = () => {
   if (typeof window !== "undefined") {
     try {
-      // Clear legacy storage keys
-      ["otomatizon_state_v1", "otomatizon_state_v2", "otomatizon_state_v3"].forEach((k) => {
+      // Clear ALL legacy storage keys
+      ["otomatizon_state_v1", "otomatizon_state_v2", "otomatizon_state_v3", "otomatizon_state_v4"].forEach((k) => {
         try { localStorage.removeItem(k); } catch (e) {}
       });
 
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Force unauthenticated if mock user detected
-        if (_optionalChain([parsed, 'optionalAccess', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.id]) === "user_james" || _optionalChain([parsed, 'optionalAccess', _4 => _4.session, 'optionalAccess', _5 => _5.user, 'optionalAccess', _6 => _6.fullName]) === "James Kamau" || !_optionalChain([parsed, 'optionalAccess', _7 => _7.session, 'optionalAccess', _8 => _8.user])) {
+        // Ensure that mock users or default test names NEVER default to logged in
+        if (!_optionalChain([parsed, 'optionalAccess', _ => _.session, 'optionalAccess', _2 => _2.user]) || !_optionalChain([parsed, 'optionalAccess', _3 => _3.session, 'optionalAccess', _4 => _4.token]) || _optionalChain([parsed, 'optionalAccess', _5 => _5.session, 'optionalAccess', _6 => _6.user, 'optionalAccess', _7 => _7.fullName]) === "James Kamau" || _optionalChain([parsed, 'optionalAccess', _8 => _8.session, 'optionalAccess', _9 => _9.user, 'optionalAccess', _10 => _10.id]) === "user_james" || _optionalChain([parsed, 'optionalAccess', _11 => _11.session, 'optionalAccess', _12 => _12.user, 'optionalAccess', _13 => _13.id]) === "usr_james_kamau") {
           parsed.session = {
             user: null,
             token: null,
@@ -4044,7 +4036,7 @@ function notify() {
 // Server Database Synchronizer (Only syncs when authenticated)
 async function syncWithServer() {
   if (typeof window === "undefined") return;
-  if (!_optionalChain([globalState, 'access', _9 => _9.session, 'optionalAccess', _10 => _10.isAuthenticated]) || !_optionalChain([globalState, 'access', _11 => _11.session, 'optionalAccess', _12 => _12.user])) return;
+  if (!_optionalChain([globalState, 'access', _14 => _14.session, 'optionalAccess', _15 => _15.isAuthenticated]) || !_optionalChain([globalState, 'access', _16 => _16.session, 'optionalAccess', _17 => _17.user])) return;
 
   try {
     const res = await fetch("/api/state");
@@ -4230,7 +4222,7 @@ async function syncWithServer() {
   };
 
   const login = async (email, password) => {
-    const existing = _optionalChain([globalState, 'access', _13 => _13.session, 'optionalAccess', _14 => _14.user]);
+    const existing = _optionalChain([globalState, 'access', _18 => _18.session, 'optionalAccess', _19 => _19.user]);
     let targetUser;
     
     if (existing && existing.email.toLowerCase() === email.toLowerCase()) {
@@ -4913,7 +4905,7 @@ async function syncWithServer() {
       role: member.role,
       status: "invited",
       joinedAt: new Date().toISOString(),
-      invitedBy: _optionalChain([globalState, 'access', _15 => _15.session, 'access', _16 => _16.user, 'optionalAccess', _17 => _17.fullName]) || "James Kamau"
+      invitedBy: _optionalChain([globalState, 'access', _20 => _20.session, 'access', _21 => _21.user, 'optionalAccess', _22 => _22.fullName]) || "James Kamau"
     };
     globalState.teamMembers.push(newMember);
     globalState.activityLogs.unshift({
@@ -5047,33 +5039,42 @@ async function syncWithServer() {
   const resetToDefaults = () => {
     globalState = {
       session: {
-        user: defaultUser,
-        token: "tok_james_reset",
-        isAuthenticated: true
+        user: null,
+        token: null,
+        isAuthenticated: false
       },
       organization: _mockdata.defaultOrganization,
       businessProfile: _mockdata.defaultBusinessProfile,
-      integrations: _mockdata.defaultIntegrations,
-      leads: _mockdata.defaultLeads,
+      integrations: _mockdata.defaultIntegrations.map((i) => ({ ...i, connected: false, status: "disconnected" })),
+      connectedApps: _mockdata.defaultConnectedApps.map((c) => ({ ...c, connectionStatus: "NOT_CONNECTED" })),
+      dataSources: _mockdata.defaultDataSources.map((d) => ({ ...d, connectionStatus: "disconnected", syncStatus: "idle" })),
+      operationalEvents: [],
+      insights: [],
+      leads: [],
       opportunities: _mockdata.defaultOpportunities,
-      workflows: _mockdata.defaultWorkflows,
+      workflows: [],
       executions: [],
-      activityLogs: _mockdata.defaultActivityLogs,
-      teamMembers: _mockdata.defaultTeamMembers,
-      connectedApps: _mockdata.defaultConnectedApps,
-      dataSources: _mockdata.defaultDataSources,
-      operationalEvents: _mockdata.defaultOperationalEvents,
-      insights: _mockdata.defaultIntelligenceInsights,
-      metrics: _mockdata.defaultOperationalMetric,
+      activityLogs: [],
+      teamMembers: [],
+      metrics: {
+        id: "met_0",
+        hoursSaved: 0,
+        inquiriesProcessed: 0,
+        followUpsSent: 0,
+        revenueRecoveredKes: 0,
+        successRatePercent: 100,
+        lastUpdated: "Never",
+        provenance: "OBSERVED"
+      },
       stats: {
-        revenueKes: 84500,
-        newCustomers: 17,
-        bookings: 23,
-        activeAutomations: 3,
-        hoursSaved: 16.3,
-        leadsMonthlyLimit: 100,
-        automationsLimit: 5,
-        currentPlanId: "growth"
+        revenueKes: 0,
+        newCustomers: 0,
+        bookings: 0,
+        activeAutomations: 0,
+        hoursSaved: 0,
+        leadsMonthlyLimit: 20,
+        automationsLimit: 1,
+        currentPlanId: "free"
       }
     };
     notify();
@@ -18534,10 +18535,10 @@ const DEMO_SCENARIOS = [
 
                 )
                 , _react2.default.createElement('button', {
-                  onClick: handleCtaClick,
+                  onClick: () => onTriggerAuth ? onTriggerAuth("signup") : handleCtaClick(),
                   className: "px-3.5 sm:px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25] shrink-0 whitespace-nowrap"                     ,}
 
-                  , _react2.default.createElement('span', null, "Find Automations" )
+                  , _react2.default.createElement('span', null, "Sign Up Free"  )
                   , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-emerald-300 shrink-0"   ,} )
                 )
               )
