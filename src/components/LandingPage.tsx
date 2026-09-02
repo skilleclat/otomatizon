@@ -45,17 +45,17 @@ interface DemoScenario {
 
 const DEMO_SCENARIOS: DemoScenario[] = [
   {
-    id: "clinic",
-    label: "PME / Clinique locale",
-    tagline: "Appointment no-shows and unconfirmed M-Pesa consultation deposits.",
-    input: "Patients call or WhatsApp for dental consultations. We write their names in a notebook and check M-Pesa messages on a shared reception phone.",
+    id: "sme",
+    label: "Petite & Moyenne Entreprise (PME)",
+    tagline: "Devis non relancés, suivi des commandes clients et vérification des paiements M-Pesa.",
+    input: "Clients send inquiries on WhatsApp and Instagram for quotes and services. We write orders in a spreadsheet, manually follow up on delayed approvals, and verify M-Pesa receipts on the office phone.",
     discovery: {
-      title: "Unverified Booking Deposits & No-Shows",
-      description: "Patients forget appointments; M-Pesa receipts checked manually.",
+      title: "Unfollowed Customer Quotes & Payment Delays",
+      description: "Quotes sent on WhatsApp without automatic 24h follow-up lead to lost sales.",
       impact: "CRITICAL"
     },
-    whyItMatters: "No-shows cost private practices and SMEs up to 30% of daily revenue because reminders aren't sent and deposits aren't automatically verified.",
-    recommended: "Match incoming M-Pesa confirmation codes directly with calendar bookings and dispatch automated appointment reminders."
+    whyItMatters: "SMEs lose up to 35% of qualified quote requests simply because manual follow-ups take too long during busy business hours.",
+    recommended: "Automatically log inquiries in Google Sheets, dispatch quotes, trigger polite 24h follow-ups, and reconcile incoming M-Pesa payments."
   },
   {
     id: "consulting",
@@ -69,6 +69,19 @@ const DEMO_SCENARIOS: DemoScenario[] = [
     },
     whyItMatters: "Consultants and service agencies spend 45 minutes per new client creating shared folders, sending prep materials, and confirming meeting times across separate tools.",
     recommended: "Trigger automatic Google Drive folder creation, share onboarding questionnaire, and log client details into Google Sheets on booking confirmation."
+  },
+  {
+    id: "clinic",
+    label: "Clinique & Cabinet médical",
+    tagline: "Appointment no-shows and unconfirmed M-Pesa consultation deposits.",
+    input: "Patients call or WhatsApp for medical consultations. We write their names in a notebook, send reminders manually, and check M-Pesa messages on a shared reception phone.",
+    discovery: {
+      title: "Unverified Booking Deposits & No-Shows",
+      description: "Patients forget appointments; M-Pesa receipts checked manually.",
+      impact: "CRITICAL"
+    },
+    whyItMatters: "No-shows cost local clinics and practices up to 30% of daily revenue because reminders aren't sent and deposits aren't automatically verified.",
+    recommended: "Match incoming M-Pesa confirmation codes directly with calendar bookings and dispatch automated SMS/WhatsApp appointment reminders."
   },
   {
     id: "tutoring",
