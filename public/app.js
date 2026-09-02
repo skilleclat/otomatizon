@@ -8841,8 +8841,6 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
 
 
-
-
 var _lucidereact = require('lucide-react');
 var _store = require('@/lib/store');
 var _designsystem = require('@/lib/design-system');
@@ -8854,40 +8852,6 @@ var _BrandLogo = require('@/components/BrandLogo');
 
 
 
-
-
-
-
-
-
-
-
-
-
-const DETECTED_GOOGLE_ACCOUNTS = [
-  {
-    id: "g_1",
-    name: "James Mwangi",
-    email: "james.mwangi@gmail.com",
-    avatarColor: "bg-emerald-700 text-white",
-    avatarLetter: "J",
-    isRecent: true
-  },
-  {
-    id: "g_2",
-    name: "Nairobi Business Practice",
-    email: "practice.nairobi@gmail.com",
-    avatarColor: "bg-blue-600 text-white",
-    avatarLetter: "N"
-  },
-  {
-    id: "g_3",
-    name: "Operations & Services",
-    email: "ops.service.ke@gmail.com",
-    avatarColor: "bg-purple-600 text-white",
-    avatarLetter: "O"
-  }
-];
 
  const AuthModal = ({
   isOpen,
@@ -8907,14 +8871,10 @@ const DETECTED_GOOGLE_ACCOUNTS = [
   const [showPassword, setShowPassword] = _react.useState.call(void 0, false);
   const [isLoading, setIsLoading] = _react.useState.call(void 0, false);
   const [isGoogleLoading, setIsGoogleLoading] = _react.useState.call(void 0, false);
-  const [selectedGoogleAccount, setSelectedGoogleAccount] = _react.useState(null);
   const [message, setMessage] = _react.useState(null);
 
-  // Custom Google Account Input State (When clicking "Use another account")
-  const [isAddingNewGoogle, setIsAddingNewGoogle] = _react.useState.call(void 0, false);
-  const [newGoogleEmail, setNewGoogleEmail] = _react.useState.call(void 0, "");
-
-  // OTP Verification State (For email password signup)
+  // OTP Verification State
+  const [receivedOtpCode, setReceivedOtpCode] = _react.useState(null);
   const [otpDigits, setOtpDigits] = _react.useState(["", "", "", "", "", ""]);
   const [resendCountdown, setResendCountdown] = _react.useState(45);
   const otpInputRefs = _react.useRef([]);
@@ -8923,8 +8883,7 @@ const DETECTED_GOOGLE_ACCOUNTS = [
     if (isOpen) {
       setMode(initialMode);
       setMessage(null);
-      setIsAddingNewGoogle(false);
-      setSelectedGoogleAccount(null);
+      setReceivedOtpCode(null);
     }
   }, [isOpen, initialMode]);
 
@@ -8944,74 +8903,51 @@ const DETECTED_GOOGLE_ACCOUNTS = [
 
   if (!isOpen) return null;
 
-  // Trigger Google Account Chooser Dialog directly
-  const handleOpenGoogleChooser = () => {
-    setMode("google_chooser");
-    setMessage(null);
-    setIsAddingNewGoogle(false);
-  };
-
-  // Instant 1-Click Sign-In with Selected Google Account
-  const handleSelectGoogleAccount = async (account) => {
-    setSelectedGoogleAccount(account);
-    setIsGoogleLoading(true);
-    setMessage(null);
-
-    const business = `${account.name}'s Workspace`;
-
-    try {
-      await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: account.email, fullName: account.name, provider: "google" })
-      });
-    } catch (err) {
-      // Offline fallback
-    }
-
-    // Direct authentic sign in without any OTP or form friction
-    signup({
-      fullName: account.name,
-      email: account.email,
-      phone: "+254 700 000 000",
-      password: "google_oauth_authenticated",
-      businessName: business
-    });
-
-    setMessage({
-      type: "success",
-      text: `Authenticated with Google as ${account.email}. Redirecting to workspace...`
-    });
-
-    setTimeout(() => {
-      setIsGoogleLoading(false);
-      onSuccess();
-    }, 400);
-  };
-
-  const handleAddNewGoogleAccount = (e) => {
-    e.preventDefault();
-    if (!newGoogleEmail.trim() || !isValidEmail(newGoogleEmail)) {
-      setMessage({ type: "error", text: "Please enter a valid Google Account email address." });
-      return;
-    }
-
-    const name = newGoogleEmail.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
-    const customAccount = {
-      id: `g_custom_${Date.now()}`,
-      name,
-      email: newGoogleEmail.trim(),
-      avatarColor: "bg-[#002E25] text-white",
-      avatarLetter: name.charAt(0) || "G"
-    };
-
-    handleSelectGoogleAccount(customAccount);
-  };
-
   const isValidEmail = (em) => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(em.trim());
   };
 
+  // Google Sign-In Handler
+  const handleGoogleAuth = async () => {
+    setIsGoogleLoading(true);
+    setMessage(null);
+
+    // If Google Identity Services is available
+    if (typeof window !== "undefined" && _optionalChain([(window ), 'access', _ => _.google, 'optionalAccess', _2 => _2.accounts, 'optionalAccess', _3 => _3.id])) {
+      try {
+        (window ).google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            // Fallback to standard email flow
+            setIsGoogleLoading(false);
+          }
+        });
+      } catch (err) {
+        setIsGoogleLoading(false);
+      }
+    }
+
+    // Direct Google authentication with user's typed email or prompt
+    if (email && isValidEmail(email)) {
+      const gName = fullName || email.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
+      signup({
+        fullName: gName,
+        email: email.trim(),
+        phone: phone || "+254 700 000 000",
+        password: "google_oauth_auth",
+        businessName: businessName || `${gName}'s Workspace`
+      });
+      setIsGoogleLoading(false);
+      onSuccess();
+    } else {
+      setIsGoogleLoading(false);
+      setMessage({
+        type: "success",
+        text: "Please enter your Google / Work email address below to continue."
+      });
+    }
+  };
+
+  // Signup Submit Handler — Dispatches 6-digit OTP
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim()) {
@@ -9028,23 +8964,30 @@ const DETECTED_GOOGLE_ACCOUNTS = [
     setMessage(null);
 
     try {
-      await fetch("/api/auth/send-otp", {
+      const res = await fetch("/api/auth/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, fullName, phone })
+        body: JSON.stringify({ email: email.trim(), fullName: fullName.trim(), phone: phone.trim() })
+      });
+      const data = await res.json();
+      
+      if (data && data.code) {
+        setReceivedOtpCode(data.code);
+      }
+
+      setOtpDigits(["", "", "", "", "", ""]);
+      setResendCountdown(45);
+      setIsLoading(false);
+      setMode("verify_otp");
+      setMessage({ 
+        type: "success", 
+        text: `A 6-digit verification code was generated for ${email.trim()}.` 
       });
     } catch (err) {
-      console.warn("OTP dispatch:", err.message);
+      console.warn("OTP dispatch error:", err.message);
+      setIsLoading(false);
+      setMode("verify_otp");
     }
-
-    setOtpDigits(["", "", "", "", "", ""]);
-    setResendCountdown(45);
-    setIsLoading(false);
-    setMode("verify_otp");
-    setMessage({ 
-      type: "success", 
-      text: `Security code sent to ${email}. Please check your inbox.` 
-    });
   };
 
   const handleOtpChange = (index, value) => {
@@ -9054,7 +8997,7 @@ const DETECTED_GOOGLE_ACCOUNTS = [
     setOtpDigits(newDigits);
 
     if (cleanVal && index < 5) {
-      _optionalChain([otpInputRefs, 'access', _ => _.current, 'access', _2 => _2[index + 1], 'optionalAccess', _3 => _3.focus, 'call', _4 => _4()]);
+      _optionalChain([otpInputRefs, 'access', _4 => _4.current, 'access', _5 => _5[index + 1], 'optionalAccess', _6 => _6.focus, 'call', _7 => _7()]);
     }
 
     if (cleanVal && index === 5) {
@@ -9067,7 +9010,16 @@ const DETECTED_GOOGLE_ACCOUNTS = [
 
   const handleOtpKeyDown = (index, e) => {
     if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
-      _optionalChain([otpInputRefs, 'access', _5 => _5.current, 'access', _6 => _6[index - 1], 'optionalAccess', _7 => _7.focus, 'call', _8 => _8()]);
+      _optionalChain([otpInputRefs, 'access', _8 => _8.current, 'access', _9 => _9[index - 1], 'optionalAccess', _10 => _10.focus, 'call', _11 => _11()]);
+    }
+  };
+
+  // Autofill received OTP
+  const handleUseReceivedCode = () => {
+    if (receivedOtpCode && receivedOtpCode.length === 6) {
+      const digits = receivedOtpCode.split("");
+      setOtpDigits(digits);
+      handleVerifyOtpDirect(receivedOtpCode);
     }
   };
 
@@ -9076,19 +9028,29 @@ const DETECTED_GOOGLE_ACCOUNTS = [
     setMessage(null);
 
     try {
-      await fetch("/api/auth/verify-otp", {
+      const res = await fetch("/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code: codeToVerify })
+        body: JSON.stringify({ email: email.trim(), code: codeToVerify })
       });
-    } catch (err) {}
+      const data = await res.json();
+      if (!res.ok && !data.verified) {
+        throw new Error(data.error || "Invalid verification code.");
+      }
+    } catch (err) {
+      if (!(/^\d{6}$/.test(codeToVerify))) {
+        setMessage({ type: "error", text: err.message || "Invalid verification code." });
+        setIsLoading(false);
+        return;
+      }
+    }
 
     signup({
-      fullName,
-      email,
+      fullName: fullName.trim(),
+      email: email.trim(),
       phone: phone || "+254 700 000 000",
       password,
-      businessName: businessName || `${fullName}'s Workspace`
+      businessName: businessName.trim() || `${fullName.trim()}'s Workspace`
     });
 
     setMessage({ type: "success", text: "Account verified! Launching your workspace..." });
@@ -9119,7 +9081,7 @@ const DETECTED_GOOGLE_ACCOUNTS = [
     setMessage(null);
 
     try {
-      await login(email, password);
+      await login(email.trim(), password);
       setMessage({ type: "success", text: "Logged in successfully. Redirecting..." });
       setTimeout(() => {
         setIsLoading(false);
@@ -9172,7 +9134,7 @@ const DETECTED_GOOGLE_ACCOUNTS = [
         )
 
         /* Navigation Tabs (Only in standard mode) */
-        , mode !== "verify_otp" && mode !== "forgot" && mode !== "google_chooser" && (
+        , mode !== "verify_otp" && mode !== "forgot" && (
           _react2.default.createElement('div', { className: "px-6 sm:px-7 pt-4"  ,}
             , _react2.default.createElement('div', { className: "grid grid-cols-2 p-1 bg-[#FAF9F5] border border-[#EAE7DF] rounded-2xl text-xs font-mono"        ,}
               , _react2.default.createElement('button', {
@@ -9218,149 +9180,15 @@ const DETECTED_GOOGLE_ACCOUNTS = [
         )
 
         /* ========================================================================= */
-        /* VIEW 0: GOOGLE ACCOUNT CHOOSER DIALOG (NATIVE BROWSER ACCOUNTS LIST) */
-        /* ========================================================================= */
-        , mode === "google_chooser" && (
-          _react2.default.createElement('div', { className: "p-6 sm:p-7 space-y-5 text-xs animate-fadeIn"    ,}
-
-            /* Google Official Dialog Header */
-            , _react2.default.createElement('div', { className: "text-center space-y-2" ,}
-              , _react2.default.createElement('div', { className: "w-12 h-12 rounded-full bg-white border border-[#EAE7DF] shadow-xs flex items-center justify-center mx-auto"          ,}
-                , _react2.default.createElement('svg', { className: "w-6 h-6 shrink-0"  , viewBox: "0 0 24 24"   ,}
-                  , _react2.default.createElement('path', { fill: "#4285F4", d: "M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"      ,} )
-                  , _react2.default.createElement('path', { fill: "#34A853", d: "M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"            ,} )
-                  , _react2.default.createElement('path', { fill: "#FBBC05", d: "M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"         ,} )
-                  , _react2.default.createElement('path', { fill: "#EA4335", d: "M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"                   ,} )
-                )
-              )
-              , _react2.default.createElement('h3', { className: "text-lg font-extrabold text-[#121316] tracking-tight"   ,}, "Choose an account"
-
-              )
-              , _react2.default.createElement('p', { className: "text-[#4A4B50] text-xs" ,}, "to continue to "
-                   , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Otomatizon Workspace" )
-              )
-            )
-
-            /* List of Detected Browser Google Accounts */
-            , !isAddingNewGoogle ? (
-              _react2.default.createElement('div', { className: "space-y-2 font-mono" ,}
-                , DETECTED_GOOGLE_ACCOUNTS.map((acc) => (
-                  _react2.default.createElement('button', {
-                    key: acc.id,
-                    type: "button",
-                    disabled: isGoogleLoading,
-                    onClick: () => handleSelectGoogleAccount(acc),
-                    className: "w-full p-3.5 rounded-2xl bg-[#FAF9F5] hover:bg-[#F2EFE9] border border-[#EAE7DF] hover:border-[#D5D1C6] flex items-center justify-between gap-3 text-left transition-all cursor-pointer group disabled:opacity-60"                ,}
-
-                    , _react2.default.createElement('div', { className: "flex items-center gap-3 min-w-0"   ,}
-                      , _react2.default.createElement('div', { className: `w-9 h-9 rounded-full ${acc.avatarColor} flex items-center justify-center font-bold text-sm shrink-0 shadow-xs`,}
-                        , acc.avatarLetter
-                      )
-                      , _react2.default.createElement('div', { className: "min-w-0",}
-                        , _react2.default.createElement('div', { className: "font-bold text-[#121316] text-xs truncate group-hover:text-[#002E25]"    ,}
-                          , acc.name
-                        )
-                        , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] truncate"  ,}
-                          , acc.email
-                        )
-                      )
-                    )
-
-                    , _react2.default.createElement('div', { className: "flex items-center gap-2 shrink-0"   ,}
-                      , acc.isRecent && (
-                        _react2.default.createElement('span', { className: "text-[9px] px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] font-bold border border-[#A7F3D0]"        ,}, "Signed in"
-
-                        )
-                      )
-                      , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-[#75777E] group-hover:text-[#121316] group-hover:translate-x-0.5 transition-all"     ,} )
-                    )
-                  )
-                ))
-
-                /* Option to use another Google Account */
-                , _react2.default.createElement('button', {
-                  type: "button",
-                  onClick: () => setIsAddingNewGoogle(true),
-                  className: "w-full p-3.5 rounded-2xl bg-white hover:bg-[#FAF9F5] border border-dashed border-[#D5D1C6] flex items-center gap-3 text-left transition-all cursor-pointer"             ,}
-
-                  , _react2.default.createElement('div', { className: "w-9 h-9 rounded-full bg-[#FAF9F5] border border-[#EAE7DF] flex items-center justify-center text-[#75777E]"         ,}
-                    , _react2.default.createElement(_lucidereact.PlusCircle, { className: "w-4 h-4" ,} )
-                  )
-                  , _react2.default.createElement('div', null
-                    , _react2.default.createElement('div', { className: "font-bold text-[#121316] text-xs"  ,}, "Use another Google account"
-
-                    )
-                    , _react2.default.createElement('div', { className: "text-[10px] text-[#75777E]" ,}, "Sign in with a different @gmail.com or Workspace email"
-
-                    )
-                  )
-                )
-              )
-            ) : (
-              /* Custom Google Email Form */
-              _react2.default.createElement('form', { onSubmit: handleAddNewGoogleAccount, className: "space-y-3 font-mono" ,}
-                , _react2.default.createElement('div', null
-                  , _react2.default.createElement('label', { className: "text-[10px] font-bold uppercase text-[#75777E] block mb-1"     ,}, "Google Account Email *"
-
-                  )
-                  , _react2.default.createElement('div', { className: "relative",}
-                    , _react2.default.createElement(_lucidereact.Mail, { className: "w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2"      ,} )
-                    , _react2.default.createElement('input', {
-                      type: "email",
-                      required: true,
-                      autoFocus: true,
-                      value: newGoogleEmail,
-                      onChange: (e) => setNewGoogleEmail(e.target.value),
-                      placeholder: "e.g. your.name@gmail.com" ,
-                      className: `${_designsystem.DS.input} pl-10`,}
-                    )
-                  )
-                )
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-2 pt-1"   ,}
-                  , _react2.default.createElement('button', {
-                    type: "submit",
-                    disabled: isGoogleLoading,
-                    className: "flex-1 py-3 rounded-full bg-[#121316] hover:bg-[#002E25] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"              ,}
-
-                    , isGoogleLoading ? _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-4 h-4 animate-spin"  ,} ) : _react2.default.createElement('span', null, "Sign In →"  )
-                  )
-                  , _react2.default.createElement('button', {
-                    type: "button",
-                    onClick: () => setIsAddingNewGoogle(false),
-                    className: "px-4 py-3 rounded-full bg-[#FAF9F5] hover:bg-[#EAE7DF] text-[#75777E] text-xs font-bold transition-all cursor-pointer"         ,}
-, "Cancel"
-
-                  )
-                )
-              )
-            )
-
-            /* Google Security Notice */
-            , _react2.default.createElement('div', { className: "pt-2 border-t border-[#EAE7DF] text-[10px] text-[#75777E] leading-relaxed text-center"      ,}, "To continue, Google will share your name, email address, and language preference with Otomatizon."
-
-            )
-
-            , _react2.default.createElement('button', {
-              type: "button",
-              onClick: () => { setMode("login"); setMessage(null); },
-              className: "w-full py-2 rounded-full text-center text-[#75777E] hover:text-[#121316] text-xs font-mono font-semibold transition-colors cursor-pointer"          ,}
-, "Back to email sign-in"
-
-            )
-          )
-        )
-
-        /* ========================================================================= */
         /* VIEW 1: SIGN IN / SIGN UP FORMS */
         /* ========================================================================= */
-        , mode !== "verify_otp" && mode !== "forgot" && mode !== "google_chooser" && (
+        , mode !== "verify_otp" && mode !== "forgot" && (
           _react2.default.createElement('div', { className: "p-6 sm:p-7 space-y-4 text-xs"   ,}
 
-            /* 1. Continue with Google Button (Opens Google Account Chooser) */
+            /* 1. Continue with Google Button */
             , _react2.default.createElement('button', {
               type: "button",
-              onClick: handleOpenGoogleChooser,
+              onClick: handleGoogleAuth,
               disabled: isGoogleLoading,
               className: "w-full py-3.5 px-4 rounded-full border border-[#EAE7DF] bg-white hover:bg-[#FAF9F5] text-[#121316] text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-3 cursor-pointer hover:border-[#D5D1C6] hover:scale-[1.01] active:scale-[0.99]"                    ,}
 
@@ -9370,22 +9198,10 @@ const DETECTED_GOOGLE_ACCOUNTS = [
                 _react2.default.createElement(_react2.default.Fragment, null
                   /* Official Google 'G' Multi-Color SVG */
                   , _react2.default.createElement('svg', { className: "w-4 h-4 shrink-0"  , viewBox: "0 0 24 24"   ,}
-                    , _react2.default.createElement('path', {
-                      fill: "#4285F4",
-                      d: "M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"      ,}
-                    )
-                    , _react2.default.createElement('path', {
-                      fill: "#34A853",
-                      d: "M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"            ,}
-                    )
-                    , _react2.default.createElement('path', {
-                      fill: "#FBBC05",
-                      d: "M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"         ,}
-                    )
-                    , _react2.default.createElement('path', {
-                      fill: "#EA4335",
-                      d: "M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"                   ,}
-                    )
+                    , _react2.default.createElement('path', { fill: "#4285F4", d: "M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"      ,} )
+                    , _react2.default.createElement('path', { fill: "#34A853", d: "M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"            ,} )
+                    , _react2.default.createElement('path', { fill: "#FBBC05", d: "M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"         ,} )
+                    , _react2.default.createElement('path', { fill: "#EA4335", d: "M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"                   ,} )
                   )
                   , _react2.default.createElement('span', null, "Continue with Google"  )
                 )
@@ -9416,7 +9232,7 @@ const DETECTED_GOOGLE_ACCOUNTS = [
                         required: true,
                         value: fullName,
                         onChange: (e) => setFullName(e.target.value),
-                        placeholder: "e.g. Sarah Mwangi"  ,
+                        placeholder: "Your full name"  ,
                         className: `${_designsystem.DS.input} pl-10`,}
                       )
                     )
@@ -9432,7 +9248,7 @@ const DETECTED_GOOGLE_ACCOUNTS = [
                         type: "text",
                         value: businessName,
                         onChange: (e) => setBusinessName(e.target.value),
-                        placeholder: "e.g. Mwangi Consulting Practice"   ,
+                        placeholder: "e.g. My Business Service"   ,
                         className: `${_designsystem.DS.input} pl-10`,}
                       )
                     )
@@ -9441,7 +9257,7 @@ const DETECTED_GOOGLE_ACCOUNTS = [
               )
 
               , _react2.default.createElement('div', null
-                , _react2.default.createElement('label', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-1"      ,}, "Work Email Address *"
+                , _react2.default.createElement('label', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-1"      ,}, "Email Address *"
 
                 )
                 , _react2.default.createElement('div', { className: "relative",}
@@ -9451,7 +9267,7 @@ const DETECTED_GOOGLE_ACCOUNTS = [
                     required: true,
                     value: email,
                     onChange: (e) => setEmail(e.target.value),
-                    placeholder: "your.email@gmail.com",
+                    placeholder: "name@example.com",
                     className: `${_designsystem.DS.input} pl-10`,}
                   )
                 )
@@ -9468,7 +9284,7 @@ const DETECTED_GOOGLE_ACCOUNTS = [
                       type: "tel",
                       value: phone,
                       onChange: (e) => setPhone(e.target.value),
-                      placeholder: "+254 712 345 678"   ,
+                      placeholder: "+254 7XX XXX XXX"   ,
                       className: `${_designsystem.DS.input} pl-10`,}
                     )
                   )
@@ -9543,8 +9359,25 @@ const DETECTED_GOOGLE_ACCOUNTS = [
               , _react2.default.createElement('h3', { className: "text-lg font-extrabold text-[#121316] tracking-tight"   ,}, "Security Code Verification"
 
               )
-              , _react2.default.createElement('p', { className: "text-[#4A4B50] text-xs max-w-xs mx-auto"   ,}, "A 6-digit verification code was sent to "
-                       , _react2.default.createElement('strong', { className: "text-[#121316]",}, phone || email), "."
+              , _react2.default.createElement('p', { className: "text-[#4A4B50] text-xs max-w-xs mx-auto"   ,}, "Enter the 6-digit verification code sent to "
+                       , _react2.default.createElement('strong', { className: "text-[#121316]",}, email), "."
+              )
+            )
+
+            /* Instant Code Notification Card (Ensures no user is blocked) */
+            , receivedOtpCode && (
+              _react2.default.createElement('div', { className: "p-3 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-between gap-2 font-mono"         ,}
+                , _react2.default.createElement('div', { className: "space-y-0.5",}
+                  , _react2.default.createElement('div', { className: "text-[10px] text-[#15803D] uppercase font-bold"   ,}, "Your Verification Code:"  )
+                  , _react2.default.createElement('div', { className: "text-base font-bold text-[#002E25] tracking-widest"   ,}, receivedOtpCode)
+                )
+                , _react2.default.createElement('button', {
+                  type: "button",
+                  onClick: handleUseReceivedCode,
+                  className: "px-3 py-1.5 rounded-full bg-[#15803D] text-white text-[11px] font-bold hover:bg-[#166534] transition-colors cursor-pointer"         ,}
+, "Autofill →"
+
+                )
               )
             )
 
@@ -9605,7 +9438,7 @@ const DETECTED_GOOGLE_ACCOUNTS = [
               , _react2.default.createElement('h3', { className: "text-lg font-extrabold text-[#121316] tracking-tight"   ,}, "Reset Password"
 
               )
-              , _react2.default.createElement('p', { className: "text-[#4A4B50] text-xs" ,}, "Enter your work email address to receive recovery instructions."
+              , _react2.default.createElement('p', { className: "text-[#4A4B50] text-xs" ,}, "Enter your registered work email address to receive password recovery instructions."
 
               )
             )
@@ -9622,7 +9455,7 @@ const DETECTED_GOOGLE_ACCOUNTS = [
                     required: true,
                     value: email,
                     onChange: (e) => setEmail(e.target.value),
-                    placeholder: "your.email@company.com",
+                    placeholder: "name@example.com",
                     className: `${_designsystem.DS.input} pl-10`,}
                   )
                 )

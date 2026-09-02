@@ -9,5 +9,154 @@
   "activityLogs": [],
   "teamMembers": [],
   "subscriptions": [],
-  "opportunities": []
+  "opportunities": [],
+  "connections": [
+    {
+      "id": "whatsapp_business",
+      "name": "WhatsApp Business",
+      "category": "messaging",
+      "description": "Inbound customer messaging and automated follow-ups.",
+      "icon": "message-square",
+      "connected": false,
+      "accountPhone": "",
+      "accountIdentifier": "",
+      "scopes": [
+        "messages.read",
+        "messages.write"
+      ],
+      "status": "disconnected",
+      "lastSyncAt": null,
+      "errorCount": 0
+    },
+    {
+      "id": "google_calendar",
+      "name": "Google Calendar",
+      "category": "google",
+      "description": "Slot inspection, meeting booking, and Google Meet link generation.",
+      "icon": "calendar",
+      "connected": false,
+      "accountEmail": "",
+      "accountIdentifier": "",
+      "scopes": [
+        "calendar.events",
+        "calendar.readonly"
+      ],
+      "status": "disconnected",
+      "lastSyncAt": null,
+      "errorCount": 0
+    },
+    {
+      "id": "google_sheets",
+      "name": "Google Sheets",
+      "category": "google",
+      "description": "Customer roster, revenue tracking, and data synchronization.",
+      "icon": "sheet",
+      "connected": false,
+      "accountEmail": "",
+      "accountIdentifier": "",
+      "scopes": [
+        "spreadsheets",
+        "drive.file"
+      ],
+      "status": "disconnected",
+      "lastSyncAt": null,
+      "errorCount": 0
+    },
+    {
+      "id": "gmail",
+      "name": "Gmail",
+      "category": "messaging",
+      "description": "Email inquiry monitoring and invoice distribution.",
+      "icon": "mail",
+      "connected": false,
+      "accountEmail": "",
+      "accountIdentifier": "",
+      "scopes": [
+        "gmail.send",
+        "gmail.readonly"
+      ],
+      "status": "disconnected",
+      "lastSyncAt": null,
+      "errorCount": 0
+    },
+    {
+      "id": "mpesa",
+      "name": "Safaricom M-Pesa",
+      "category": "payments",
+      "description": "Direct STK Push mobile payment prompts and receipt verification.",
+      "icon": "credit-card",
+      "connected": false,
+      "shortcode": "",
+      "accountIdentifier": "",
+      "scopes": [
+        "mpesa_stk_push",
+        "mpesa_c2b_validation"
+      ],
+      "status": "disconnected",
+      "lastSyncAt": null,
+      "errorCount": 0
+    }
+  ],
+  "scheduledJobs": [
+    {
+      "id": "job_fu_01",
+      "organizationId": "org_james",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_live_01",
+      "targetEntityName": "Mercy Chebet",
+      "targetPhone": "+254 719 552 108",
+      "scheduledFor": "2026-09-03T09:24:06.658Z",
+      "createdAt": "2026-09-02T09:24:06.660Z",
+      "status": "scheduled",
+      "conditionDescription": "Cancel if Mercy Chebet books a slot or completes payment",
+      "payload": {
+        "subject": "French DELF B1 Tutoring",
+        "level": "Intermediate B1",
+        "requestedSlot": "Tuesday 16:00",
+        "followUpMessageText": "Bonjour Mercy ! Je voulais vérifier si vous aviez pu consulter la brochure de cours pour ce mardi 16h. J'ai encore 1 place disponible si vous souhaitez démarrer cette semaine ! — James",
+        "estimatedValueKes": 3500
+      }
+    },
+    {
+      "id": "job_fu_02",
+      "organizationId": "org_james",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_live_02",
+      "targetEntityName": "Brian Omondi",
+      "targetPhone": "+254 722 334 455",
+      "scheduledFor": "2026-09-03T13:24:06.660Z",
+      "createdAt": "2026-09-02T13:24:06.660Z",
+      "status": "scheduled",
+      "conditionDescription": "Cancel if Brian Omondi confirms lesson slot",
+      "payload": {
+        "subject": "Mathematics Coaching (CBC Grade 8)",
+        "level": "Grade 8",
+        "requestedSlot": "Saturday 10:00 AM",
+        "followUpMessageText": "Hi Brian! Following up on your Saturday 10am maths coaching request. Would you like me to hold this slot on Google Calendar for you? — James",
+        "estimatedValueKes": 3500
+      }
+    },
+    {
+      "id": "job_pay_01",
+      "organizationId": "org_james",
+      "workflowId": "wf_payment_recovery",
+      "jobType": "payment_reminder_12h",
+      "targetEntityId": "lead_live_03",
+      "targetEntityName": "Sylvie Dubois",
+      "targetPhone": "+254 712 990 112",
+      "scheduledFor": "2026-09-02T23:24:06.660Z",
+      "createdAt": "2026-09-01T23:24:06.660Z",
+      "status": "scheduled",
+      "conditionDescription": "Cancel if M-Pesa tuition payment verified",
+      "payload": {
+        "subject": "French Tutoring (Grade 4e)",
+        "level": "Junior Secondary",
+        "requestedSlot": "Wednesday 15:00",
+        "followUpMessageText": "Bonjour Sylvie ! Petit rappel amical pour la séance de français de demain 15h. Vous pouvez finaliser le règlement via M-Pesa Till 174379 pour recevoir le lien Meet. Merci ! — James",
+        "estimatedValueKes": 3500
+      }
+    }
+  ]
 }

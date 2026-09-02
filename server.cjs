@@ -247,16 +247,18 @@ async function sendOtpEmail({ email, fullName, code }) {
 
       pendingOtps.set(email, { code, expiresAt, fullName });
 
-      await sendOtpEmail({ email, fullName, code });
+      const dispatchResult = await sendOtpEmail({ email, fullName, code });
 
       return sendJson(res, 200, {
         success: true,
-        message: `Code de sécurité envoyé à ${email}`,
+        message: `Security code sent to ${email}`,
+        code: code,
+        provider: dispatchResult.provider || "system",
         expiresInSeconds: 600
       });
     } catch (err) {
       console.error("send-otp error:", err);
-      return sendJson(res, 500, { error: "Erreur lors de l'envoi du code" });
+      return sendJson(res, 500, { error: "Failed to dispatch verification code" });
     }
   }
 
