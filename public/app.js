@@ -12497,6 +12497,7 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
 
 
+
 var _lucidereact = require('lucide-react');
 
 
@@ -12514,6 +12515,58 @@ var _lucidereact = require('lucide-react');
 
 
 
+
+
+
+
+
+
+
+
+
+
+const GOOGLE_WORKSPACE_SERVICES = [
+  {
+    id: "google_calendar",
+    name: "Google Calendar",
+    category: "Scheduling & Availability",
+    icon: _react2.default.createElement(_lucidereact.Calendar, { className: "w-5 h-5 text-blue-600"  ,} ),
+    roleDescription: "Inspect real-time availability & automatically schedule sessions with Google Meet links",
+    scopes: ["calendar.readonly", "calendar.events"]
+  },
+  {
+    id: "google_sheets",
+    name: "Google Sheets",
+    category: "Master Data Ledger",
+    icon: _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-5 h-5 text-emerald-600"  ,} ),
+    roleDescription: "Automatically log student & client inquiries, attendance logs, and payment records",
+    scopes: ["spreadsheets"]
+  },
+  {
+    id: "gmail",
+    name: "Gmail",
+    category: "Inquiries & Invoicing",
+    icon: _react2.default.createElement(_lucidereact.Mail, { className: "w-5 h-5 text-red-600"  ,} ),
+    roleDescription: "Capture inbound formal inquiries and deliver automated PDF invoices & syllabus",
+    scopes: ["gmail.send", "gmail.readonly"]
+  },
+  {
+    id: "google_drive",
+    name: "Google Drive",
+    category: "Client File Storage",
+    icon: _react2.default.createElement(_lucidereact.HardDrive, { className: "w-5 h-5 text-amber-600"  ,} ),
+    roleDescription: "Generate shared student folders, attach study materials, and store receipts",
+    scopes: ["drive.file"]
+  },
+  {
+    id: "google_business",
+    name: "Google Business Profile",
+    category: "Maps & 5-Star Reviews",
+    icon: _react2.default.createElement(_lucidereact.MapPin, { className: "w-5 h-5 text-blue-600"  ,} ),
+    roleDescription: "Track incoming calls from Google Maps and request 5-star customer reviews automatically",
+    scopes: ["business.manage"]
+  }
+];
 
 const appConfigMap
 
@@ -12686,6 +12739,13 @@ const appConfigMap
   const [realQrDataUrl, setRealQrDataUrl] = _react.useState(null);
   const [linkedPhoneNumber, setLinkedPhoneNumber] = _react.useState(null);
 
+  // Google Workspace Multi-App Checkbox Selection
+  const isGoogleSuite = appId.startsWith("google") || appId === "gmail";
+  const [selectedGoogleServices, setSelectedGoogleServices] = _react.useState(
+    new Set(["google_calendar", "google_sheets", "gmail"])
+  );
+  const [googleEmailInput, setGoogleEmailInput] = _react.useState.call(void 0, "");
+
   const isWhatsApp = appId === "whatsapp_business" || appId === "whatsapp";
 
   const config = appConfigMap[appId] || {
@@ -12711,6 +12771,17 @@ const appConfigMap
   };
 
   const [accountInput, setAccountInput] = _react.useState.call(void 0, config.accountDefault);
+
+  // Auto-check current Google app when opened
+  _react.useEffect.call(void 0, () => {
+    if (isGoogleSuite) {
+      setSelectedGoogleServices((prev) => {
+        const next = new Set(prev);
+        next.add(appId);
+        return next;
+      });
+    }
+  }, [appId, isGoogleSuite]);
 
   // Fetch real Baileys QR Code and poll for live mobile device pairing
   const fetchBaileysQr = async () => {
@@ -12746,13 +12817,11 @@ const appConfigMap
       setQrRefreshTimer(60);
       fetchBaileysQr();
       
-      // Quick second fetch to catch QR as soon as socket emits
       const quickTimer = setTimeout(fetchBaileysQr, 1200);
       return () => clearTimeout(quickTimer);
     }
   }, [isOpen, isWhatsApp]);
 
-  // Live polling for scan verification and QR refresh
   _react.useEffect.call(void 0, () => {
     if (!isOpen || !isWhatsApp || qrScanningState === "connected") return;
     
@@ -12766,33 +12835,47 @@ const appConfigMap
 
   if (!isOpen) return null;
 
-  // Handle WhatsApp QR Scan Simulation / Linking
-  const handleSimulateQrScan = async () => {
+  // Toggle individual Google Service
+  const toggleGoogleService = (serviceId) => {
+    setSelectedGoogleServices((prev) => {
+      const next = new Set(prev);
+      if (next.has(serviceId)) {
+        if (next.size > 1) {
+          next.delete(serviceId);
+        }
+      } else {
+        next.add(serviceId);
+      }
+      return next;
+    });
+  };
+
+  // Connect Google Workspace with all selected services
+  const handleAuthorizeGoogleWorkspace = async () => {
     setLoading(true);
-    setQrScanningState("pairing");
+    
+    const targetEmail = googleEmailInput.trim() || accountInput.trim() || "myaccount@gmail.com";
 
     try {
-      await new Promise((r) => setTimeout(r, 1400));
-      setQrScanningState("connected");
+      await new Promise((r) => setTimeout(r, 800));
       setLoading(false);
 
-      const linkedAccount = phoneInput.trim() || "WhatsApp Linked Device (Phone Active)";
-
+      // Connect all checked Google apps
       if (onConnected) {
-        onConnected(appId, {
-          account: linkedAccount,
-          connectedAt: new Date().toISOString(),
-          status: "connected",
-          authMethod: "qr_linked_device"
+        selectedGoogleServices.forEach((serviceId) => {
+          onConnected(serviceId, {
+            account: targetEmail,
+            connectedAt: new Date().toISOString(),
+            status: "connected",
+            authType: "google_oauth2",
+            connectedSuite: Array.from(selectedGoogleServices)
+          });
         });
       }
 
-      setTimeout(() => {
-        onClose();
-      }, 1000);
+      onClose();
     } catch (err) {
       setLoading(false);
-      setQrScanningState("ready");
     }
   };
 
@@ -12844,7 +12927,7 @@ const appConfigMap
   return (
     _react2.default.createElement('div', { className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#121316]/50 backdrop-blur-xs animate-fadeIn"         ,}
       , _react2.default.createElement('div', { 
-        className: "bg-white border border-[#EAE7DF] w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col transform transition-all max-h-[90vh] overflow-y-auto"             ,
+        className: "bg-white border border-[#EAE7DF] w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col transform transition-all max-h-[92vh] overflow-y-auto"             ,
         onClick: (e) => e.stopPropagation(),}
 
 
@@ -12859,8 +12942,15 @@ const appConfigMap
 
           /* Connected Logos (App <-> Otomatizon) */
           , _react2.default.createElement('div', { className: "flex items-center gap-3 mb-4"   ,}
-            , _react2.default.createElement('div', { className: `w-12 h-12 rounded-2xl ${config.iconBg} border flex items-center justify-center shadow-2xs`,}
-              , getAppIcon(appId)
+            , _react2.default.createElement('div', { className: `w-12 h-12 rounded-2xl ${isGoogleSuite ? "bg-blue-50 border-blue-200" : config.iconBg} border flex items-center justify-center shadow-2xs`,}
+              , isGoogleSuite ? (
+                _react2.default.createElement('svg', { className: "w-6 h-6" , viewBox: "0 0 24 24"   ,}
+                  , _react2.default.createElement('path', { fill: "#4285F4", d: "M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"      ,} )
+                  , _react2.default.createElement('path', { fill: "#34A853", d: "M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"            ,} )
+                  , _react2.default.createElement('path', { fill: "#FBBC05", d: "M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"         ,} )
+                  , _react2.default.createElement('path', { fill: "#EA4335", d: "M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"                   ,} )
+                )
+              ) : getAppIcon(appId)
             )
 
             , _react2.default.createElement('div', { className: "flex items-center gap-1.5 text-[#75777E]"   ,}
@@ -12874,19 +12964,140 @@ const appConfigMap
             )
           )
 
-          , _react2.default.createElement('h2', { className: "text-lg font-bold text-[#121316]"  ,}, "Connect "
-             , config.name
+          , _react2.default.createElement('h2', { className: "text-lg font-bold text-[#121316]"  ,}
+            , isGoogleSuite ? "Connect Google Workspace Hub" : `Connect ${config.name}`
           )
-          , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] mt-1 leading-relaxed"   ,}, "Link your active "
-               , config.name, " to receive customer messages, send automated follow-ups, and sync workflows."
+          , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] mt-1 leading-relaxed"   ,}
+            , isGoogleSuite 
+              ? "Link your Google / Gmail account and select the business services you want Otomatizon to automate."
+              : `Link your active ${config.name} to receive customer messages, send automated follow-ups, and sync workflows.`
           )
         )
 
         /* Modal Body */
         , _react2.default.createElement('div', { className: "p-6 space-y-5" ,}
 
-          /* WHATSAPP QR CODE SCANNER (WHATSAPP WEB LINKED DEVICE STYLE) */
-          , isWhatsApp ? (
+          /* SECTION 1: GOOGLE WORKSPACE UNIFIED HUB (WITH INTERACTIVE CHECKBOXES) */
+          , isGoogleSuite ? (
+            _react2.default.createElement('div', { className: "space-y-4",}
+
+              /* 1. Account Input / Identifier */
+              , _react2.default.createElement('div', { className: "space-y-1.5 font-mono" ,}
+                , _react2.default.createElement('label', { className: "text-xs font-bold text-[#121316] flex items-center justify-between"     ,}
+                  , _react2.default.createElement('span', null, "Your Google / Gmail Account Address *"      )
+                  , _react2.default.createElement('span', { className: "text-[10px] text-[#15803D] uppercase font-bold"   ,}, "Single Sign-On" )
+                )
+                , _react2.default.createElement('div', { className: "relative",}
+                  , _react2.default.createElement(_lucidereact.Mail, { className: "w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2"      ,} )
+                  , _react2.default.createElement('input', {
+                    type: "email",
+                    required: true,
+                    value: googleEmailInput,
+                    onChange: (e) => setGoogleEmailInput(e.target.value),
+                    placeholder: "e.g. yourname@gmail.com or name@company.com"   ,
+                    className: "w-full pl-10 pr-4 py-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] text-xs font-mono focus:bg-white focus:border-[#15803D] focus:outline-none transition-all"             ,}
+                  )
+                )
+              )
+
+              /* 2. Google Workspace Apps Permissions Selector (Checkboxes) */
+              , _react2.default.createElement('div', { className: "space-y-2.5",}
+                , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
+                  , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block"      ,}, "Select Google Services to Automate ("
+                         , selectedGoogleServices.size, " selected)"
+                  )
+                  , _react2.default.createElement('button', {
+                    type: "button",
+                    onClick: () => {
+                      if (selectedGoogleServices.size === GOOGLE_WORKSPACE_SERVICES.length) {
+                        setSelectedGoogleServices(new Set(["google_calendar"]));
+                      } else {
+                        setSelectedGoogleServices(new Set(GOOGLE_WORKSPACE_SERVICES.map(s => s.id)));
+                      }
+                    },
+                    className: "text-[10px] font-mono font-bold text-[#15803D] hover:underline cursor-pointer"     ,}
+
+                    , selectedGoogleServices.size === GOOGLE_WORKSPACE_SERVICES.length ? "Deselect All" : "Select All (5 Services)"
+                  )
+                )
+
+                , _react2.default.createElement('div', { className: "space-y-2 max-h-64 overflow-y-auto pr-1"   ,}
+                  , GOOGLE_WORKSPACE_SERVICES.map((srv) => {
+                    const isChecked = selectedGoogleServices.has(srv.id);
+
+                    return (
+                      _react2.default.createElement('div', {
+                        key: srv.id,
+                        onClick: () => toggleGoogleService(srv.id),
+                        className: `p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 ${
+                          isChecked 
+                            ? "bg-[#ECFDF5]/60 border-[#A7F3D0] shadow-2xs" 
+                            : "bg-[#FAF9F5] border-[#EAE7DF] hover:bg-white opacity-75"
+                        }`,}
+
+                        /* Custom Checkbox */
+                        , _react2.default.createElement('div', { className: `mt-0.5 w-5 h-5 rounded-lg border flex items-center justify-center transition-colors shrink-0 ${
+                          isChecked 
+                            ? "bg-[#15803D] border-[#15803D] text-white" 
+                            : "bg-white border-[#EAE7DF]"
+                        }`,}
+                          , isChecked && _react2.default.createElement(_lucidereact.Check, { className: "w-3.5 h-3.5 stroke-[3]"  ,} )
+                        )
+
+                        /* Icon & Details */
+                        , _react2.default.createElement('div', { className: "space-y-0.5 flex-1 min-w-0"  ,}
+                          , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+                            , _react2.default.createElement('span', { className: "shrink-0",}, srv.icon)
+                            , _react2.default.createElement('span', { className: "text-xs font-bold text-[#121316]"  ,}, srv.name)
+                            , _react2.default.createElement('span', { className: "text-[9px] font-mono px-2 py-0.5 rounded-full bg-white border border-[#EAE7DF] text-[#75777E]"        ,}
+                              , srv.category
+                            )
+                          )
+                          , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] leading-snug pt-0.5"   ,}
+                            , srv.roleDescription
+                          )
+                        )
+                      )
+                    );
+                  })
+                )
+              )
+
+              /* Security Guarantee */
+              , _react2.default.createElement('div', { className: "flex items-center gap-2 text-[11px] text-[#75777E] font-mono pt-1"      ,}
+                , _react2.default.createElement(_lucidereact.Lock, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
+                , _react2.default.createElement('span', null, "Google OAuth 2.0 · Official Google API Authorization"       )
+              )
+
+              /* Action Button */
+              , _react2.default.createElement('div', { className: "pt-2 flex items-center justify-end gap-3 font-mono"     ,}
+                , _react2.default.createElement('button', {
+                  type: "button",
+                  onClick: onClose,
+                  className: "px-5 py-2.5 rounded-full text-xs font-semibold text-[#75777E] hover:text-[#121316] hover:bg-[#FAF9F5] transition-colors cursor-pointer"         ,}
+, "Cancel"
+
+                )
+                , _react2.default.createElement('button', {
+                  type: "button",
+                  onClick: handleAuthorizeGoogleWorkspace,
+                  disabled: loading || selectedGoogleServices.size === 0,
+                  className: "px-6 py-3 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2 disabled:opacity-50 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"                ,}
+
+                  , loading ? (
+                    _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3.5 h-3.5 animate-spin"  ,} )
+                  ) : (
+                    _react2.default.createElement(_react2.default.Fragment, null
+                      , _react2.default.createElement('span', null, "Authorize " , selectedGoogleServices.size, " Google Services"  )
+                      , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5" ,} )
+                    )
+                  )
+                )
+              )
+
+            )
+          ) : isWhatsApp ? (
+            /* SECTION 2: WHATSAPP QR CODE SCANNER (WHATSAPP WEB LINKED DEVICE STYLE) */
             _react2.default.createElement('div', { className: "space-y-4",}
 
               /* Mode Toggle Pills */
@@ -13018,7 +13229,7 @@ const appConfigMap
 
             )
           ) : (
-            /* STANDARD APPS PERMISSIONS & OAUTH AUTHORIZATION */
+            /* SECTION 3: OTHER SERVICES (M-PESA / CUSTOM TOOLS) */
             _react2.default.createElement(_react2.default.Fragment, null
               /* Permissions Section */
               , _react2.default.createElement('div', { className: "space-y-3",}
@@ -13038,52 +13249,6 @@ const appConfigMap
                       )
                     )
                   ))
-                )
-              )
-
-              /* 1-Click Google OAuth Authorization for Google Calendar / Sheets / Gmail */
-              , (appId.startsWith("google") || appId === "gmail") && (
-                _react2.default.createElement('div', { className: "space-y-2",}
-                  , _react2.default.createElement('button', {
-                    type: "button",
-                    disabled: loading,
-                    onClick: () => {
-                      setLoading(true);
-                      setTimeout(() => {
-                        const googleAccount = accountInput.trim() || "Connected Google Workspace Account";
-                        if (onConnected) {
-                          onConnected(appId, {
-                            account: googleAccount,
-                            connectedAt: new Date().toISOString(),
-                            status: "connected",
-                            authType: "google_oauth2"
-                          });
-                        }
-                        setLoading(false);
-                        onClose();
-                      }, 900);
-                    },
-                    className: "w-full py-3.5 px-4 rounded-2xl bg-white hover:bg-[#FAF9F5] border border-[#EAE7DF] text-[#121316] text-xs font-bold font-mono transition-all shadow-xs flex items-center justify-center gap-3 cursor-pointer hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"                     ,}
-
-                    , loading ? (
-                      _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-4 h-4 animate-spin text-[#15803D]"   ,} )
-                    ) : (
-                      _react2.default.createElement(_react2.default.Fragment, null
-                        , _react2.default.createElement('svg', { className: "w-4 h-4 shrink-0"  , viewBox: "0 0 24 24"   ,}
-                          , _react2.default.createElement('path', { fill: "#4285F4", d: "M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"      ,} )
-                          , _react2.default.createElement('path', { fill: "#34A853", d: "M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"            ,} )
-                          , _react2.default.createElement('path', { fill: "#FBBC05", d: "M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"         ,} )
-                          , _react2.default.createElement('path', { fill: "#EA4335", d: "M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"                   ,} )
-                        )
-                        , _react2.default.createElement('span', null, "Authorize with Google Workspace →"    )
-                      )
-                    )
-                  )
-                  , _react2.default.createElement('div', { className: "flex items-center gap-2 my-2 text-[#75777E] text-[10px] font-mono justify-center"       ,}
-                    , _react2.default.createElement('span', { className: "w-12 h-px bg-[#EAE7DF]"  ,} )
-                    , _react2.default.createElement('span', null, "OR ENTER ACCOUNT EMAIL"   )
-                    , _react2.default.createElement('span', { className: "w-12 h-px bg-[#EAE7DF]"  ,} )
-                  )
                 )
               )
 
@@ -15272,8 +15437,10 @@ const initialConnectors = [
   };
 
   const handleAppConnected = (appId, details) => {
+    const suiteIds = details.connectedSuite ? details.connectedSuite : [appId];
+    
     setConnectors(prev => prev.map(c => 
-      c.id === appId 
+      suiteIds.includes(c.id) || c.id === appId
         ? { 
             ...c, 
             status: "connected" , 

@@ -154,8 +154,10 @@ export const AppsView: React.FC<AppsViewProps> = ({ onNavigateToAutomations }) =
   };
 
   const handleAppConnected = (appId: string, details: any) => {
+    const suiteIds = details.connectedSuite ? details.connectedSuite : [appId];
+    
     setConnectors(prev => prev.map(c => 
-      c.id === appId 
+      suiteIds.includes(c.id) || c.id === appId
         ? { 
             ...c, 
             status: "connected" as IntegrationStatus, 
