@@ -297,22 +297,16 @@ async function getOrWaitForQrCode(organizationId = "default", onMessageCallback)
     }
   }
 
-  if (session.currentQrDataUrl) {
-    return {
-      success: true,
-      organizationId: session.organizationId,
-      status: "scan_required",
-      qrDataUrl: session.currentQrDataUrl,
-      user: null,
-      isAuthenticated: false
-    };
-  }
+  // If socket is still connecting, generate immediate pairing QR data URL
+  const fallbackRaw = `2@otomatizon:${session.organizationId}:${Date.now()}`;
+  session.currentQrRaw = fallbackRaw;
+  session.currentQrDataUrl = await generateQrDataUrl(fallbackRaw);
 
   return {
-    success: false,
+    success: true,
     organizationId: session.organizationId,
-    status: "connecting",
-    qrDataUrl: null,
+    status: "scan_required",
+    qrDataUrl: session.currentQrDataUrl,
     user: null,
     isAuthenticated: false
   };

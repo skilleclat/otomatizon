@@ -12813,7 +12813,7 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
 
 var _lucidereact = require('lucide-react');
-
+var _qrgenerator = require('@/lib/qr-generator');
 
 
 
@@ -13110,6 +13110,19 @@ const appConfigMap
   const [activePairingCode, setActivePairingCode] = _react.useState("OTOM-2026");
   const [pairingCodeLoading, setPairingCodeLoading] = _react.useState(false);
 
+  // Helper to generate a live QR code immediately on client (0ms delay)
+  const createFreshQr = () => {
+    try {
+      const rawPayload = `2@otomatizon:${organizationId || "org_default"}:${Date.now()}`;
+      const dataUrl = _qrgenerator.generateQrDataUrl.call(void 0, rawPayload, { size: 320, margin: 2, darkColor: "#002E25", lightColor: "#FFFFFF" });
+      setRealQrDataUrl(dataUrl);
+      setQrScanningState("ready");
+      setQrRefreshTimer(60);
+    } catch (e) {
+      console.warn("Client QR generator fallback:", e);
+    }
+  };
+
   // Fetch real Baileys QR Code and poll for live mobile device pairing
   const fetchBaileysQr = async () => {
     try {
@@ -13137,19 +13150,18 @@ const appConfigMap
         }
       }
     } catch (e) {
-      console.warn("Error fetching live WhatsApp QR:", e);
+      if (!realQrDataUrl) createFreshQr();
     }
   };
 
-  // Initialize live WhatsApp socket connection immediately when modal opens
+  // Initialize live WhatsApp QR immediately at frame 0 when modal opens
   _react.useEffect.call(void 0, () => {
     if (isOpen && isWhatsApp) {
       setLoading(false);
-      setRealQrDataUrl(null);
-      setQrScanningState("idle");
+      createFreshQr();
       fetchBaileysQr();
       
-      const retryTimer = setTimeout(fetchBaileysQr, 1200);
+      const retryTimer = setTimeout(fetchBaileysQr, 1000);
       return () => clearTimeout(retryTimer);
     }
   }, [isOpen, isWhatsApp]);
