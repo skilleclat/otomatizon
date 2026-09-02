@@ -12514,6 +12514,7 @@ var _lucidereact = require('lucide-react');
 
 
 
+
 const appConfigMap
 
 
@@ -12674,7 +12675,8 @@ const appConfigMap
   isOpen,
   onClose,
   onConnected,
-  isConnected = false
+  isConnected = false,
+  organizationId = "default"
 }) => {
   const [loading, setLoading] = _react.useState.call(void 0, false);
   const [whatsappMode, setWhatsappMode] = _react.useState("qr");
@@ -12713,7 +12715,7 @@ const appConfigMap
   // Fetch real Baileys QR Code and poll for live mobile device pairing
   const fetchBaileysQr = async () => {
     try {
-      const res = await fetch("/api/whatsapp/qr");
+      const res = await fetch(`/api/whatsapp/qr?orgId=${encodeURIComponent(organizationId)}`);
       const data = await res.json();
       if (data.success) {
         if (data.qrDataUrl) {
@@ -15427,7 +15429,8 @@ const initialConnectors = [
           isOpen: !!activeModalApp,
           onClose: () => setActiveModalApp(null),
           onConnected: handleAppConnected,
-          isConnected: activeModalApp.status === "connected",}
+          isConnected: activeModalApp.status === "connected",
+          organizationId: state.organization.id,}
         )
       )
 

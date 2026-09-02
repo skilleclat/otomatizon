@@ -31,6 +31,7 @@ interface ConnectAppModalProps {
   onClose: () => void;
   onConnected?: (appId: string, details: any) => void;
   isConnected?: boolean;
+  organizationId?: string;
 }
 
 interface AppPermissionInfo {
@@ -199,7 +200,8 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
   isOpen,
   onClose,
   onConnected,
-  isConnected = false
+  isConnected = false,
+  organizationId = "default"
 }) => {
   const [loading, setLoading] = useState(false);
   const [whatsappMode, setWhatsappMode] = useState<"qr" | "phone">("qr");
@@ -238,7 +240,7 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
   // Fetch real Baileys QR Code and poll for live mobile device pairing
   const fetchBaileysQr = async () => {
     try {
-      const res = await fetch("/api/whatsapp/qr");
+      const res = await fetch(`/api/whatsapp/qr?orgId=${encodeURIComponent(organizationId)}`);
       const data = await res.json();
       if (data.success) {
         if (data.qrDataUrl) {

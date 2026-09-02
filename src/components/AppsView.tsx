@@ -361,6 +361,7 @@ export const AppsView: React.FC<AppsViewProps> = ({ onNavigateToAutomations }) =
           onClose={() => setActiveModalApp(null)}
           onConnected={handleAppConnected}
           isConnected={activeModalApp.status === "connected"}
+          organizationId={state.organization.id}
         />
       )}
 

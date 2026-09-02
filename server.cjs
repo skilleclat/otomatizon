@@ -529,27 +529,28 @@ async function sendOtpEmail({ email, fullName, code }) {
     }
   }
 
-  // 5a. WhatsApp Baileys Real Multi-Device QR Generator & Status
+  // 5a. WhatsApp Baileys Real Multi-Device Multi-Tenant QR Generator & Status
   if (urlPath === "/api/whatsapp/qr" && req.method === "GET") {
     try {
-      const status = getWhatsAppStatus();
+      const searchParams = new URLSearchParams(queryString || "");
+      const orgId = searchParams.get("orgId") || "default";
+      const status = getWhatsAppStatus(orgId);
       if (!status.isAuthenticated && status.status !== "connecting" && status.status !== "scan_required") {
-        // Start socket session
-        startWhatsAppSocket((msg) => {
-          // Record incoming WhatsApp customer message in DB
+        // Start socket session for this specific client organization
+        startWhatsAppSocket(orgId, (msg) => {
+          // Record incoming WhatsApp customer message strictly scoped to this organization
           try {
             const db = readDb();
-            const orgId = db.organizations[0]?.id || "org_james";
             db.activityLogs.unshift({
               id: `act_${Date.now()}`,
-              organizationId: orgId,
+              organizationId: msg.organizationId || orgId,
               type: "inbound_message",
               channel: "whatsapp",
               application: "WhatsApp Business",
               title: `WhatsApp from ${msg.senderName}`,
               description: `"${msg.text}"`,
               actionTakenByOtomatizon: "Inbound message received via Linked WhatsApp Device",
-              businessResult: "Logged to activity stream",
+              businessResult: "Logged to organization activity stream",
               entityName: msg.senderName,
               timestamp: "Just now",
               provenance: "OBSERVED"
@@ -559,9 +560,10 @@ async function sendOtpEmail({ email, fullName, code }) {
         });
       }
 
-      const latestStatus = getWhatsAppStatus();
+      const latestStatus = getWhatsAppStatus(orgId);
       return sendJson(res, 200, {
         success: true,
+        organizationId: orgId,
         status: latestStatus.status,
         qrDataUrl: latestStatus.qrDataUrl,
         user: latestStatus.user,
@@ -574,7 +576,9 @@ async function sendOtpEmail({ email, fullName, code }) {
   }
 
   if (urlPath === "/api/whatsapp/status" && req.method === "GET") {
-    const status = getWhatsAppStatus();
+    const searchParams = new URLSearchParams(queryString || "");
+    const orgId = searchParams.get("orgId") || "default";
+    const status = getWhatsAppStatus(orgId);
     return sendJson(res, 200, {
       success: true,
       ...status
@@ -582,7 +586,9 @@ async function sendOtpEmail({ email, fullName, code }) {
   }
 
   if (urlPath === "/api/whatsapp/disconnect" && req.method === "POST") {
-    await disconnectWhatsApp();
+    const searchParams = new URLSearchParams(queryString || "");
+    const orgId = searchParams.get("orgId") || "default";
+    await disconnectWhatsApp(orgId);
     const db = readDb();
     const conn = (db.connections || []).find(c => c.id === "whatsapp" || c.id === "whatsapp_business");
     if (conn) {
@@ -590,7 +596,7 @@ async function sendOtpEmail({ email, fullName, code }) {
       conn.status = "disconnected";
       writeDb(db);
     }
-    return sendJson(res, 200, { success: true, message: "WhatsApp disconnected" });
+    return sendJson(res, 200, { success: true, message: `WhatsApp disconnected for organization ${orgId}` });
   }
 
   // 5b. Dedicated Business Automation Report Endpoint
