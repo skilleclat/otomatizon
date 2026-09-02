@@ -69,6 +69,7 @@
     if (clean === "./components/LiveAutomationPipeline" || clean === "./LiveAutomationPipeline" || clean === "@/components/LiveAutomationPipeline") clean = "@/components/LiveAutomationPipeline";
     if (clean === "./components/AttentionRequiredSection" || clean === "./AttentionRequiredSection" || clean === "@/components/AttentionRequiredSection") clean = "@/components/AttentionRequiredSection";
     if (clean === "./components/AppCollaborationMatrix" || clean === "./AppCollaborationMatrix" || clean === "@/components/AppCollaborationMatrix") clean = "@/components/AppCollaborationMatrix";
+    if (clean === "./components/LiveIntelligenceRunnerModal" || clean === "./LiveIntelligenceRunnerModal" || clean === "@/components/LiveIntelligenceRunnerModal") clean = "@/components/LiveIntelligenceRunnerModal";
     if (clean === "./lib/decision-trace" || clean === "@/lib/decision-trace") clean = "@/lib/decision-trace";
     if (clean === "./lib/connectors/types" || clean === "@/lib/connectors/types") clean = "@/lib/connectors/types";
     if (clean === "./lib/intelligence/types" || clean === "@/lib/intelligence/types") clean = "@/lib/intelligence/types";
@@ -78,6 +79,11 @@
     if (clean === "./components/SettingsView") clean = "@/components/SettingsView";
     if (clean === "./components/OnboardingModal") clean = "@/components/OnboardingModal";
     if (clean === "@/types") clean = "@/types";
+
+    // Generic fallback for any relative component
+    if (clean.startsWith("./") && modules["@/components/" + clean.slice(2)]) {
+      clean = "@/components/" + clean.slice(2);
+    }
 
     const mod = modules[clean] || modules[name];
     if (!mod) {
@@ -14947,6 +14953,273 @@ var _lucidereact = require('lucide-react');
     )
   );
 }; exports.FollowUpQueueModal = FollowUpQueueModal;
+
+  });
+
+  // Module: @/components/LiveIntelligenceRunnerModal
+  define("@/components/LiveIntelligenceRunnerModal", function(require, exports) {
+    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }"use client";
+
+var _react = require('react'); var _react2 = _interopRequireDefault(_react);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _lucidereact = require('lucide-react');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ const LiveIntelligenceRunnerModal = ({
+  isOpen,
+  onClose,
+  connectedEmail = "heritiermaliyabwana1@gmail.com",
+  connectedPhone = "+254 770 979 109"
+}) => {
+  const [isRunning, setIsRunning] = _react.useState.call(void 0, false);
+  const [executedSteps, setExecutedSteps] = _react.useState([]);
+  const [currentStepIndex, setCurrentStepIndex] = _react.useState(0);
+  const [meetLink, setMeetLink] = _react.useState("");
+  const [isCompleted, setIsCompleted] = _react.useState.call(void 0, false);
+
+  if (!isOpen) return null;
+
+  const handleRunLiveTest = async () => {
+    setIsRunning(true);
+    setExecutedSteps([]);
+    setCurrentStepIndex(0);
+    setIsCompleted(false);
+
+    try {
+      const res = await fetch("/api/orchestration/test-live-flow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerName: "Mercy Chebet",
+          customerPhone: "+254 719 552 108",
+          inquiryText: "Hello! I saw your tutoring page. Could you share your fees and schedule a trial session?"
+        })
+      });
+
+      const data = await res.json();
+      if (data.success && data.steps) {
+        setMeetLink(data.meetLink);
+
+        // Step by step animation reveal
+        for (let i = 0; i < data.steps.length; i++) {
+          await new Promise((r) => setTimeout(r, 650));
+          setCurrentStepIndex(i + 1);
+          setExecutedSteps((prev) => [...prev, data.steps[i]]);
+        }
+
+        setIsCompleted(true);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
+  const getSystemIcon = (systemName) => {
+    if (systemName.includes("WhatsApp")) return _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4 text-emerald-600"  ,} );
+    if (systemName.includes("Sheets")) return _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-4 h-4 text-emerald-600"  ,} );
+    if (systemName.includes("Calendar") || systemName.includes("Meet")) return _react2.default.createElement(_lucidereact.Video, { className: "w-4 h-4 text-blue-600"  ,} );
+    if (systemName.includes("Gmail")) return _react2.default.createElement(_lucidereact.Mail, { className: "w-4 h-4 text-red-600"  ,} );
+    if (systemName.includes("M-Pesa")) return _react2.default.createElement(_lucidereact.CreditCard, { className: "w-4 h-4 text-emerald-700"  ,} );
+    return _react2.default.createElement(_lucidereact.Sparkles, { className: "w-4 h-4 text-[#15803D]"  ,} );
+  };
+
+  return (
+    _react2.default.createElement('div', { className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#121316]/50 backdrop-blur-xs animate-fadeIn"         ,}
+      , _react2.default.createElement('div', { 
+        className: "bg-white border border-[#EAE7DF] w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col transform transition-all max-h-[92vh] overflow-y-auto"             ,
+        onClick: (e) => e.stopPropagation(),}
+
+
+        /* Header */
+        , _react2.default.createElement('div', { className: "p-6 border-b border-[#EAE7DF] relative bg-[#FAF9F5]"    ,}
+          , _react2.default.createElement('button', { 
+            onClick: onClose,
+            className: "absolute top-5 right-5 w-8 h-8 rounded-full flex items-center justify-center hover:bg-white text-[#75777E] transition-colors cursor-pointer"            ,}
+
+            , _react2.default.createElement(_lucidereact.X, { className: "w-4 h-4" ,} )
+          )
+
+          , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+            , _react2.default.createElement('span', { className: "w-2.5 h-2.5 rounded-full bg-[#15803D] animate-pulse"    ,} )
+            , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#15803D] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"           ,}, "LIVE ORCHESTRATION PIPELINE"
+
+            )
+          )
+
+          , _react2.default.createElement('h2', { className: "text-lg sm:text-xl font-extrabold text-[#121316] mt-2"    ,}, "Otomatizon Autonomous AI Engine in Action"
+
+          )
+          , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] mt-1 leading-relaxed"   ,}, "Connected to your Google Workspace ("
+                 , _react2.default.createElement('strong', { className: "text-[#121316]",}, connectedEmail), ") & WhatsApp ("   , _react2.default.createElement('strong', { className: "text-[#121316]",}, connectedPhone), ")."
+          )
+        )
+
+        /* Modal Body */
+        , _react2.default.createElement('div', { className: "p-6 space-y-6" ,}
+
+          /* Action Trigger Card */
+          , _react2.default.createElement('div', { className: "p-5 bg-[#FAF9F5] border border-[#EAE7DF] rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"           ,}
+            , _react2.default.createElement('div', { className: "space-y-1",}
+              , _react2.default.createElement('span', { className: "text-xs font-bold text-[#121316] block"   ,}, "Trigger Real Inbound Inquiry Simulation"
+
+              )
+              , _react2.default.createElement('p', { className: "text-[11px] text-[#75777E]" ,}, "Simulate a live student inquiry and watch Otomatizon log the lead into Sheets, generate a Google Meet link on Calendar, and send responses."
+
+              )
+            )
+
+            , _react2.default.createElement('button', {
+              type: "button",
+              onClick: handleRunLiveTest,
+              disabled: isRunning,
+              className: "px-5 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all flex items-center gap-2 cursor-pointer shrink-0 shadow-xs disabled:opacity-50"                ,}
+
+              , isRunning ? (
+                _react2.default.createElement(_react2.default.Fragment, null
+                  , _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3.5 h-3.5 animate-spin"  ,} )
+                  , _react2.default.createElement('span', null, "Orchestrating...")
+                )
+              ) : (
+                _react2.default.createElement(_react2.default.Fragment, null
+                  , _react2.default.createElement(_lucidereact.Play, { className: "w-3.5 h-3.5 fill-current"  ,} )
+                  , _react2.default.createElement('span', null, "Execute Pipeline Live"  )
+                )
+              )
+            )
+          )
+
+          /* Pipeline Step Execution Stream */
+          , _react2.default.createElement('div', { className: "space-y-3",}
+            , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
+              , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold"     ,}, "Real-Time Execution Trace ("
+                   , executedSteps.length, " of 6 steps)"
+              )
+              , isCompleted && (
+                _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold flex items-center gap-1"      ,}
+                  , _react2.default.createElement(_lucidereact.CheckCircle2, { className: "w-3.5 h-3.5" ,} ), "Workflow Completed"
+
+                )
+              )
+            )
+
+            , executedSteps.length === 0 && !isRunning && (
+              _react2.default.createElement('div', { className: "p-8 border border-dashed border-[#EAE7DF] rounded-2xl text-center space-y-2 bg-[#FAF9F5]/50"       ,}
+                , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-6 h-6 text-[#15803D] mx-auto opacity-60"    ,} )
+                , _react2.default.createElement('p', { className: "text-xs text-[#75777E] font-mono"  ,}, "Click “Execute Pipeline Live” above to observe real-time communication between WhatsApp, Google Sheets, Google Meet & Gmail."
+
+                )
+              )
+            )
+
+            , _react2.default.createElement('div', { className: "space-y-2.5",}
+              , executedSteps.map((step) => (
+                _react2.default.createElement('div', { 
+                  key: step.step,
+                  className: "p-4 rounded-2xl bg-white border border-[#EAE7DF] shadow-2xs flex items-start gap-3.5 animate-fadeIn"         ,}
+
+                  , _react2.default.createElement('div', { className: "mt-0.5 p-2 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF] shrink-0"      ,}
+                    , getSystemIcon(step.system)
+                  )
+
+                  , _react2.default.createElement('div', { className: "space-y-1 flex-1 min-w-0"  ,}
+                    , _react2.default.createElement('div', { className: "flex items-center justify-between gap-2"   ,}
+                      , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+                        , _react2.default.createElement('span', { className: "text-xs font-bold text-[#121316] font-mono"   ,}, "Step "
+                           , step.step, ": " , step.system
+                        )
+                        , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] font-bold"         ,}
+                          , step.status
+                        )
+                      )
+                      , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#75777E]"  ,}, "Just now" )
+                    )
+
+                    , _react2.default.createElement('p', { className: "text-xs font-medium text-[#121316]"  ,}
+                      , step.action
+                    )
+                    , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] font-mono leading-relaxed bg-[#FAF9F5] p-2 rounded-lg border border-[#EAE7DF]"        ,}
+                      , step.detail
+                    )
+                  )
+                )
+              ))
+            )
+
+            /* Generated Google Meet Link Box if completed */
+            , meetLink && (
+              _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-between gap-3 animate-fadeIn"         ,}
+                , _react2.default.createElement('div', { className: "flex items-center gap-3"  ,}
+                  , _react2.default.createElement(_lucidereact.Video, { className: "w-5 h-5 text-[#15803D] shrink-0"   ,} )
+                  , _react2.default.createElement('div', { className: "space-y-0.5",}
+                    , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316]"  ,}, "Live Google Meet Session Created"    )
+                    , _react2.default.createElement('div', { className: "text-[11px] font-mono text-[#15803D]"  ,}, meetLink)
+                  )
+                )
+                , _react2.default.createElement('a', {
+                  href: meetLink,
+                  target: "_blank",
+                  rel: "noreferrer",
+                  className: "px-3 py-1.5 rounded-full bg-[#15803D] text-white text-[11px] font-mono font-bold hover:bg-[#002E25] transition-colors flex items-center gap-1 shrink-0"             ,}
+
+                  , _react2.default.createElement('span', null, "Open Meet" )
+                  , _react2.default.createElement(_lucidereact.ExternalLink, { className: "w-3 h-3" ,} )
+                )
+              )
+            )
+          )
+
+        )
+
+        /* Footer */
+        , _react2.default.createElement('div', { className: "p-5 border-t border-[#EAE7DF] bg-[#FAF9F5] flex items-center justify-between"      ,}
+          , _react2.default.createElement('div', { className: "flex items-center gap-2 text-[11px] text-[#75777E] font-mono"     ,}
+            , _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-4 h-4 text-[#15803D]"  ,} )
+            , _react2.default.createElement('span', null, "Bank-grade encryption · Multi-Tenant Isolation Verified"     )
+          )
+
+          , _react2.default.createElement('button', {
+            type: "button",
+            onClick: onClose,
+            className: "px-5 py-2.5 rounded-full bg-[#121316] hover:bg-black text-white text-xs font-mono font-bold cursor-pointer"         ,}
+, "Close Trace"
+
+          )
+        )
+
+      )
+    )
+  );
+}; exports.LiveIntelligenceRunnerModal = LiveIntelligenceRunnerModal;
 
   });
 

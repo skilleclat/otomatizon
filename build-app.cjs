@@ -128,6 +128,7 @@ function bundleApp() {
     { name: "@/components/SystemHealthOverview", path: "src/components/SystemHealthOverview.tsx" },
     { name: "@/components/IntelligenceInspectorModal", path: "src/components/IntelligenceInspectorModal.tsx" },
     { name: "@/components/FollowUpQueueModal", path: "src/components/FollowUpQueueModal.tsx" },
+    { name: "@/components/LiveIntelligenceRunnerModal", path: "src/components/LiveIntelligenceRunnerModal.tsx" },
     { name: "@/components/HomeCommandCenter", path: "src/components/HomeCommandCenter.tsx" },
     { name: "@/components/AppsView", path: "src/components/AppsView.tsx" },
     { name: "@/components/ActivityView", path: "src/components/ActivityView.tsx" },
@@ -209,6 +210,7 @@ function bundleApp() {
     if (clean === "./components/LiveAutomationPipeline" || clean === "./LiveAutomationPipeline" || clean === "@/components/LiveAutomationPipeline") clean = "@/components/LiveAutomationPipeline";
     if (clean === "./components/AttentionRequiredSection" || clean === "./AttentionRequiredSection" || clean === "@/components/AttentionRequiredSection") clean = "@/components/AttentionRequiredSection";
     if (clean === "./components/AppCollaborationMatrix" || clean === "./AppCollaborationMatrix" || clean === "@/components/AppCollaborationMatrix") clean = "@/components/AppCollaborationMatrix";
+    if (clean === "./components/LiveIntelligenceRunnerModal" || clean === "./LiveIntelligenceRunnerModal" || clean === "@/components/LiveIntelligenceRunnerModal") clean = "@/components/LiveIntelligenceRunnerModal";
     if (clean === "./lib/decision-trace" || clean === "@/lib/decision-trace") clean = "@/lib/decision-trace";
     if (clean === "./lib/connectors/types" || clean === "@/lib/connectors/types") clean = "@/lib/connectors/types";
     if (clean === "./lib/intelligence/types" || clean === "@/lib/intelligence/types") clean = "@/lib/intelligence/types";
@@ -218,6 +220,11 @@ function bundleApp() {
     if (clean === "./components/SettingsView") clean = "@/components/SettingsView";
     if (clean === "./components/OnboardingModal") clean = "@/components/OnboardingModal";
     if (clean === "@/types") clean = "@/types";
+
+    // Generic fallback for any relative component
+    if (clean.startsWith("./") && modules["@/components/" + clean.slice(2)]) {
+      clean = "@/components/" + clean.slice(2);
+    }
 
     const mod = modules[clean] || modules[name];
     if (!mod) {
