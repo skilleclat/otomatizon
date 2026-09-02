@@ -31,6 +31,7 @@ const { parseInboundMessageText } = require("./src/lib/intelligence/semantic-par
 const { 
   startWhatsAppSocket, 
   getOrWaitForQrCode,
+  requestWhatsAppPairingCode,
   getWhatsAppStatus, 
   sendWhatsAppTextMessage, 
   disconnectWhatsApp,
@@ -633,6 +634,25 @@ async function sendOtpEmail({ email, fullName, code }) {
       success: true,
       ...status
     });
+  }
+
+  // 5a-1b. Official WhatsApp 8-Digit Phone Pairing Code (Multi-Device standard)
+  if (urlPath === "/api/whatsapp/pairing-code" && req.method === "POST") {
+    try {
+      const body = await parseJsonBody(req);
+      const searchParams = new URLSearchParams(queryString || "");
+      const orgId = body.organizationId || searchParams.get("orgId") || "default";
+      const phone = body.phone || "+254 712 345 678";
+
+      const pairCodeRes = await requestWhatsAppPairingCode(orgId, phone);
+      return sendJson(res, 200, {
+        success: true,
+        pairingCode: pairCodeRes.pairingCode,
+        organizationId: orgId
+      });
+    } catch (err) {
+      return sendJson(res, 400, { error: err.message || "Failed to generate pairing code" });
+    }
   }
 
   // 5a-2. Pair Device / Simulate Scan Endpoint (Instant Seamless Link)

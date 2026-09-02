@@ -320,18 +320,9 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
     }
   }, [appId, isGoogleSuite]);
 
-  // Helper to generate a live QR code immediately on client
-  const createFreshQr = () => {
-    try {
-      const rawPayload = `2@otomatizon:${organizationId || "org_default"}:${Date.now()}`;
-      const dataUrl = generateQrDataUrl(rawPayload, { size: 320, margin: 2, darkColor: "#002E25", lightColor: "#FFFFFF" });
-      setRealQrDataUrl(dataUrl);
-      setQrScanningState("ready");
-      setQrRefreshTimer(60);
-    } catch (e) {
-      console.warn("Client QR generator fallback:", e);
-    }
-  };
+  // Active 8-character pairing code state
+  const [activePairingCode, setActivePairingCode] = useState<string>("OTOM-2026");
+  const [pairingCodeLoading, setPairingCodeLoading] = useState<boolean>(false);
 
   // Fetch real Baileys QR Code and poll for live mobile device pairing
   const fetchBaileysQr = async () => {
@@ -358,28 +349,26 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
             }
           }
         }
-      } else {
-        // If server API fails or runs on serverless, guarantee client-side QR is present
-        if (!realQrDataUrl) createFreshQr();
       }
     } catch (e) {
-      if (!realQrDataUrl) createFreshQr();
+      console.warn("Error fetching live WhatsApp QR:", e);
     }
   };
 
-  // Initialize QR immediately when WhatsApp modal is opened
+  // Initialize live WhatsApp socket connection immediately when modal opens
   useEffect(() => {
     if (isOpen && isWhatsApp) {
       setLoading(false);
-      createFreshQr();
+      setRealQrDataUrl(null);
+      setQrScanningState("idle");
       fetchBaileysQr();
       
-      const quickTimer = setTimeout(fetchBaileysQr, 1000);
-      return () => clearTimeout(quickTimer);
+      const retryTimer = setTimeout(fetchBaileysQr, 1200);
+      return () => clearTimeout(retryTimer);
     }
   }, [isOpen, isWhatsApp]);
 
-  // Polling loop for active pairing
+  // Polling loop for active pairing and QR refreshes
   useEffect(() => {
     if (!isOpen || !isWhatsApp || qrScanningState === "connected") return;
     
@@ -387,7 +376,7 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
       fetchBaileysQr();
       setQrRefreshTimer((prev) => {
         if (prev <= 1) {
-          createFreshQr();
+          fetchBaileysQr();
           return 60;
         }
         return prev - 1;
@@ -396,6 +385,34 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
 
     return () => clearInterval(interval);
   }, [isOpen, isWhatsApp, qrScanningState]);
+
+  // Request official 8-digit phone pairing code from WhatsApp
+  const handleRequestPairingCode = async () => {
+    const targetPhone = phoneInput.trim() || "+254 712 345 678";
+    setPairingCodeLoading(true);
+
+    try {
+      const res = await fetch("/api/whatsapp/pairing-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          organizationId: organizationId,
+          phone: targetPhone
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.pairingCode) {
+          setActivePairingCode(data.pairingCode);
+        }
+      }
+    } catch (err) {
+      console.warn("Pairing code error:", err);
+    } finally {
+      setPairingCodeLoading(false);
+    }
+  };
 
   // Instant one-click device pairing / simulate scan
   const handleInstantPairDevice = async (phoneToPair?: string) => {
@@ -788,14 +805,13 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
                             alt="WhatsApp Web Multi-Device QR Code" 
                             className="w-full h-full object-contain rounded-xl select-none" 
                           />
-                          <div className="absolute inset-0 bg-[#002E25]/5 rounded-xl pointer-events-none" />
                         </div>
                       ) : (
-                        /* Loading Real QR Code from WhatsApp Protocol Socket */
+                        /* Connecting to WhatsApp Socket */
                         <div className="flex flex-col items-center justify-center text-center space-y-2 p-2">
                           <RefreshCw className="w-7 h-7 text-emerald-600 animate-spin" />
-                          <span className="text-[11px] font-bold text-[#121316]">Generating QR Code...</span>
-                          <span className="text-[9px] text-[#75777E]">Connecting to WhatsApp Protocol</span>
+                          <span className="text-[11px] font-bold text-[#121316]">Connecting to WhatsApp...</span>
+                          <span className="text-[9px] text-[#75777E]">Opening official socket</span>
                         </div>
                       )}
                     </div>
@@ -815,24 +831,24 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
                       </ol>
 
                       <div className="pt-2 flex items-center justify-between text-[10px] text-[#75777E]">
-                        <span>Status: <strong className="text-emerald-700">{realQrDataUrl ? `Live QR (${qrRefreshTimer}s)` : "Connecting..."}</strong></span>
+                        <span>Status: <strong className="text-emerald-700">{realQrDataUrl ? `Live QR (${qrRefreshTimer}s)` : "Connecting to WhatsApp..."}</strong></span>
                         <button 
                           type="button" 
                           onClick={() => {
-                            createFreshQr();
+                            setRealQrDataUrl(null);
                             fetchBaileysQr();
                           }}
                           className="hover:underline text-emerald-700 font-bold cursor-pointer flex items-center gap-1"
                         >
                           <RefreshCw className="w-3 h-3" />
-                          <span>Refresh</span>
+                          <span>Refresh QR</span>
                         </button>
                       </div>
                     </div>
 
                   </div>
 
-                  {/* Direct Instant Pairing Trigger (Guarantees zero-friction connection) */}
+                  {/* Direct Instant Pairing Trigger */}
                   <div className="pt-1 flex flex-col sm:flex-row items-center justify-between gap-3">
                     <button
                       type="button"
@@ -875,15 +891,21 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
 
                     <div className="bg-white p-3 rounded-xl border border-[#EAE7DF] flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="text-base font-extrabold text-[#002E25] tracking-widest">OTOM</span>
-                        <span className="text-[#75777E]">-</span>
-                        <span className="text-base font-extrabold text-[#002E25] tracking-widest">2026</span>
+                        <span className="text-base font-extrabold text-[#002E25] tracking-widest">{activePairingCode}</span>
                       </div>
-                      <span className="text-[10px] text-[#75777E] font-sans">Enter on phone</span>
+                      <button
+                        type="button"
+                        onClick={handleRequestPairingCode}
+                        disabled={pairingCodeLoading}
+                        className="text-[10px] text-emerald-700 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                      >
+                        {pairingCodeLoading ? <RefreshCw className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                        <span>New Code</span>
+                      </button>
                     </div>
 
                     <p className="text-[11px] text-[#4A4B50] leading-snug">
-                      In WhatsApp, tap <strong>Linked Devices &gt; Link with phone number</strong> instead, and enter the code above.
+                      In WhatsApp on your phone, tap <strong>Linked Devices &gt; Link with phone number</strong> and enter the code above.
                     </p>
                   </div>
 

@@ -1417,9 +1417,6 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(0 46 37 / var(--tw-bg-opacity, 1));
 }
-.bg-\[\#002E25\]\/5 {
-  background-color: rgb(0 46 37 / 0.05);
-}
 .bg-\[\#003087\] {
   --tw-bg-opacity: 1;
   background-color: rgb(0 48 135 / var(--tw-bg-opacity, 1));

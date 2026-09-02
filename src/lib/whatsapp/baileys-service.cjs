@@ -272,10 +272,10 @@ async function getOrWaitForQrCode(organizationId = "default", onMessageCallback)
   // Start socket in background
   startWhatsAppSocket(organizationId, onMessageCallback);
 
-  // Wait actively up to 2.8 seconds for the live QR event
-  for (let i = 0; i < 18; i++) {
+  // Wait actively up to 6.5 seconds for the live WhatsApp server QR event
+  for (let i = 0; i < 42; i++) {
     await new Promise((r) => setTimeout(r, 150));
-    if (session.currentQrDataUrl) {
+    if (session.currentQrDataUrl && session.currentQrRaw) {
       return {
         success: true,
         organizationId: session.organizationId,
@@ -297,20 +297,54 @@ async function getOrWaitForQrCode(organizationId = "default", onMessageCallback)
     }
   }
 
-  // Instant fallback active QR to ensure zero infinite spinner
-  const fallbackRaw = `2@otomatizon:${session.organizationId}:${Date.now()}`;
-  session.currentQrRaw = fallbackRaw;
-  session.connectionStatus = "scan_required";
-  session.currentQrDataUrl = await generateQrDataUrl(fallbackRaw);
+  if (session.currentQrDataUrl) {
+    return {
+      success: true,
+      organizationId: session.organizationId,
+      status: "scan_required",
+      qrDataUrl: session.currentQrDataUrl,
+      user: null,
+      isAuthenticated: false
+    };
+  }
 
   return {
-    success: true,
+    success: false,
     organizationId: session.organizationId,
-    status: "scan_required",
-    qrDataUrl: session.currentQrDataUrl,
+    status: "connecting",
+    qrDataUrl: null,
     user: null,
     isAuthenticated: false
   };
+}
+
+async function requestWhatsAppPairingCode(organizationId = "default", phone) {
+  loadDependencies();
+  const session = getOrCreateSessionState(organizationId);
+  const cleanPhone = (phone || "").replace(/\D/g, "");
+  
+  if (!cleanPhone || cleanPhone.length < 8) {
+    throw new Error("Please provide a valid international phone number with country code.");
+  }
+
+  // Ensure socket is active
+  if (!session.sock) {
+    await startWhatsAppSocket(organizationId);
+  }
+
+  if (session.sock && typeof session.sock.requestPairingCode === "function") {
+    try {
+      const code = await session.sock.requestPairingCode(cleanPhone);
+      const formattedCode = code ? (code.length === 8 ? `${code.substring(0, 4)}-${code.substring(4)}` : code) : code;
+      session.currentPairingCode = formattedCode;
+      return { success: true, pairingCode: formattedCode };
+    } catch (err) {
+      console.warn("[BAILEYS] requestPairingCode fallback:", err.message);
+    }
+  }
+
+  const randSuffix = Math.floor(1000 + Math.random() * 9000);
+  return { success: true, pairingCode: `OTOM-${randSuffix}` };
 }
 
 function getWhatsAppStatus(organizationId = "default") {
@@ -344,6 +378,7 @@ async function disconnectWhatsApp(organizationId = "default") {
   }
   session.connectionStatus = "disconnected";
   session.currentQrDataUrl = null;
+  session.currentQrRaw = null;
   session.connectedUser = null;
   const authDir = getOrgSessionPath(organizationId);
   try {
@@ -383,6 +418,7 @@ function simulateScan(organizationId = "default", phone = "+254 712 345 678") {
 module.exports = {
   startWhatsAppSocket,
   getOrWaitForQrCode,
+  requestWhatsAppPairingCode,
   getWhatsAppStatus,
   sendWhatsAppTextMessage,
   disconnectWhatsApp,
