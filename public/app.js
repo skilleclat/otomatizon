@@ -4223,16 +4223,28 @@ async function syncWithServer() {
 
     if (typeof window !== "undefined") {
       try {
-        await fetch("/api/auth/signup", {
+        const res = await fetch("/api/auth/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             fullName: payload.fullName,
             email: payload.email,
             phone: payload.phone,
+            password: payload.password,
             businessName: bName
           })
         });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user && data.organization) {
+            globalState.session.user = data.user;
+            globalState.organization = data.organization;
+            if (data.businessProfile) {
+              globalState.businessProfile = data.businessProfile;
+            }
+            notify();
+          }
+        }
       } catch (e) {
         // local persistence fallback
       }
@@ -4240,32 +4252,51 @@ async function syncWithServer() {
   };
 
   const login = async (email, password) => {
-    const existing = _optionalChain([globalState, 'access', _9 => _9.session, 'optionalAccess', _10 => _10.user]);
-    let targetUser;
-    
-    if (existing && existing.email.toLowerCase() === email.toLowerCase()) {
-      targetUser = existing;
-    } else {
-      const uName = email.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
-      targetUser = {
+    const cleanEmail = (email || "").toLowerCase().trim();
+    const cleanPass = (password || "").trim();
+
+    if (!cleanEmail || !cleanEmail.includes("@")) {
+      throw new Error("Please enter a valid email address.");
+    }
+
+    if (!cleanPass) {
+      throw new Error("Password is required.");
+    }
+
+    if (typeof window !== "undefined") {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: cleanEmail, password: cleanPass })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Incorrect email or password. Please try again.");
+      }
+
+      // Valid credentials verified by server
+      const targetUser = data.user || {
         id: `user_${Date.now()}`,
-        fullName: uName,
-        email: email,
+        fullName: cleanEmail.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase()),
+        email: cleanEmail,
         phone: "+254 700 000 000",
         createdAt: new Date().toISOString()
       };
-      const orgId = `org_${Date.now()}`;
-      const newOrg = {
-        id: orgId,
-        name: `${uName}'s Workspace`,
+
+      const targetOrg = data.organization || {
+        id: `org_${targetUser.id}`,
+        name: `${targetUser.fullName}'s Workspace`,
         planId: "starter",
         createdAt: new Date().toISOString()
       };
-      const newProfile = {
-        id: `bp_${Date.now()}`,
-        organizationId: orgId,
-        name: newOrg.name,
-        businessType: "Service Business",
+
+      const targetProfile = data.businessProfile || {
+        id: `bp_${targetUser.id}`,
+        organizationId: targetOrg.id,
+        name: targetOrg.name,
+        businessType: "Service Provider",
         city: "Nairobi",
         country: "Kenya",
         currency: "KES",
@@ -4275,29 +4306,19 @@ async function syncWithServer() {
         frictionPoints: [],
         workflowStages: []
       };
-      globalState = exports.createCleanWorkspaceState.call(void 0, targetUser, newOrg, newProfile);
+
+      globalState = exports.createCleanWorkspaceState.call(void 0, targetUser, targetOrg, targetProfile);
+      globalState.session = {
+        user: targetUser,
+        token: data.token || `session_tok_${targetUser.id}`,
+        isAuthenticated: true
+      };
+
+      notify();
+      return true;
     }
 
-    globalState.session = {
-      user: targetUser,
-      token: `session_tok_${targetUser.id}`,
-      isAuthenticated: true
-    };
-
-    notify();
-
-    if (typeof window !== "undefined") {
-      try {
-        await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
-        });
-      } catch (e) {
-        // fallback
-      }
-    }
-    return true;
+    return false;
   };
 
   const logout = () => {
@@ -4923,7 +4944,7 @@ async function syncWithServer() {
       role: member.role,
       status: "invited",
       joinedAt: new Date().toISOString(),
-      invitedBy: _optionalChain([globalState, 'access', _11 => _11.session, 'access', _12 => _12.user, 'optionalAccess', _13 => _13.fullName]) || "James Kamau"
+      invitedBy: _optionalChain([globalState, 'access', _9 => _9.session, 'access', _10 => _10.user, 'optionalAccess', _11 => _11.fullName]) || "James Kamau"
     };
     globalState.teamMembers.push(newMember);
     globalState.activityLogs.unshift({
@@ -5136,7 +5157,7 @@ async function syncWithServer() {
 
     return {
       generatedAt: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }),
-      businessName: p.name || _optionalChain([globalState, 'access', _14 => _14.organization, 'optionalAccess', _15 => _15.name]) || "Your Business",
+      businessName: p.name || _optionalChain([globalState, 'access', _12 => _12.organization, 'optionalAccess', _13 => _13.name]) || "Your Business",
       businessType: p.businessType || "Service Business",
       city: p.city || "Nairobi",
       country: p.country || "Kenya",

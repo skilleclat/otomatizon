@@ -293,26 +293,94 @@ async function sendOtpEmail({ email, fullName, code }) {
     }
   }
 
-  // 3c. Auth Signup
+  function hashPassword(password) {
+    const salt = crypto.randomBytes(16).toString("hex");
+    const hash = crypto.pbkdf2Sync(password || "default_pass", salt, 10000, 64, "sha512").toString("hex");
+    return { salt, hash };
+  }
+
+  function verifyPassword(password, salt, hash) {
+    if (!password || !salt || !hash) return false;
+    try {
+      const verifyHash = crypto.pbkdf2Sync(password, salt, 10000, 64, "sha512").toString("hex");
+      return crypto.timingSafeEqual(Buffer.from(hash, "hex"), Buffer.from(verifyHash, "hex"));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // 3c. Auth Signup (Strict Cryptographic Password Hashing)
   if (urlPath === "/api/auth/signup" && req.method === "POST") {
     try {
       const body = await parseJsonBody(req);
+      const email = (body.email || "").toLowerCase().trim();
+      const rawPassword = body.password || "";
+
+      if (!email || !email.includes("@")) {
+        return sendJson(res, 400, { error: "Valid email address is required" });
+      }
+
+      if (!rawPassword || rawPassword.length < 6) {
+        return sendJson(res, 400, { error: "Password must be at least 6 characters long" });
+      }
+
       const db = readDb();
+      const existingUser = db.users.find(u => u.email.toLowerCase() === email);
+
+      const { salt, hash } = hashPassword(rawPassword);
+
+      if (existingUser) {
+        // Update credentials if user already exists
+        existingUser.fullName = body.fullName || existingUser.fullName;
+        existingUser.phone = body.phone || existingUser.phone;
+        existingUser.passwordHash = hash;
+        existingUser.salt = salt;
+        writeDb(db);
+
+        const org = db.organizations.find(o => o.id === existingUser.organizationId) || {
+          id: `org_${existingUser.id}`,
+          name: `${existingUser.fullName}'s Practice`,
+          planId: "starter"
+        };
+
+        const profile = db.businessProfiles.find(b => b.organizationId === org.id) || {
+          id: `bp_${existingUser.id}`,
+          organizationId: org.id,
+          name: org.name
+        };
+
+        return sendJson(res, 200, {
+          success: true,
+          user: {
+            id: existingUser.id,
+            fullName: existingUser.fullName,
+            email: existingUser.email,
+            phone: existingUser.phone,
+            organizationId: org.id
+          },
+          organization: org,
+          businessProfile: profile,
+          token: `session_tok_${existingUser.id}`
+        });
+      }
+
       const orgId = `org_${Date.now()}`;
       const userId = `user_${Date.now()}`;
 
       const newUser = {
         id: userId,
         fullName: body.fullName || "New Business Owner",
-        email: body.email,
+        email: email,
         phone: body.phone || "+254 700 000 000",
         organizationId: orgId,
+        passwordHash: hash,
+        salt: salt,
         createdAt: new Date().toISOString()
       };
 
       const newOrg = {
         id: orgId,
-        name: body.businessName || `${body.fullName}'s Practice`,
+        name: body.businessName || `${body.fullName || "My"}'s Practice`,
         planId: "starter",
         createdAt: new Date().toISOString()
       };
@@ -320,6 +388,7 @@ async function sendOtpEmail({ email, fullName, code }) {
       const newProfile = {
         id: `bp_${Date.now()}`,
         organizationId: orgId,
+        name: newOrg.name,
         businessName: newOrg.name,
         businessType: "Service Provider",
         city: "Nairobi",
@@ -347,32 +416,86 @@ async function sendOtpEmail({ email, fullName, code }) {
 
       return sendJson(res, 201, {
         success: true,
-        user: newUser,
+        user: {
+          id: newUser.id,
+          fullName: newUser.fullName,
+          email: newUser.email,
+          phone: newUser.phone,
+          organizationId: newUser.organizationId
+        },
         organization: newOrg,
         businessProfile: newProfile,
         token: `session_tok_${userId}`
       });
     } catch (err) {
+      console.error("Signup error:", err);
       return sendJson(res, 400, { error: "Invalid signup payload" });
     }
   }
 
-  // 4. Auth Login
+  // 4. Auth Login (Strict Password Validation)
   if (urlPath === "/api/auth/login" && req.method === "POST") {
     try {
       const body = await parseJsonBody(req);
+      const email = (body.email || "").toLowerCase().trim();
+      const password = (body.password || "").trim();
+
+      if (!email || !email.includes("@")) {
+        return sendJson(res, 400, { error: "Please provide a valid email address." });
+      }
+
+      if (!password) {
+        return sendJson(res, 400, { error: "Password is required." });
+      }
+
       const db = readDb();
-      const user = db.users.find(u => u.email.toLowerCase() === (body.email || "").toLowerCase()) || db.users[0];
-      const org = db.organizations.find(o => o.id === user.organizationId) || db.organizations[0];
+      const user = db.users.find(u => u.email && u.email.toLowerCase() === email);
+
+      if (!user) {
+        return sendJson(res, 401, { error: "No account found with this email address. Please create an account first." });
+      }
+
+      // Verify password strictly
+      if (user.passwordHash && user.salt) {
+        const isPasswordValid = verifyPassword(password, user.salt, user.passwordHash);
+        if (!isPasswordValid) {
+          return sendJson(res, 401, { error: "Incorrect password. Please verify your password and try again." });
+        }
+      } else {
+        // Legacy or unhashed user - fallback check or require password reset
+        if (user.password && user.password !== password) {
+          return sendJson(res, 401, { error: "Incorrect password. Please verify your password and try again." });
+        }
+      }
+
+      const org = db.organizations.find(o => o.id === user.organizationId) || {
+        id: `org_${user.id}`,
+        name: `${user.fullName}'s Workspace`,
+        planId: "starter"
+      };
+
+      const profile = db.businessProfiles.find(b => b.organizationId === org.id) || {
+        id: `bp_${user.id}`,
+        organizationId: org.id,
+        name: org.name
+      };
 
       return sendJson(res, 200, {
         success: true,
-        user,
+        user: {
+          id: user.id,
+          fullName: user.fullName,
+          email: user.email,
+          phone: user.phone,
+          organizationId: org.id
+        },
         organization: org,
+        businessProfile: profile,
         token: `session_tok_${user.id}`
       });
     } catch (err) {
-      return sendJson(res, 400, { error: "Login failed" });
+      console.error("Login error:", err);
+      return sendJson(res, 500, { error: "Login server error" });
     }
   }
 
