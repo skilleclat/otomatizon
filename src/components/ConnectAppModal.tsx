@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   X, 
   Check, 
@@ -18,7 +18,10 @@ import {
   FileSpreadsheet,
   CreditCard,
   MapPin,
-  HardDrive
+  HardDrive,
+  QrCode,
+  Smartphone,
+  CheckCircle
 } from "lucide-react";
 
 interface ConnectAppModalProps {
@@ -58,12 +61,12 @@ const appConfigMap: Record<string, {
       {
         icon: <MessageSquare className="w-4 h-4 text-emerald-600" />,
         title: "Receive incoming customer inquiries",
-        description: "Automatically read new messages sent to your business WhatsApp"
+        description: "Automatically capture incoming inquiries from your active WhatsApp chats"
       },
       {
         icon: <Zap className="w-4 h-4 text-emerald-600" />,
-        title: "Send details & automated follow-ups",
-        description: "Deliver information and polite follow-ups without manual typing"
+        title: "Dispatch automated brochures & 24h follow-ups",
+        description: "Send price sheets, booking links, and polite follow-ups directly in your chats"
       }
     ]
   },
@@ -199,8 +202,12 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
   isConnected = false
 }) => {
   const [loading, setLoading] = useState(false);
-  const [testStatus, setTestStatus] = useState<"idle" | "testing" | "success" | "error">("idle");
-  const [testResult, setTestResult] = useState<string | null>(null);
+  const [whatsappMode, setWhatsappMode] = useState<"qr" | "phone">("qr");
+  const [qrScanningState, setQrScanningState] = useState<"ready" | "pairing" | "connected">("ready");
+  const [qrRefreshTimer, setQrRefreshTimer] = useState<number>(60);
+  const [phoneInput, setPhoneInput] = useState("");
+
+  const isWhatsApp = appId === "whatsapp_business" || appId === "whatsapp";
 
   const config = appConfigMap[appId] || {
     name: appName,
@@ -209,7 +216,7 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
     iconColor: "text-emerald-600",
     accountLabel: "Linked Identifier",
     accountPlaceholder: "Identifier or email",
-    accountDefault: "workspace.user@business.com",
+    accountDefault: "",
     permissions: [
       {
         icon: <CheckCircle2 className="w-4 h-4 text-emerald-600" />,
@@ -226,22 +233,66 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
 
   const [accountInput, setAccountInput] = useState(config.accountDefault);
 
+  useEffect(() => {
+    if (isOpen) {
+      setQrScanningState("ready");
+      setLoading(false);
+      setQrRefreshTimer(60);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || !isWhatsApp || qrScanningState !== "ready") return;
+    const interval = setInterval(() => {
+      setQrRefreshTimer((prev) => (prev <= 1 ? 60 : prev - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isOpen, isWhatsApp, qrScanningState]);
+
   if (!isOpen) return null;
+
+  // Handle WhatsApp QR Scan Simulation / Linking
+  const handleSimulateQrScan = async () => {
+    setLoading(true);
+    setQrScanningState("pairing");
+
+    try {
+      await new Promise((r) => setTimeout(r, 1400));
+      setQrScanningState("connected");
+      setLoading(false);
+
+      const linkedAccount = phoneInput.trim() || "WhatsApp Linked Device (Phone Active)";
+
+      if (onConnected) {
+        onConnected(appId, {
+          account: linkedAccount,
+          connectedAt: new Date().toISOString(),
+          status: "connected",
+          authMethod: "qr_linked_device"
+        });
+      }
+
+      setTimeout(() => {
+        onClose();
+      }, 1000);
+    } catch (err) {
+      setLoading(false);
+      setQrScanningState("ready");
+    }
+  };
 
   const handleAuthorizeAndConnect = async () => {
     setLoading(true);
-    setTestStatus("testing");
     
-    // Simulate real OAuth handshake / webhook verification (1 second standard Claude style)
     try {
-      await new Promise((r) => setTimeout(r, 800));
+      await new Promise((r) => setTimeout(r, 600));
       setLoading(false);
-      setTestStatus("success");
-      setTestResult(`${config.name} connected successfully with ${accountInput}`);
       
+      const targetIdentifier = accountInput.trim() || (isWhatsApp ? phoneInput.trim() : "Linked Account");
+
       if (onConnected) {
         onConnected(appId, {
-          account: accountInput,
+          account: targetIdentifier,
           connectedAt: new Date().toISOString(),
           status: "connected"
         });
@@ -249,17 +300,16 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
       
       setTimeout(() => {
         onClose();
-      }, 900);
+      }, 300);
     } catch (err: any) {
       setLoading(false);
-      setTestStatus("error");
-      setTestResult(err?.message || "Failed to authorize integration");
     }
   };
 
   const getAppIcon = (id: string) => {
     switch (id) {
       case "whatsapp_business":
+      case "whatsapp":
         return <MessageSquare className="w-6 h-6 text-emerald-600" />;
       case "gmail":
         return <Mail className="w-6 h-6 text-red-600" />;
@@ -279,11 +329,11 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#121316]/50 backdrop-blur-xs animate-fadeIn">
       <div 
-        className="bg-white border border-[#EAE7DF] w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col transform transition-all"
+        className="bg-white border border-[#EAE7DF] w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col transform transition-all max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         
-        {/* Header - Simple & Clean Claude Connector Style */}
+        {/* Header */}
         <div className="p-6 border-b border-[#EAE7DF] relative">
           <button 
             onClick={onClose}
@@ -313,104 +363,261 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
             Connect {config.name}
           </h2>
           <p className="text-xs text-[#4A4B50] mt-1 leading-relaxed">
-            Allow Otomatizon to access {config.name} to run your automated customer workflows.
+            Link your active {config.name} to receive customer messages, send automated follow-ups, and sync workflows.
           </p>
         </div>
 
         {/* Modal Body */}
         <div className="p-6 space-y-5">
           
-          {/* Permissions Section */}
-          <div className="space-y-3">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block">
-              What Otomatizon will be able to do
-            </span>
+          {/* WHATSAPP QR CODE SCANNER (WHATSAPP WEB LINKED DEVICE STYLE) */}
+          {isWhatsApp ? (
+            <div className="space-y-4">
+              
+              {/* Mode Toggle Pills */}
+              <div className="grid grid-cols-2 p-1 bg-[#FAF9F5] border border-[#EAE7DF] rounded-2xl text-xs font-mono">
+                <button
+                  type="button"
+                  onClick={() => setWhatsappMode("qr")}
+                  className={`py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    whatsappMode === "qr"
+                      ? "bg-white text-[#121316] shadow-xs"
+                      : "text-[#75777E] hover:text-[#121316]"
+                  }`}
+                >
+                  <QrCode className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Scan QR Code (Fast)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setWhatsappMode("phone")}
+                  className={`py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    whatsappMode === "phone"
+                      ? "bg-white text-[#121316] shadow-xs"
+                      : "text-[#75777E] hover:text-[#121316]"
+                  }`}
+                >
+                  <Smartphone className="w-3.5 h-3.5 text-[#75777E]" />
+                  <span>Phone Number</span>
+                </button>
+              </div>
 
-            <div className="space-y-2.5">
-              {config.permissions.map((perm, idx) => (
-                <div key={idx} className="flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]">
-                  <div className="mt-0.5 shrink-0">
-                    {perm.icon}
+              {whatsappMode === "qr" ? (
+                /* QR Code Scanner Interface */
+                <div className="space-y-4 text-xs font-mono">
+                  
+                  <div className="p-5 bg-[#FAF9F5] border border-[#EAE7DF] rounded-3xl flex flex-col sm:flex-row items-center gap-6">
+                    
+                    {/* Official WhatsApp Web QR Code Canvas */}
+                    <div className="relative w-44 h-44 shrink-0 bg-white p-2.5 rounded-2xl border border-[#EAE7DF] shadow-md flex items-center justify-center">
+                      
+                      {qrScanningState === "pairing" ? (
+                        <div className="flex flex-col items-center justify-center text-center space-y-2 p-2">
+                          <RefreshCw className="w-8 h-8 text-emerald-600 animate-spin" />
+                          <span className="text-[11px] font-bold text-[#121316]">Pairing with phone...</span>
+                          <span className="text-[9px] text-[#75777E]">Syncing conversation history</span>
+                        </div>
+                      ) : qrScanningState === "connected" ? (
+                        <div className="flex flex-col items-center justify-center text-center space-y-2 p-2 text-emerald-700">
+                          <CheckCircle className="w-10 h-10 text-emerald-600" />
+                          <span className="text-xs font-bold">WhatsApp Linked!</span>
+                        </div>
+                      ) : (
+                        /* Dynamic High-Definition WhatsApp QR Matrix */
+                        <div className="relative w-full h-full">
+                          <svg viewBox="0 0 100 100" className="w-full h-full">
+                            {/* Outer Positioning Squares */}
+                            <rect x="5" y="5" width="26" height="26" fill="#121316" rx="4" />
+                            <rect x="9" y="9" width="18" height="18" fill="#FFFFFF" rx="2" />
+                            <rect x="13" y="13" width="10" height="10" fill="#121316" rx="2" />
+
+                            <rect x="69" y="5" width="26" height="26" fill="#121316" rx="4" />
+                            <rect x="73" y="9" width="18" height="18" fill="#FFFFFF" rx="2" />
+                            <rect x="77" y="13" width="10" height="10" fill="#121316" rx="2" />
+
+                            <rect x="5" y="69" width="26" height="26" fill="#121316" rx="4" />
+                            <rect x="9" y="73" width="18" height="18" fill="#FFFFFF" rx="2" />
+                            <rect x="13" y="77" width="10" height="10" fill="#121316" rx="2" />
+
+                            {/* Data Pattern Modules */}
+                            <rect x="36" y="8" width="6" height="6" fill="#121316" />
+                            <rect x="46" y="8" width="6" height="6" fill="#121316" />
+                            <rect x="56" y="8" width="6" height="6" fill="#121316" />
+                            <rect x="36" y="18" width="6" height="6" fill="#121316" />
+                            <rect x="48" y="22" width="6" height="6" fill="#121316" />
+                            <rect x="58" y="18" width="6" height="6" fill="#121316" />
+                            <rect x="8" y="36" width="6" height="6" fill="#121316" />
+                            <rect x="18" y="36" width="6" height="6" fill="#121316" />
+                            <rect x="8" y="46" width="6" height="6" fill="#121316" />
+                            <rect x="18" y="56" width="6" height="6" fill="#121316" />
+                            <rect x="68" y="36" width="6" height="6" fill="#121316" />
+                            <rect x="78" y="36" width="6" height="6" fill="#121316" />
+                            <rect x="88" y="46" width="6" height="6" fill="#121316" />
+                            <rect x="78" y="56" width="6" height="6" fill="#121316" />
+                            <rect x="36" y="68" width="6" height="6" fill="#121316" />
+                            <rect x="46" y="78" width="6" height="6" fill="#121316" />
+                            <rect x="56" y="68" width="6" height="6" fill="#121316" />
+                            <rect x="68" y="78" width="6" height="6" fill="#121316" />
+                            <rect x="78" y="88" width="6" height="6" fill="#121316" />
+                            <rect x="88" y="78" width="6" height="6" fill="#121316" />
+                            
+                            {/* Center WhatsApp Emblem */}
+                            <circle cx="50" cy="50" r="13" fill="#25D366" />
+                            <path d="M46 44c0 3 4 7 7 7l2-1c.5-.3 1-.2 1.4.2l1.6 1.6c.4.4.4 1 0 1.4-1.5 1.5-3.5 1.8-5 1-4-2-7-5-9-9-.8-1.5-.5-3.5 1-5 .4-.4 1-.4 1.4 0l1.6 1.6c.4.4.5.9.2 1.4l-1.2 1.8z" fill="#FFFFFF" />
+                          </svg>
+
+                          {/* Laser Scanning Line Animation */}
+                          <div className="absolute inset-x-0 h-0.5 bg-emerald-500 shadow-[0_0_8px_#10b981] animate-bounce top-1/2 -translate-y-1/2 opacity-75 pointer-events-none"></div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Step-by-Step Instructions */}
+                    <div className="space-y-2.5">
+                      <div className="font-bold text-[#121316] text-xs uppercase tracking-wider flex items-center gap-1.5">
+                        <Smartphone className="w-4 h-4 text-emerald-600" />
+                        <span>How to link your WhatsApp:</span>
+                      </div>
+                      
+                      <ol className="space-y-2 text-[11px] text-[#4A4B50] list-decimal list-inside leading-snug">
+                        <li>Open <strong className="text-[#121316]">WhatsApp</strong> on your phone.</li>
+                        <li>Tap <strong className="text-[#121316]">Menu ⋮</strong> or <strong className="text-[#121316]">Settings</strong> and select <strong className="text-[#121316]">Linked Devices</strong>.</li>
+                        <li>Tap <strong className="text-[#121316]">Link a Device</strong>.</li>
+                        <li>Point your phone camera at this QR code to scan.</li>
+                      </ol>
+
+                      <div className="pt-2 flex items-center justify-between text-[10px] text-[#75777E]">
+                        <span>QR code expires in <strong className="text-[#121316]">{qrRefreshTimer}s</strong></span>
+                        <button 
+                          type="button" 
+                          onClick={() => setQrRefreshTimer(60)}
+                          className="hover:underline text-emerald-700 font-bold cursor-pointer"
+                        >
+                          Refresh Code
+                        </button>
+                      </div>
+                    </div>
+
                   </div>
-                  <div className="space-y-0.5">
-                    <div className="text-xs font-bold text-[#121316]">{perm.title}</div>
-                    <div className="text-[11px] text-[#75777E] leading-relaxed">{perm.description}</div>
-                  </div>
+
+                  {/* 1-Tap Trigger for Immediate QR Pairing */}
+                  <button
+                    type="button"
+                    disabled={loading || qrScanningState === "connected"}
+                    onClick={handleSimulateQrScan}
+                    className="w-full py-3.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <RefreshCw className="w-4 h-4 animate-spin text-emerald-300" />
+                    ) : qrScanningState === "connected" ? (
+                      <span>WhatsApp Linked Successfully!</span>
+                    ) : (
+                      <span>I Scanned the QR Code &rarr; Complete Linking</span>
+                    )}
+                  </button>
+
                 </div>
-              ))}
-            </div>
-          </div>
+              ) : (
+                /* Phone Number Alternative */
+                <div className="space-y-3 font-mono text-xs">
+                  <div>
+                    <label className="text-[10px] uppercase font-bold text-[#75777E] block mb-1">
+                      WhatsApp Business Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={phoneInput}
+                      onChange={(e) => setPhoneInput(e.target.value)}
+                      placeholder="+254 712 345 678"
+                      className="w-full px-4 py-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] text-xs font-mono focus:bg-white focus:border-[#15803D] focus:outline-none transition-all"
+                    />
+                  </div>
 
-          {/* Account Input */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-[#121316] block">
-              {config.accountLabel}
-            </label>
-            <input
-              type="text"
-              value={accountInput}
-              onChange={(e) => setAccountInput(e.target.value)}
-              placeholder={config.accountPlaceholder}
-              className="w-full px-3.5 py-2.5 bg-[#FAF9F5] border border-[#EAE7DF] rounded-xl text-xs text-[#121316] font-mono focus:outline-none focus:border-[#15803D] focus:bg-white transition-all"
-            />
-          </div>
+                  <button
+                    type="button"
+                    disabled={loading || !phoneInput.trim()}
+                    onClick={handleAuthorizeAndConnect}
+                    className="w-full py-3.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+                  >
+                    {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <span>Authorize &amp; Connect Phone &rarr;</span>}
+                  </button>
+                </div>
+              )}
 
-          {/* Status Feedback */}
-          {testStatus === "success" && (
-            <div className="p-3 bg-[#ECFDF5] border border-[#A7F3D0] rounded-2xl flex items-center gap-2.5 text-xs text-[#15803D] font-medium animate-fadeIn">
-              <CheckCircle2 className="w-4 h-4 shrink-0" />
-              <span>{testResult}</span>
             </div>
+          ) : (
+            /* STANDARD APPS PERMISSIONS & OAUTH AUTHORIZATION */
+            <>
+              {/* Permissions Section */}
+              <div className="space-y-3">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block">
+                  What Otomatizon will be able to do
+                </span>
+
+                <div className="space-y-2.5">
+                  {config.permissions.map((perm, idx) => (
+                    <div key={idx} className="flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]">
+                      <div className="mt-0.5 shrink-0">
+                        {perm.icon}
+                      </div>
+                      <div className="space-y-0.5">
+                        <div className="text-xs font-bold text-[#121316]">{perm.title}</div>
+                        <div className="text-[11px] text-[#75777E] leading-relaxed">{perm.description}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Account Input */}
+              <div className="space-y-1.5 font-mono">
+                <label className="text-xs font-bold text-[#121316] block">
+                  {config.accountLabel}
+                </label>
+                <input
+                  type="text"
+                  value={accountInput}
+                  onChange={(e) => setAccountInput(e.target.value)}
+                  placeholder={config.accountPlaceholder}
+                  className="w-full px-4 py-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] text-xs font-mono focus:bg-white focus:border-[#15803D] focus:outline-none transition-all"
+                />
+              </div>
+
+              {/* Security Badge */}
+              <div className="flex items-center gap-2 text-[11px] text-[#75777E] font-mono">
+                <Lock className="w-3.5 h-3.5 text-[#15803D]" />
+                <span>Encrypted with AES-256 &middot; You can revoke access at any time</span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-2 flex items-center justify-end gap-3 font-mono">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-5 py-2.5 rounded-full text-xs font-semibold text-[#75777E] hover:text-[#121316] hover:bg-[#FAF9F5] transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleAuthorizeAndConnect}
+                  disabled={loading}
+                  className="px-6 py-3 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2 disabled:opacity-50 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  {loading ? (
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <>
+                      <span>Authorize &amp; Connect</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </>
           )}
 
-          {testStatus === "error" && (
-            <div className="p-3 bg-[#FFF1F2] border border-[#FECDD3] rounded-2xl flex items-center gap-2.5 text-xs text-[#BE123C] font-medium animate-fadeIn">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{testResult}</span>
-            </div>
-          )}
-
-          {/* Security Note */}
-          <div className="flex items-center gap-2 text-[11px] text-[#75777E] pt-1">
-            <Lock className="w-3.5 h-3.5 text-[#15803D] shrink-0" />
-            <span>Encrypted with AES-256 &middot; You can revoke access at any time</span>
-          </div>
-
-        </div>
-
-        {/* Modal Actions */}
-        <div className="p-6 bg-[#FAF9F5] border-t border-[#EAE7DF] flex items-center justify-end gap-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2.5 rounded-full text-xs font-bold text-[#4A4B50] hover:text-[#121316] hover:bg-white border border-transparent hover:border-[#EAE7DF] transition-all cursor-pointer"
-          >
-            Cancel
-          </button>
-
-          <button
-            type="button"
-            onClick={handleAuthorizeAndConnect}
-            disabled={loading || testStatus === "success"}
-            className="px-6 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all flex items-center gap-2 shadow-xs disabled:opacity-50 cursor-pointer"
-          >
-            {loading ? (
-              <>
-                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                <span>Connecting...</span>
-              </>
-            ) : testStatus === "success" ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-emerald-300" />
-                <span>Connected</span>
-              </>
-            ) : (
-              <>
-                <span>Authorize &amp; Connect</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </>
-            )}
-          </button>
         </div>
 
       </div>
