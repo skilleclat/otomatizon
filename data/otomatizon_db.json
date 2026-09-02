@@ -1,6 +1,16 @@
 {
   "users": [
     {
+      "id": "user_skilleclat_01",
+      "fullName": "Skilleclat",
+      "email": "skilleclat@gmail.com",
+      "phone": "+254 700 000 000",
+      "organizationId": "org_skilleclat_01",
+      "passwordHash": "4af1c09f934d9295d445cd0316ba4a22c97a653e6cc54721913a08521472d43717062c7560ef66fead4a53b2891905b53c1b8afcf5ed9afdf97713832e0d173c",
+      "salt": "48831e5fdcb6f4842a7641909783a307",
+      "createdAt": "2026-09-02T20:10:00.000Z"
+    },
+    {
       "id": "user_1788371046317",
       "fullName": "Amina Odhiambo",
       "email": "amina.odhiambo@gmail.com",
@@ -13,6 +23,12 @@
   ],
   "organizations": [
     {
+      "id": "org_skilleclat_01",
+      "name": "Skilleclat Workspace",
+      "planId": "growth",
+      "createdAt": "2026-09-02T20:10:00.000Z"
+    },
+    {
       "id": "org_1788371046317",
       "name": "Amina Math Coaching",
       "planId": "growth",
@@ -20,6 +36,32 @@
     }
   ],
   "businessProfiles": [
+    {
+      "id": "bp_skilleclat_01",
+      "organizationId": "org_skilleclat_01",
+      "name": "Skilleclat Workspace",
+      "businessName": "Skilleclat Workspace",
+      "businessType": "Service Business",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "WhatsApp",
+        "Google",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Client follow-ups and appointment booking",
+      "workflowStages": [],
+      "manualTasks": [],
+      "frictionPoints": [],
+      "customerType": "Direct clients"
+    },
     {
       "id": "bp_1788371046317",
       "organizationId": "org_1788371046317",

@@ -109,30 +109,53 @@ const initialDb = {
   opportunities: []
 };
 
+function getBaseSeedDb() {
+  if (fs.existsSync(DB_FILE)) {
+    try {
+      const raw = fs.readFileSync(DB_FILE, "utf8");
+      return JSON.parse(raw);
+    } catch (e) {
+      console.warn("Could not parse base DB_FILE, falling back to initialDb:", e);
+    }
+  }
+  return JSON.parse(JSON.stringify(initialDb));
+}
+
 function readDb() {
   if (inMemoryDb) {
     return inMemoryDb;
   }
 
   const targetFile = getDbTargetFile();
+  const baseSeed = getBaseSeedDb();
 
   if (!fs.existsSync(targetFile)) {
     try {
-      fs.writeFileSync(targetFile, JSON.stringify(initialDb, null, 2), "utf8");
+      fs.writeFileSync(targetFile, JSON.stringify(baseSeed, null, 2), "utf8");
     } catch (e) {
-      inMemoryDb = JSON.parse(JSON.stringify(initialDb));
+      inMemoryDb = baseSeed;
       return inMemoryDb;
     }
-    inMemoryDb = JSON.parse(JSON.stringify(initialDb));
+    inMemoryDb = baseSeed;
     return inMemoryDb;
   }
   try {
     const raw = fs.readFileSync(targetFile, "utf8");
     const parsed = JSON.parse(raw);
     
+    // Ensure base seed users are merged if missing
+    if (baseSeed.users && baseSeed.users.length > 0) {
+      if (!parsed.users) parsed.users = [];
+      baseSeed.users.forEach((bu) => {
+        if (!parsed.users.some(u => u.email && u.email.toLowerCase() === bu.email.toLowerCase())) {
+          parsed.users.push(bu);
+        }
+      });
+    }
+
     // Ensure connections array exists
     if (!parsed.connections || parsed.connections.length === 0) {
-      parsed.connections = initialDb.connections || [];
+      parsed.connections = baseSeed.connections || initialDb.connections || [];
     }
     // Ensure workflow stages exist in default business profile
     if (parsed.businessProfiles && parsed.businessProfiles[0]) {
@@ -174,8 +197,8 @@ function readDb() {
     inMemoryDb = parsed;
     return parsed;
   } catch (err) {
-    console.error("Error reading db file, restoring initialDb:", err);
-    inMemoryDb = JSON.parse(JSON.stringify(initialDb));
+    console.error("Error reading db file, restoring baseSeed:", err);
+    inMemoryDb = baseSeed;
     return inMemoryDb;
   }
 }
@@ -187,6 +210,11 @@ function writeDb(data) {
     fs.writeFileSync(targetFile, JSON.stringify(data, null, 2), "utf8");
   } catch (e) {
     // Keep in-memory on serverless read-only filesystem
+  }
+  if (targetFile !== DB_FILE && fs.existsSync(DATA_DIR)) {
+    try {
+      fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf8");
+    } catch (e) {}
   }
 }
 

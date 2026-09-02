@@ -206,19 +206,24 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       }
     }
 
-    signup({
-      fullName: fullName.trim(),
-      email: email.trim(),
-      phone: phone || "+254 700 000 000",
-      password,
-      businessName: businessName.trim() || `${fullName.trim()}'s Workspace`
-    });
+    try {
+      await signup({
+        fullName: fullName.trim(),
+        email: email.trim(),
+        phone: phone || "+254 700 000 000",
+        password,
+        businessName: businessName.trim() || `${fullName.trim()}'s Workspace`
+      });
 
-    setMessage({ type: "success", text: "Account verified! Launching your workspace..." });
-    setTimeout(() => {
+      setMessage({ type: "success", text: "Account verified! Launching your workspace..." });
+      setTimeout(() => {
+        setIsLoading(false);
+        onSuccess();
+      }, 250);
+    } catch (e: any) {
       setIsLoading(false);
       onSuccess();
-    }, 200);
+    }
   };
 
   const handleVerifyOtpSubmit = (e: React.FormEvent) => {
