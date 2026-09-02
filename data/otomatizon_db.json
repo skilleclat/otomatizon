@@ -1,7 +1,53 @@
 {
-  "users": [],
-  "organizations": [],
-  "businessProfiles": [],
+  "users": [
+    {
+      "id": "user_1788371046317",
+      "fullName": "Amina Odhiambo",
+      "email": "amina.odhiambo@gmail.com",
+      "phone": "+254 722 111 222",
+      "organizationId": "org_1788371046317",
+      "passwordHash": "de0afffafe35931debb4d556ce5d8c1a1fd0877da825219ec5cb87b1f1efe872ed90c40a264f404b2674f8425955e8ea30e48a9c3c3e4fb86e23d76f73d95ef0",
+      "salt": "8b62d90da88579df5076405c834a0ba1",
+      "createdAt": "2026-09-02T17:44:06.317Z"
+    }
+  ],
+  "organizations": [
+    {
+      "id": "org_1788371046317",
+      "name": "Amina Math Coaching",
+      "planId": "starter",
+      "createdAt": "2026-09-02T17:44:06.317Z"
+    }
+  ],
+  "businessProfiles": [
+    {
+      "id": "bp_1788371046317",
+      "organizationId": "org_1788371046317",
+      "name": "Amina Math Coaching",
+      "businessName": "Amina Math Coaching",
+      "businessType": "Private Math Tutor",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "Google",
+        "WhatsApp",
+        "Instagram",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Follow up with students who ask for fees on WhatsApp but do not book.",
+      "workflowStages": [],
+      "manualTasks": [],
+      "frictionPoints": [],
+      "customerType": "Direct clients"
+    }
+  ],
   "connections": [
     {
       "id": "whatsapp_business",
@@ -90,12 +136,47 @@
     }
   ],
   "workflows": [],
-  "executions": [],
+  "executions": [
+    {
+      "id": "exec_1788371423277",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 3,
+      "stepsTotal": 3,
+      "logSummary": "Completed all 3 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    }
+  ],
   "leads": [],
   "operationalEvents": [],
-  "activityLogs": [],
+  "activityLogs": [
+    {
+      "id": "log_1788371423277",
+      "organizationId": "org_1788371046317",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    }
+  ],
   "teamMembers": [],
-  "subscriptions": [],
+  "subscriptions": [
+    {
+      "id": "sub_1788371046317",
+      "organizationId": "org_1788371046317",
+      "planId": "starter",
+      "status": "active",
+      "currentPeriodStart": "2026-09-02T17:44:06.317Z",
+      "currentPeriodEnd": "2026-10-02T17:44:06.317Z",
+      "priceKesMonthly": 499
+    }
+  ],
   "opportunities": [],
   "scheduledJobs": [
     {

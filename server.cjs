@@ -774,9 +774,22 @@ async function sendOtpEmail({ email, fullName, code }) {
     const parts = urlPath.split("/");
     const wfId = parts[3];
     const db = readDb();
-    const wf = db.workflows.find(w => w.id === wfId) || db.workflows[0];
+    const wf = (db.workflows && db.workflows.find(w => w.id === wfId)) || (db.workflows && db.workflows[0]) || {
+      id: wfId || "wf_lead_autopilot",
+      organizationId: db.organizations[0]?.id || "org_james",
+      title: "Lead Follow-Up Autopilot",
+      steps: [{ id: "s1" }, { id: "s2" }, { id: "s3" }],
+      metrics: { runsCount: 0, leadsHelped: 0, hoursSaved: 0, revenueRecoveredKes: 0 }
+    };
 
-    const lead = db.leads[0] || {
+    if (!wf.metrics) {
+      wf.metrics = { runsCount: 0, leadsHelped: 0, hoursSaved: 0, revenueRecoveredKes: 0 };
+    }
+    if (!wf.steps) {
+      wf.steps = [{ id: "s1" }, { id: "s2" }];
+    }
+
+    const lead = (db.leads && db.leads[0]) || {
       id: "lead_live_01",
       organizationId: wf.organizationId,
       name: "Mercy Chebet",
@@ -798,6 +811,7 @@ async function sendOtpEmail({ email, fullName, code }) {
       completedAt: "Just now"
     };
 
+    db.executions = db.executions || [];
     db.executions.unshift(newExec);
     wf.metrics.runsCount += 1;
     wf.metrics.leadsHelped += 1;
