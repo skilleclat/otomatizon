@@ -28,6 +28,12 @@ const { WhatsAppConnector } = require("./src/lib/connectors/whatsapp-connector.c
 const { MpesaDarajaConnector } = require("./src/lib/connectors/mpesa-connector.cjs");
 const { encryptCredential, decryptCredential } = require("./src/lib/connectors/crypto-vault.cjs");
 const { parseInboundMessageText } = require("./src/lib/intelligence/semantic-parser.cjs");
+const { 
+  startWhatsAppSocket, 
+  getWhatsAppStatus, 
+  sendWhatsAppTextMessage, 
+  disconnectWhatsApp 
+} = require("./src/lib/whatsapp/baileys-service.cjs");
 const { draftActionAndReply } = require("./src/lib/intelligence/action-drafter.cjs");
 const { persistentJobQueue } = require("./src/lib/worker/job-queue.cjs");
 const { checkUsageQuota, upgradePlan, PLAN_TIERS } = require("./src/lib/billing/subscription-manager.cjs");
@@ -521,6 +527,70 @@ async function sendOtpEmail({ email, fullName, code }) {
     } catch (err) {
       return sendJson(res, 400, { error: "Could not save onboarding data" });
     }
+  }
+
+  // 5a. WhatsApp Baileys Real Multi-Device QR Generator & Status
+  if (urlPath === "/api/whatsapp/qr" && req.method === "GET") {
+    try {
+      const status = getWhatsAppStatus();
+      if (!status.isAuthenticated && status.status !== "connecting" && status.status !== "scan_required") {
+        // Start socket session
+        startWhatsAppSocket((msg) => {
+          // Record incoming WhatsApp customer message in DB
+          try {
+            const db = readDb();
+            const orgId = db.organizations[0]?.id || "org_james";
+            db.activityLogs.unshift({
+              id: `act_${Date.now()}`,
+              organizationId: orgId,
+              type: "inbound_message",
+              channel: "whatsapp",
+              application: "WhatsApp Business",
+              title: `WhatsApp from ${msg.senderName}`,
+              description: `"${msg.text}"`,
+              actionTakenByOtomatizon: "Inbound message received via Linked WhatsApp Device",
+              businessResult: "Logged to activity stream",
+              entityName: msg.senderName,
+              timestamp: "Just now",
+              provenance: "OBSERVED"
+            });
+            writeDb(db);
+          } catch (e) {}
+        });
+      }
+
+      const latestStatus = getWhatsAppStatus();
+      return sendJson(res, 200, {
+        success: true,
+        status: latestStatus.status,
+        qrDataUrl: latestStatus.qrDataUrl,
+        user: latestStatus.user,
+        isAuthenticated: latestStatus.isAuthenticated
+      });
+    } catch (err) {
+      console.error("[WHATSAPP API ERROR]", err);
+      return sendJson(res, 500, { error: "Failed to initialize WhatsApp session" });
+    }
+  }
+
+  if (urlPath === "/api/whatsapp/status" && req.method === "GET") {
+    const status = getWhatsAppStatus();
+    return sendJson(res, 200, {
+      success: true,
+      ...status
+    });
+  }
+
+  if (urlPath === "/api/whatsapp/disconnect" && req.method === "POST") {
+    await disconnectWhatsApp();
+    const db = readDb();
+    const conn = (db.connections || []).find(c => c.id === "whatsapp" || c.id === "whatsapp_business");
+    if (conn) {
+      conn.connected = false;
+      conn.status = "disconnected";
+      writeDb(db);
+    }
+    return sendJson(res, 200, { success: true, message: "WhatsApp disconnected" });
   }
 
   // 5b. Dedicated Business Automation Report Endpoint

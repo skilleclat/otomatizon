@@ -517,10 +517,6 @@ video {
 .inset-0 {
   inset: 0px;
 }
-.inset-x-0 {
-  left: 0px;
-  right: 0px;
-}
 .bottom-0 {
   bottom: 0px;
 }
@@ -1560,10 +1556,6 @@ video {
 .bg-emerald-50\/50 {
   background-color: rgb(236 253 245 / 0.5);
 }
-.bg-emerald-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(16 185 129 / var(--tw-bg-opacity, 1));
-}
 .bg-emerald-500\/30 {
   background-color: rgb(16 185 129 / 0.3);
 }
@@ -2140,11 +2132,6 @@ video {
 .shadow-2xl {
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-.shadow-\[0_0_8px_\#10b981\] {
-  --tw-shadow: 0 0 8px #10b981;
-  --tw-shadow-colored: 0 0 8px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 .shadow-\[0_1px_3px_rgba\(0\2c 0\2c 0\2c 0\.02\)\] {

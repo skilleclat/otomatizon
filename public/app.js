@@ -12681,6 +12681,8 @@ const appConfigMap
   const [qrScanningState, setQrScanningState] = _react.useState("ready");
   const [qrRefreshTimer, setQrRefreshTimer] = _react.useState(60);
   const [phoneInput, setPhoneInput] = _react.useState.call(void 0, "");
+  const [realQrDataUrl, setRealQrDataUrl] = _react.useState(null);
+  const [linkedPhoneNumber, setLinkedPhoneNumber] = _react.useState(null);
 
   const isWhatsApp = appId === "whatsapp_business" || appId === "whatsapp";
 
@@ -12708,19 +12710,52 @@ const appConfigMap
 
   const [accountInput, setAccountInput] = _react.useState.call(void 0, config.accountDefault);
 
+  // Fetch real Baileys QR Code and poll for live mobile device pairing
+  const fetchBaileysQr = async () => {
+    try {
+      const res = await fetch("/api/whatsapp/qr");
+      const data = await res.json();
+      if (data.success) {
+        if (data.qrDataUrl) {
+          setRealQrDataUrl(data.qrDataUrl);
+          setQrScanningState("ready");
+        }
+        if (data.isAuthenticated && data.user) {
+          setQrScanningState("connected");
+          setLinkedPhoneNumber(data.user.phone || "WhatsApp Linked Device");
+          if (onConnected) {
+            onConnected(appId, {
+              account: data.user.phone || "WhatsApp Linked Device",
+              connectedAt: new Date().toISOString(),
+              status: "connected",
+              authMethod: "baileys_multidevice"
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Could not fetch real WhatsApp QR code:", e);
+    }
+  };
+
   _react.useEffect.call(void 0, () => {
-    if (isOpen) {
+    if (isOpen && isWhatsApp) {
       setQrScanningState("ready");
       setLoading(false);
       setQrRefreshTimer(60);
+      fetchBaileysQr();
     }
-  }, [isOpen]);
+  }, [isOpen, isWhatsApp]);
 
+  // Live polling for scan verification
   _react.useEffect.call(void 0, () => {
-    if (!isOpen || !isWhatsApp || qrScanningState !== "ready") return;
+    if (!isOpen || !isWhatsApp || qrScanningState === "connected") return;
+    
     const interval = setInterval(() => {
+      fetchBaileysQr();
       setQrRefreshTimer((prev) => (prev <= 1 ? 60 : prev - 1));
-    }, 1000);
+    }, 2500);
+
     return () => clearInterval(interval);
   }, [isOpen, isWhatsApp, qrScanningState]);
 
@@ -12896,53 +12931,23 @@ const appConfigMap
                         _react2.default.createElement('div', { className: "flex flex-col items-center justify-center text-center space-y-2 p-2 text-emerald-700"       ,}
                           , _react2.default.createElement(_lucidereact.CheckCircle, { className: "w-10 h-10 text-emerald-600"  ,} )
                           , _react2.default.createElement('span', { className: "text-xs font-bold" ,}, "WhatsApp Linked!" )
+                          , _react2.default.createElement('span', { className: "text-[10px] text-[#121316] font-mono"  ,}, linkedPhoneNumber)
+                        )
+                      ) : realQrDataUrl ? (
+                        /* Authentic Real WhatsApp Web Multi-Device QR Code Image */
+                        _react2.default.createElement('div', { className: "relative w-full h-full flex items-center justify-center"     ,}
+                          , _react2.default.createElement('img', { 
+                            src: realQrDataUrl, 
+                            alt: "WhatsApp Web Multi-Device QR Code"    , 
+                            className: "w-full h-full object-contain rounded-xl select-none"    ,} 
+                          )
                         )
                       ) : (
-                        /* Dynamic High-Definition WhatsApp QR Matrix */
-                        _react2.default.createElement('div', { className: "relative w-full h-full"  ,}
-                          , _react2.default.createElement('svg', { viewBox: "0 0 100 100"   , className: "w-full h-full" ,}
-                            /* Outer Positioning Squares */
-                            , _react2.default.createElement('rect', { x: "5", y: "5", width: "26", height: "26", fill: "#121316", rx: "4",} )
-                            , _react2.default.createElement('rect', { x: "9", y: "9", width: "18", height: "18", fill: "#FFFFFF", rx: "2",} )
-                            , _react2.default.createElement('rect', { x: "13", y: "13", width: "10", height: "10", fill: "#121316", rx: "2",} )
-
-                            , _react2.default.createElement('rect', { x: "69", y: "5", width: "26", height: "26", fill: "#121316", rx: "4",} )
-                            , _react2.default.createElement('rect', { x: "73", y: "9", width: "18", height: "18", fill: "#FFFFFF", rx: "2",} )
-                            , _react2.default.createElement('rect', { x: "77", y: "13", width: "10", height: "10", fill: "#121316", rx: "2",} )
-
-                            , _react2.default.createElement('rect', { x: "5", y: "69", width: "26", height: "26", fill: "#121316", rx: "4",} )
-                            , _react2.default.createElement('rect', { x: "9", y: "73", width: "18", height: "18", fill: "#FFFFFF", rx: "2",} )
-                            , _react2.default.createElement('rect', { x: "13", y: "77", width: "10", height: "10", fill: "#121316", rx: "2",} )
-
-                            /* Data Pattern Modules */
-                            , _react2.default.createElement('rect', { x: "36", y: "8", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "46", y: "8", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "56", y: "8", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "36", y: "18", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "48", y: "22", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "58", y: "18", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "8", y: "36", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "18", y: "36", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "8", y: "46", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "18", y: "56", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "68", y: "36", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "78", y: "36", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "88", y: "46", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "78", y: "56", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "36", y: "68", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "46", y: "78", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "56", y: "68", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "68", y: "78", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "78", y: "88", width: "6", height: "6", fill: "#121316",} )
-                            , _react2.default.createElement('rect', { x: "88", y: "78", width: "6", height: "6", fill: "#121316",} )
-
-                            /* Center WhatsApp Emblem */
-                            , _react2.default.createElement('circle', { cx: "50", cy: "50", r: "13", fill: "#25D366",} )
-                            , _react2.default.createElement('path', { d: "M46 44c0 3 4 7 7 7l2-1c.5-.3 1-.2 1.4.2l1.6 1.6c.4.4.4 1 0 1.4-1.5 1.5-3.5 1.8-5 1-4-2-7-5-9-9-.8-1.5-.5-3.5 1-5 .4-.4 1-.4 1.4 0l1.6 1.6c.4.4.5.9.2 1.4l-1.2 1.8z"                       , fill: "#FFFFFF",} )
-                          )
-
-                          /* Laser Scanning Line Animation */
-                          , _react2.default.createElement('div', { className: "absolute inset-x-0 h-0.5 bg-emerald-500 shadow-[0_0_8px_#10b981] animate-bounce top-1/2 -translate-y-1/2 opacity-75 pointer-events-none"         ,})
+                        /* Loading Real QR Code from WhatsApp Protocol Socket */
+                        _react2.default.createElement('div', { className: "flex flex-col items-center justify-center text-center space-y-2 p-2"      ,}
+                          , _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-7 h-7 text-emerald-600 animate-spin"   ,} )
+                          , _react2.default.createElement('span', { className: "text-[11px] font-bold text-[#121316]"  ,}, "Generating QR Code..."  )
+                          , _react2.default.createElement('span', { className: "text-[9px] text-[#75777E]" ,}, "Connecting to WhatsApp Servers"   )
                         )
                       )
                     )
@@ -12956,39 +12961,25 @@ const appConfigMap
 
                       , _react2.default.createElement('ol', { className: "space-y-2 text-[11px] text-[#4A4B50] list-decimal list-inside leading-snug"     ,}
                         , _react2.default.createElement('li', null, "Open " , _react2.default.createElement('strong', { className: "text-[#121316]",}, "WhatsApp"), " on your phone."   )
-                        , _react2.default.createElement('li', null, "Tap " , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Menu ⋮" ), " or "  , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Settings"), " and select "   , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Linked Devices" ), ".")
-                        , _react2.default.createElement('li', null, "Tap " , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Link a Device"  ), ".")
-                        , _react2.default.createElement('li', null, "Point your phone camera at this QR code to scan."         )
+                        , _react2.default.createElement('li', null, "Tap " , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Menu ⋮" ), " (Android) or "   , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Settings"), " (iPhone)." )
+                        , _react2.default.createElement('li', null, "Select " , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Linked Devices" ), " (" , _react2.default.createElement('em', null, "Appareils connectés" ), ").")
+                        , _react2.default.createElement('li', null, "Tap " , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Link a Device"  ), " (" , _react2.default.createElement('em', null, "Lier un appareil"  ), ").")
+                        , _react2.default.createElement('li', null, "Point your camera at this QR code to scan."        )
                       )
 
                       , _react2.default.createElement('div', { className: "pt-2 flex items-center justify-between text-[10px] text-[#75777E]"     ,}
-                        , _react2.default.createElement('span', null, "QR code expires in "    , _react2.default.createElement('strong', { className: "text-[#121316]",}, qrRefreshTimer, "s"))
+                        , _react2.default.createElement('span', null, "Status: " , _react2.default.createElement('strong', { className: "text-emerald-700",}, realQrDataUrl ? "Live QR Ready" : "Connecting..."))
                         , _react2.default.createElement('button', { 
                           type: "button", 
-                          onClick: () => setQrRefreshTimer(60),
-                          className: "hover:underline text-emerald-700 font-bold cursor-pointer"   ,}
-, "Refresh Code"
+                          onClick: fetchBaileysQr,
+                          className: "hover:underline text-emerald-700 font-bold cursor-pointer flex items-center gap-1"      ,}
 
+                          , _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3 h-3" ,} )
+                          , _react2.default.createElement('span', null, "Refresh")
                         )
                       )
                     )
 
-                  )
-
-                  /* 1-Tap Trigger for Immediate QR Pairing */
-                  , _react2.default.createElement('button', {
-                    type: "button",
-                    disabled: loading || qrScanningState === "connected",
-                    onClick: handleSimulateQrScan,
-                    className: "w-full py-3.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"                 ,}
-
-                    , loading ? (
-                      _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-4 h-4 animate-spin text-emerald-300"   ,} )
-                    ) : qrScanningState === "connected" ? (
-                      _react2.default.createElement('span', null, "WhatsApp Linked Successfully!"  )
-                    ) : (
-                      _react2.default.createElement('span', null, "I Scanned the QR Code → Complete Linking"       )
-                    )
                   )
 
                 )

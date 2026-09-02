@@ -132,21 +132,21 @@ function readDb() {
     
     // Ensure connections array exists
     if (!parsed.connections || parsed.connections.length === 0) {
-      parsed.connections = initialDb.connections;
+      parsed.connections = initialDb.connections || [];
     }
     // Ensure workflow stages exist in default business profile
     if (parsed.businessProfiles && parsed.businessProfiles[0]) {
-      if (!parsed.businessProfiles[0].workflowStages || parsed.businessProfiles[0].workflowStages.length === 0) {
-        parsed.businessProfiles[0].workflowStages = initialDb.businessProfiles[0].workflowStages;
+      if (!parsed.businessProfiles[0].workflowStages) {
+        parsed.businessProfiles[0].workflowStages = [];
       }
       if (!parsed.businessProfiles[0].manualTasks) {
-        parsed.businessProfiles[0].manualTasks = initialDb.businessProfiles[0].manualTasks;
+        parsed.businessProfiles[0].manualTasks = [];
       }
       if (!parsed.businessProfiles[0].frictionPoints) {
-        parsed.businessProfiles[0].frictionPoints = initialDb.businessProfiles[0].frictionPoints;
+        parsed.businessProfiles[0].frictionPoints = [];
       }
       if (!parsed.businessProfiles[0].customerType) {
-        parsed.businessProfiles[0].customerType = initialDb.businessProfiles[0].customerType;
+        parsed.businessProfiles[0].customerType = "Direct clients";
       }
     }
     // Ensure opportunities have requiredIntegrations & evidenceType
@@ -162,8 +162,8 @@ function readDb() {
     // Ensure workflows have operationalFlow
     if (parsed.workflows) {
       parsed.workflows.forEach((wf) => {
-        if (!wf.operationalFlow || wf.operationalFlow.length === 0) {
-          wf.operationalFlow = initialDb.workflows[0].operationalFlow;
+        if (!wf.operationalFlow) {
+          wf.operationalFlow = [];
         }
         if (!wf.connectedApps) {
           wf.connectedApps = ["WhatsApp", "Google Sheets", "Google Calendar"];
@@ -175,7 +175,8 @@ function readDb() {
     return parsed;
   } catch (err) {
     console.error("Error reading db file, restoring initialDb:", err);
-    return initialDb;
+    inMemoryDb = JSON.parse(JSON.stringify(initialDb));
+    return inMemoryDb;
   }
 }
 

@@ -206,6 +206,8 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
   const [qrScanningState, setQrScanningState] = useState<"ready" | "pairing" | "connected">("ready");
   const [qrRefreshTimer, setQrRefreshTimer] = useState<number>(60);
   const [phoneInput, setPhoneInput] = useState("");
+  const [realQrDataUrl, setRealQrDataUrl] = useState<string | null>(null);
+  const [linkedPhoneNumber, setLinkedPhoneNumber] = useState<string | null>(null);
 
   const isWhatsApp = appId === "whatsapp_business" || appId === "whatsapp";
 
@@ -233,19 +235,52 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
 
   const [accountInput, setAccountInput] = useState(config.accountDefault);
 
+  // Fetch real Baileys QR Code and poll for live mobile device pairing
+  const fetchBaileysQr = async () => {
+    try {
+      const res = await fetch("/api/whatsapp/qr");
+      const data = await res.json();
+      if (data.success) {
+        if (data.qrDataUrl) {
+          setRealQrDataUrl(data.qrDataUrl);
+          setQrScanningState("ready");
+        }
+        if (data.isAuthenticated && data.user) {
+          setQrScanningState("connected");
+          setLinkedPhoneNumber(data.user.phone || "WhatsApp Linked Device");
+          if (onConnected) {
+            onConnected(appId, {
+              account: data.user.phone || "WhatsApp Linked Device",
+              connectedAt: new Date().toISOString(),
+              status: "connected",
+              authMethod: "baileys_multidevice"
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Could not fetch real WhatsApp QR code:", e);
+    }
+  };
+
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && isWhatsApp) {
       setQrScanningState("ready");
       setLoading(false);
       setQrRefreshTimer(60);
+      fetchBaileysQr();
     }
-  }, [isOpen]);
+  }, [isOpen, isWhatsApp]);
 
+  // Live polling for scan verification
   useEffect(() => {
-    if (!isOpen || !isWhatsApp || qrScanningState !== "ready") return;
+    if (!isOpen || !isWhatsApp || qrScanningState === "connected") return;
+    
     const interval = setInterval(() => {
+      fetchBaileysQr();
       setQrRefreshTimer((prev) => (prev <= 1 ? 60 : prev - 1));
-    }, 1000);
+    }, 2500);
+
     return () => clearInterval(interval);
   }, [isOpen, isWhatsApp, qrScanningState]);
 
@@ -421,53 +456,23 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
                         <div className="flex flex-col items-center justify-center text-center space-y-2 p-2 text-emerald-700">
                           <CheckCircle className="w-10 h-10 text-emerald-600" />
                           <span className="text-xs font-bold">WhatsApp Linked!</span>
+                          <span className="text-[10px] text-[#121316] font-mono">{linkedPhoneNumber}</span>
+                        </div>
+                      ) : realQrDataUrl ? (
+                        /* Authentic Real WhatsApp Web Multi-Device QR Code Image */
+                        <div className="relative w-full h-full flex items-center justify-center">
+                          <img 
+                            src={realQrDataUrl} 
+                            alt="WhatsApp Web Multi-Device QR Code" 
+                            className="w-full h-full object-contain rounded-xl select-none" 
+                          />
                         </div>
                       ) : (
-                        /* Dynamic High-Definition WhatsApp QR Matrix */
-                        <div className="relative w-full h-full">
-                          <svg viewBox="0 0 100 100" className="w-full h-full">
-                            {/* Outer Positioning Squares */}
-                            <rect x="5" y="5" width="26" height="26" fill="#121316" rx="4" />
-                            <rect x="9" y="9" width="18" height="18" fill="#FFFFFF" rx="2" />
-                            <rect x="13" y="13" width="10" height="10" fill="#121316" rx="2" />
-
-                            <rect x="69" y="5" width="26" height="26" fill="#121316" rx="4" />
-                            <rect x="73" y="9" width="18" height="18" fill="#FFFFFF" rx="2" />
-                            <rect x="77" y="13" width="10" height="10" fill="#121316" rx="2" />
-
-                            <rect x="5" y="69" width="26" height="26" fill="#121316" rx="4" />
-                            <rect x="9" y="73" width="18" height="18" fill="#FFFFFF" rx="2" />
-                            <rect x="13" y="77" width="10" height="10" fill="#121316" rx="2" />
-
-                            {/* Data Pattern Modules */}
-                            <rect x="36" y="8" width="6" height="6" fill="#121316" />
-                            <rect x="46" y="8" width="6" height="6" fill="#121316" />
-                            <rect x="56" y="8" width="6" height="6" fill="#121316" />
-                            <rect x="36" y="18" width="6" height="6" fill="#121316" />
-                            <rect x="48" y="22" width="6" height="6" fill="#121316" />
-                            <rect x="58" y="18" width="6" height="6" fill="#121316" />
-                            <rect x="8" y="36" width="6" height="6" fill="#121316" />
-                            <rect x="18" y="36" width="6" height="6" fill="#121316" />
-                            <rect x="8" y="46" width="6" height="6" fill="#121316" />
-                            <rect x="18" y="56" width="6" height="6" fill="#121316" />
-                            <rect x="68" y="36" width="6" height="6" fill="#121316" />
-                            <rect x="78" y="36" width="6" height="6" fill="#121316" />
-                            <rect x="88" y="46" width="6" height="6" fill="#121316" />
-                            <rect x="78" y="56" width="6" height="6" fill="#121316" />
-                            <rect x="36" y="68" width="6" height="6" fill="#121316" />
-                            <rect x="46" y="78" width="6" height="6" fill="#121316" />
-                            <rect x="56" y="68" width="6" height="6" fill="#121316" />
-                            <rect x="68" y="78" width="6" height="6" fill="#121316" />
-                            <rect x="78" y="88" width="6" height="6" fill="#121316" />
-                            <rect x="88" y="78" width="6" height="6" fill="#121316" />
-                            
-                            {/* Center WhatsApp Emblem */}
-                            <circle cx="50" cy="50" r="13" fill="#25D366" />
-                            <path d="M46 44c0 3 4 7 7 7l2-1c.5-.3 1-.2 1.4.2l1.6 1.6c.4.4.4 1 0 1.4-1.5 1.5-3.5 1.8-5 1-4-2-7-5-9-9-.8-1.5-.5-3.5 1-5 .4-.4 1-.4 1.4 0l1.6 1.6c.4.4.5.9.2 1.4l-1.2 1.8z" fill="#FFFFFF" />
-                          </svg>
-
-                          {/* Laser Scanning Line Animation */}
-                          <div className="absolute inset-x-0 h-0.5 bg-emerald-500 shadow-[0_0_8px_#10b981] animate-bounce top-1/2 -translate-y-1/2 opacity-75 pointer-events-none"></div>
+                        /* Loading Real QR Code from WhatsApp Protocol Socket */
+                        <div className="flex flex-col items-center justify-center text-center space-y-2 p-2">
+                          <RefreshCw className="w-7 h-7 text-emerald-600 animate-spin" />
+                          <span className="text-[11px] font-bold text-[#121316]">Generating QR Code...</span>
+                          <span className="text-[9px] text-[#75777E]">Connecting to WhatsApp Servers</span>
                         </div>
                       )}
                     </div>
@@ -481,40 +486,26 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
                       
                       <ol className="space-y-2 text-[11px] text-[#4A4B50] list-decimal list-inside leading-snug">
                         <li>Open <strong className="text-[#121316]">WhatsApp</strong> on your phone.</li>
-                        <li>Tap <strong className="text-[#121316]">Menu ⋮</strong> or <strong className="text-[#121316]">Settings</strong> and select <strong className="text-[#121316]">Linked Devices</strong>.</li>
-                        <li>Tap <strong className="text-[#121316]">Link a Device</strong>.</li>
-                        <li>Point your phone camera at this QR code to scan.</li>
+                        <li>Tap <strong className="text-[#121316]">Menu ⋮</strong> (Android) or <strong className="text-[#121316]">Settings</strong> (iPhone).</li>
+                        <li>Select <strong className="text-[#121316]">Linked Devices</strong> (<em>Appareils connectés</em>).</li>
+                        <li>Tap <strong className="text-[#121316]">Link a Device</strong> (<em>Lier un appareil</em>).</li>
+                        <li>Point your camera at this QR code to scan.</li>
                       </ol>
 
                       <div className="pt-2 flex items-center justify-between text-[10px] text-[#75777E]">
-                        <span>QR code expires in <strong className="text-[#121316]">{qrRefreshTimer}s</strong></span>
+                        <span>Status: <strong className="text-emerald-700">{realQrDataUrl ? "Live QR Ready" : "Connecting..."}</strong></span>
                         <button 
                           type="button" 
-                          onClick={() => setQrRefreshTimer(60)}
-                          className="hover:underline text-emerald-700 font-bold cursor-pointer"
+                          onClick={fetchBaileysQr}
+                          className="hover:underline text-emerald-700 font-bold cursor-pointer flex items-center gap-1"
                         >
-                          Refresh Code
+                          <RefreshCw className="w-3 h-3" />
+                          <span>Refresh</span>
                         </button>
                       </div>
                     </div>
 
                   </div>
-
-                  {/* 1-Tap Trigger for Immediate QR Pairing */}
-                  <button
-                    type="button"
-                    disabled={loading || qrScanningState === "connected"}
-                    onClick={handleSimulateQrScan}
-                    className="w-full py-3.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
-                  >
-                    {loading ? (
-                      <RefreshCw className="w-4 h-4 animate-spin text-emerald-300" />
-                    ) : qrScanningState === "connected" ? (
-                      <span>WhatsApp Linked Successfully!</span>
-                    ) : (
-                      <span>I Scanned the QR Code &rarr; Complete Linking</span>
-                    )}
-                  </button>
 
                 </div>
               ) : (
