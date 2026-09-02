@@ -261,17 +261,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             ) : (
               <>
                 <button
+                  onClick={onEnterDashboard}
+                  className="px-3.5 sm:px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25] shrink-0 whitespace-nowrap"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
+                  <span>Live Command Center</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
+                </button>
+                <button
                   onClick={() => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard()}
                   className="text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3 sm:px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer shrink-0 whitespace-nowrap"
                 >
                   Sign In
-                </button>
-                <button
-                  onClick={() => onTriggerAuth ? onTriggerAuth("signup") : handleCtaClick()}
-                  className="px-3.5 sm:px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25] shrink-0 whitespace-nowrap"
-                >
-                  <span>Sign Up Free</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
                 </button>
               </>
             )}

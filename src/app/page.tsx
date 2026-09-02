@@ -27,9 +27,11 @@ export default function AppRoot() {
 
   const { state, simulateNewLead } = useOtomatizonStore();
 
-  // Route Synchronization with Browser URL Path
+  // Route Synchronization with Browser URL Path & Hash
   const applyRoute = (pathname: string) => {
-    const clean = (pathname || "/").toLowerCase();
+    const rawPath = (pathname || "/").toLowerCase();
+    const hash = (typeof window !== "undefined" ? window.location.hash || "" : "").toLowerCase();
+    const clean = hash ? (hash.replace(/^#\/?/, "/") || rawPath) : rawPath;
 
     if (clean === "/login") {
       setView("landing");
@@ -48,49 +50,49 @@ export default function AppRoot() {
       setIsOnboardingOpen(true);
       setIsAuthOpen(false);
       setIsCheckoutOpen(false);
-    } else if (clean.startsWith("/app/settings/billing")) {
+    } else if (clean.startsWith("/app/settings/billing") || clean.startsWith("/settings/billing") || clean === "/billing") {
       setView("app");
       setCurrentTab("settings");
       setIsCheckoutOpen(true);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/report")) {
+    } else if (clean.startsWith("/app/report") || clean === "/report") {
       setView("app");
       setCurrentTab("report");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/opportunities")) {
+    } else if (clean.startsWith("/app/opportunities") || clean === "/opportunities") {
       setView("app");
       setCurrentTab("opportunities");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/automations")) {
+    } else if (clean.startsWith("/app/automations") || clean === "/automations") {
       setView("app");
       setCurrentTab("automations");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/apps")) {
+    } else if (clean.startsWith("/app/apps") || clean === "/apps" || clean === "/connectors" || clean === "/integrations") {
       setView("app");
       setCurrentTab("apps");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/activity")) {
+    } else if (clean.startsWith("/app/activity") || clean === "/activity" || clean === "/audit") {
       setView("app");
       setCurrentTab("activity");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/settings")) {
+    } else if (clean.startsWith("/app/settings") || clean === "/settings") {
       setView("app");
       setCurrentTab("settings");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app")) {
+    } else if (clean.startsWith("/app") || clean === "/command-center" || clean === "/home" || clean === "/dashboard") {
       setView("app");
       setCurrentTab("home");
       setIsCheckoutOpen(false);
@@ -108,8 +110,13 @@ export default function AppRoot() {
     if (typeof window !== "undefined") {
       applyRoute(window.location.pathname);
       const onPop = () => applyRoute(window.location.pathname);
+      const onHashChange = () => applyRoute(window.location.pathname);
       window.addEventListener("popstate", onPop);
-      return () => window.removeEventListener("popstate", onPop);
+      window.addEventListener("hashchange", onHashChange);
+      return () => {
+        window.removeEventListener("popstate", onPop);
+        window.removeEventListener("hashchange", onHashChange);
+      };
     }
   }, []);
 

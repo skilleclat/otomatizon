@@ -42,7 +42,7 @@ import {
 import { executeWorkflowRun } from "@/lib/automation-runner";
 import { detectOpportunities } from "@/lib/decision-engine";
 
-const STORAGE_KEY = "otomatizon_state_v5";
+const STORAGE_KEY = "otomatizon_state_clean_v6";
 
 export interface BusinessStats {
   revenueKes: number;
@@ -77,16 +77,15 @@ export interface AppState {
 const getInitialState = (): AppState => {
   if (typeof window !== "undefined") {
     try {
-      // Clear ALL legacy storage keys
-      ["otomatizon_state_v1", "otomatizon_state_v2", "otomatizon_state_v3", "otomatizon_state_v4"].forEach((k) => {
+      // Clear ALL legacy storage keys with mock data
+      ["otomatizon_state_v1", "otomatizon_state_v2", "otomatizon_state_v3", "otomatizon_state_v4", "otomatizon_state_v5"].forEach((k) => {
         try { localStorage.removeItem(k); } catch (e) {}
       });
 
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Ensure that mock users or default test names NEVER default to logged in
-        if (!parsed?.session?.user || !parsed?.session?.token || parsed?.session?.user?.fullName === "James Kamau" || parsed?.session?.user?.id === "user_james" || parsed?.session?.user?.id === "usr_james_kamau") {
+        if (!parsed?.session?.user || !parsed?.session?.token) {
           parsed.session = {
             user: null,
             token: null,
@@ -106,15 +105,33 @@ const getInitialState = (): AppState => {
       token: null,
       isAuthenticated: false
     },
-    organization: defaultOrganization,
-    businessProfile: defaultBusinessProfile,
+    organization: {
+      id: "org_default",
+      name: "My Workspace",
+      planId: "starter",
+      createdAt: new Date().toISOString()
+    },
+    businessProfile: {
+      id: "bp_default",
+      organizationId: "org_default",
+      name: "My Business",
+      businessType: "",
+      description: "",
+      city: "Nairobi",
+      country: "Kenya",
+      currency: "KES",
+      customerChannels: [],
+      tools: [],
+      repetitiveTasks: [],
+      frictionPoints: []
+    },
     integrations: defaultIntegrations.map((i) => ({ ...i, connected: false, status: "disconnected" })),
     connectedApps: defaultConnectedApps.map((c) => ({ ...c, connectionStatus: "NOT_CONNECTED" })),
     dataSources: defaultDataSources.map((d) => ({ ...d, connectionStatus: "disconnected", syncStatus: "idle" })),
     operationalEvents: [],
     insights: [],
     leads: [],
-    opportunities: defaultOpportunities,
+    opportunities: [],
     workflows: [],
     executions: [],
     activityLogs: [],
@@ -136,7 +153,7 @@ const getInitialState = (): AppState => {
       activeAutomations: 0,
       hoursSaved: 0,
       leadsMonthlyLimit: 100,
-      automationsLimit: 1, // Plan limit: Starter allows 1 active automation
+      automationsLimit: 1,
       currentPlanId: "starter"
     }
   };

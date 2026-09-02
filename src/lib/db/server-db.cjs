@@ -22,72 +22,92 @@ function getDbTargetFile() {
   return DB_FILE;
 }
 
-// Initial Database Structure
+// Initial Clean Database Structure
 const initialDb = {
-  users: [
-    {
-      id: "user_admin_01",
-      fullName: "Admin User",
-      email: "admin@otomatizon.com",
-      phone: "+254 700 000 000",
-      organizationId: "org_workspace_01",
-      createdAt: "2026-08-01"
-    }
-  ],
-  organizations: [
-    {
-      id: "org_workspace_01",
-      name: "My Business Workspace",
-      planId: "starter",
-      createdAt: "2026-08-01"
-    }
-  ],
-  businessProfiles: [
-    {
-      id: "bp_workspace_01",
-      organizationId: "org_workspace_01",
-      businessName: "My Service Business",
-      businessType: "Solo Consultant & Service Business",
-      description: "Professional consulting, coaching, and client service business in Nairobi.",
-      city: "Nairobi",
-      country: "Kenya",
-      currency: "KES",
-      customerType: "Individual learners, executives & university candidates",
-      customerAcquisitionChannels: ["WhatsApp", "Google Maps", "Referrals"],
-      toolsUsed: ["WhatsApp Business", "Google Calendar", "Google Sheets", "Gmail", "M-Pesa"],
-      biggestRepetitiveTask: "Reminding students to pay before lessons and sending brochures.",
-      workflowSummary: "Customers inquire on WhatsApp -> syllabus sent -> sessions booked on Calendar -> M-Pesa reminder before class.",
-      manualTasks: [
-        "Copy-pasting lesson schedules into WhatsApp messages",
-        "Sending PDF brochures manually to prospective students",
-        "Checking M-Pesa SMS alerts against student attendance rosters",
-        "Chasing payment on the morning of scheduled sessions"
-      ],
-      frictionPoints: [
-        "Unanswered WhatsApp inquiries going cold after 24 hours",
-        "Students attending lessons before completing payments",
-        "Manual entry of session attendance into Google Sheets"
-      ],
-      workflowStages: [
-        { id: "stg_01", order: 1, name: "Customer inquiry", sourceApp: "WhatsApp Business", actionDescription: "Student inquires about French lessons", destinationApp: "WhatsApp Business", manualFriction: "Manual response required within hours" },
-        { id: "stg_02", order: 2, name: "Information sent", sourceApp: "WhatsApp Business", actionDescription: "Tutor sends lesson brochure and pricing", destinationApp: "Google Drive", manualFriction: "Manual PDF attachment" },
-        { id: "stg_03", order: 3, name: "Session booking", sourceApp: "Google Calendar", actionDescription: "Agreed slot booked on Google Calendar with Meet link", destinationApp: "Google Calendar", manualFriction: "Typing details and verifying slot availability" },
-        { id: "stg_04", order: 4, name: "Payment verification", sourceApp: "M-Pesa", actionDescription: "Student pays deposit via Paybill 849201", destinationApp: "M-Pesa", manualFriction: "Manual SMS reconciliation" },
-        { id: "stg_05", order: 5, name: "Lesson execution", sourceApp: "Google Meet", actionDescription: "60-min coaching session conducted", destinationApp: "Google Meet" },
-        { id: "stg_06", order: 6, name: "Session follow-up", sourceApp: "Google Sheets", actionDescription: "Attendance and homework logged in roster", destinationApp: "Google Sheets", manualFriction: "Manual roster entry" }
-      ]
-    }
-  ],
+  users: [],
+  organizations: [],
+  businessProfiles: [],
   connections: [
     {
       id: "whatsapp_business",
       name: "WhatsApp Business",
       category: "messaging",
-      description: "Inbound student messages, rate brochures, and 24h reminders.",
+      description: "Inbound customer messaging and automated follow-ups.",
       icon: "message-square",
-      connected: true,
-      accountPhone: "+254 722 000 123",
-      accountIdentifier: "WABA ID: 109284729104",
+      connected: false,
+      accountPhone: "",
+      accountIdentifier: "",
+      scopes: ["messages.read", "messages.write"],
+      status: "disconnected",
+      lastSyncAt: null,
+      errorCount: 0
+    },
+    {
+      id: "google_calendar",
+      name: "Google Calendar",
+      category: "google",
+      description: "Slot inspection, meeting booking, and Google Meet link generation.",
+      icon: "calendar",
+      connected: false,
+      accountEmail: "",
+      accountIdentifier: "",
+      scopes: ["calendar.events", "calendar.readonly"],
+      status: "disconnected",
+      lastSyncAt: null,
+      errorCount: 0
+    },
+    {
+      id: "google_sheets",
+      name: "Google Sheets",
+      category: "google",
+      description: "Customer roster, revenue tracking, and data synchronization.",
+      icon: "sheet",
+      connected: false,
+      accountEmail: "",
+      accountIdentifier: "",
+      scopes: ["spreadsheets", "drive.file"],
+      status: "disconnected",
+      lastSyncAt: null,
+      errorCount: 0
+    },
+    {
+      id: "gmail",
+      name: "Gmail",
+      category: "messaging",
+      description: "Email inquiry monitoring and invoice distribution.",
+      icon: "mail",
+      connected: false,
+      accountEmail: "",
+      accountIdentifier: "",
+      scopes: ["gmail.send", "gmail.readonly"],
+      status: "disconnected",
+      lastSyncAt: null,
+      errorCount: 0
+    },
+    {
+      id: "mpesa",
+      name: "Safaricom M-Pesa",
+      category: "payments",
+      description: "Direct STK Push mobile payment prompts and receipt verification.",
+      icon: "credit-card",
+      connected: false,
+      shortcode: "",
+      accountIdentifier: "",
+      scopes: ["mpesa_stk_push", "mpesa_c2b_validation"],
+      status: "disconnected",
+      lastSyncAt: null,
+      errorCount: 0
+    }
+  ],
+  workflows: [],
+  executions: [],
+  leads: [],
+  operationalEvents: [],
+  activityLogs: [],
+  teamMembers: [],
+  subscriptions: [],
+  opportunities: []
+};
       lastSyncedAt: "2 mins ago",
       status: "connected",
       scopes: ["whatsapp_business_messaging", "whatsapp_business_management"],

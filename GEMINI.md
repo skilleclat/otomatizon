@@ -123,6 +123,22 @@ Les opportunités suivent un cycle de vie strict :
 - Moteur de suivi de conversion funnel (`src/lib/analytics/funnel.ts`).
 - Modal de souscription STK Push Safaricom M-Pesa.
 
+### Étape 16 : Finalisation & Cohérence Multi-Pages
+- Validation des flux de bout en bout et alignement des tokens de design `DS`.
+
+### Étape 17 : Refonte Command Center & Intégrations Simplifiées (Modèle Claude)
+- **Perfectionnement du Command Center (`HomeCommandCenter.tsx`)** :
+  * Épuration visuelle radicale selon les principes *« Less, but better »*.
+  * En-tête de statut actif avec résumé hebdomadaire (16.3h économisées, KES 88,000 protégés) et bouton direct **« Test Live Inbound »** pour lancer une simulation d'orchestration en direct.
+  * Pipeline d'orchestration en 5 étapes lisible horizontalement (`WhatsApp` $\to$ `Otomatizon Core` $\to$ `Google Sheets` $\to$ `Google Calendar` $\to$ `M-Pesa / Follow-up`).
+  * 4 cartes de métriques transparentes et cliquables (`OBSERVED` / `CALCULATED`).
+  * Hub direct des 5 canaux connectés et flux d'audit chronologique compact.
+- **Intégrations Simplifiées comme Claude (`ConnectAppModal.tsx` & `AppsView.tsx`)** :
+  * Remplacement des formulaires techniques à onglets par un modal d'autorisation 1-clic direct style OAuth/Claude Connectors (`[App Logo] ⟷ [Otomatizon]`).
+  * Formulation claire des 2 autorisations demandées en langage métier simple.
+  * Boutons directs **« Connect »** / **« Disconnect »** / **« Settings »** dans la liste des connecteurs.
+  * Validation des tests unitaires et d'intégration à 100% (`test-system-foundation.cjs`, `test-integration-hub.cjs`, `test-opportunities-engine.cjs`, `test-activity-stream.cjs`).
+
 ### Étape 5 : Audit Red Team & Sécurité Production
 - Tests unitaires et d'intrusion : `test-red-team.cjs`.
 - Validation de l'idempotence des paiements et de l'isolation multi-tenant RLS.

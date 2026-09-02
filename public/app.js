@@ -3919,7 +3919,7 @@ var _mockdata = require('@/lib/mock-data');
 
 
 
-const STORAGE_KEY = "otomatizon_state_v5";
+const STORAGE_KEY = "otomatizon_state_clean_v6";
 
 
 
@@ -3954,16 +3954,15 @@ const STORAGE_KEY = "otomatizon_state_v5";
 const getInitialState = () => {
   if (typeof window !== "undefined") {
     try {
-      // Clear ALL legacy storage keys
-      ["otomatizon_state_v1", "otomatizon_state_v2", "otomatizon_state_v3", "otomatizon_state_v4"].forEach((k) => {
+      // Clear ALL legacy storage keys with mock data
+      ["otomatizon_state_v1", "otomatizon_state_v2", "otomatizon_state_v3", "otomatizon_state_v4", "otomatizon_state_v5"].forEach((k) => {
         try { localStorage.removeItem(k); } catch (e) {}
       });
 
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Ensure that mock users or default test names NEVER default to logged in
-        if (!_optionalChain([parsed, 'optionalAccess', _ => _.session, 'optionalAccess', _2 => _2.user]) || !_optionalChain([parsed, 'optionalAccess', _3 => _3.session, 'optionalAccess', _4 => _4.token]) || _optionalChain([parsed, 'optionalAccess', _5 => _5.session, 'optionalAccess', _6 => _6.user, 'optionalAccess', _7 => _7.fullName]) === "James Kamau" || _optionalChain([parsed, 'optionalAccess', _8 => _8.session, 'optionalAccess', _9 => _9.user, 'optionalAccess', _10 => _10.id]) === "user_james" || _optionalChain([parsed, 'optionalAccess', _11 => _11.session, 'optionalAccess', _12 => _12.user, 'optionalAccess', _13 => _13.id]) === "usr_james_kamau") {
+        if (!_optionalChain([parsed, 'optionalAccess', _ => _.session, 'optionalAccess', _2 => _2.user]) || !_optionalChain([parsed, 'optionalAccess', _3 => _3.session, 'optionalAccess', _4 => _4.token])) {
           parsed.session = {
             user: null,
             token: null,
@@ -3983,15 +3982,33 @@ const getInitialState = () => {
       token: null,
       isAuthenticated: false
     },
-    organization: _mockdata.defaultOrganization,
-    businessProfile: _mockdata.defaultBusinessProfile,
+    organization: {
+      id: "org_default",
+      name: "My Workspace",
+      planId: "starter",
+      createdAt: new Date().toISOString()
+    },
+    businessProfile: {
+      id: "bp_default",
+      organizationId: "org_default",
+      name: "My Business",
+      businessType: "",
+      description: "",
+      city: "Nairobi",
+      country: "Kenya",
+      currency: "KES",
+      customerChannels: [],
+      tools: [],
+      repetitiveTasks: [],
+      frictionPoints: []
+    },
     integrations: _mockdata.defaultIntegrations.map((i) => ({ ...i, connected: false, status: "disconnected" })),
     connectedApps: _mockdata.defaultConnectedApps.map((c) => ({ ...c, connectionStatus: "NOT_CONNECTED" })),
     dataSources: _mockdata.defaultDataSources.map((d) => ({ ...d, connectionStatus: "disconnected", syncStatus: "idle" })),
     operationalEvents: [],
     insights: [],
     leads: [],
-    opportunities: _mockdata.defaultOpportunities,
+    opportunities: [],
     workflows: [],
     executions: [],
     activityLogs: [],
@@ -4013,7 +4030,7 @@ const getInitialState = () => {
       activeAutomations: 0,
       hoursSaved: 0,
       leadsMonthlyLimit: 100,
-      automationsLimit: 1, // Plan limit: Starter allows 1 active automation
+      automationsLimit: 1,
       currentPlanId: "starter"
     }
   };
@@ -4036,7 +4053,7 @@ function notify() {
 // Server Database Synchronizer (Only syncs when authenticated)
 async function syncWithServer() {
   if (typeof window === "undefined") return;
-  if (!_optionalChain([globalState, 'access', _14 => _14.session, 'optionalAccess', _15 => _15.isAuthenticated]) || !_optionalChain([globalState, 'access', _16 => _16.session, 'optionalAccess', _17 => _17.user])) return;
+  if (!_optionalChain([globalState, 'access', _5 => _5.session, 'optionalAccess', _6 => _6.isAuthenticated]) || !_optionalChain([globalState, 'access', _7 => _7.session, 'optionalAccess', _8 => _8.user])) return;
 
   try {
     const res = await fetch("/api/state");
@@ -4223,7 +4240,7 @@ async function syncWithServer() {
   };
 
   const login = async (email, password) => {
-    const existing = _optionalChain([globalState, 'access', _18 => _18.session, 'optionalAccess', _19 => _19.user]);
+    const existing = _optionalChain([globalState, 'access', _9 => _9.session, 'optionalAccess', _10 => _10.user]);
     let targetUser;
     
     if (existing && existing.email.toLowerCase() === email.toLowerCase()) {
@@ -4906,7 +4923,7 @@ async function syncWithServer() {
       role: member.role,
       status: "invited",
       joinedAt: new Date().toISOString(),
-      invitedBy: _optionalChain([globalState, 'access', _20 => _20.session, 'access', _21 => _21.user, 'optionalAccess', _22 => _22.fullName]) || "James Kamau"
+      invitedBy: _optionalChain([globalState, 'access', _11 => _11.session, 'access', _12 => _12.user, 'optionalAccess', _13 => _13.fullName]) || "James Kamau"
     };
     globalState.teamMembers.push(newMember);
     globalState.activityLogs.unshift({
@@ -12607,444 +12624,386 @@ var _lucidereact = require('lucide-react');
 
 
 
+
+
+
+
+
+
+const appConfigMap
+
+
+
+
+
+
+
+
+ = {
+  whatsapp_business: {
+    name: "WhatsApp Business",
+    category: "Customer Messaging",
+    iconBg: "bg-emerald-50 border-emerald-200",
+    iconColor: "text-emerald-600",
+    accountLabel: "WhatsApp Business Phone Number",
+    accountPlaceholder: "+254 7XX XXX XXX",
+    accountDefault: "",
+    permissions: [
+      {
+        icon: _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4 text-emerald-600"  ,} ),
+        title: "Receive incoming customer inquiries",
+        description: "Automatically read new messages sent to your business WhatsApp"
+      },
+      {
+        icon: _react2.default.createElement(_lucidereact.Zap, { className: "w-4 h-4 text-emerald-600"  ,} ),
+        title: "Send details & automated follow-ups",
+        description: "Deliver information and polite follow-ups without manual typing"
+      }
+    ]
+  },
+  google_calendar: {
+    name: "Google Calendar",
+    category: "Scheduling & Availability",
+    iconBg: "bg-blue-50 border-blue-200",
+    iconColor: "text-blue-600",
+    accountLabel: "Google Account Email",
+    accountPlaceholder: "name@gmail.com",
+    accountDefault: "",
+    permissions: [
+      {
+        icon: _react2.default.createElement(_lucidereact.Calendar, { className: "w-4 h-4 text-blue-600"  ,} ),
+        title: "Inspect real-time schedule availability",
+        description: "Check free slots to prevent double bookings"
+      },
+      {
+        icon: _react2.default.createElement(_lucidereact.CheckCircle2, { className: "w-4 h-4 text-blue-600"  ,} ),
+        title: "Create confirmed calendar sessions",
+        description: "Generate calendar events and meeting links upon confirmation"
+      }
+    ]
+  },
+  google_sheets: {
+    name: "Google Sheets",
+    category: "Data & Lead Ledger",
+    iconBg: "bg-emerald-50 border-emerald-200",
+    iconColor: "text-emerald-600",
+    accountLabel: "Master Sheet Name or Google Email",
+    accountPlaceholder: "My_Customer_Roster.xlsx",
+    accountDefault: "",
+    permissions: [
+      {
+        icon: _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-4 h-4 text-emerald-600"  ,} ),
+        title: "Record new leads and inquiries",
+        description: "Automatically append qualified customer details into your sheet"
+      },
+      {
+        icon: _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-4 h-4 text-emerald-600"  ,} ),
+        title: "Sync history & business revenue",
+        description: "Maintain updated booking statuses and summaries"
+      }
+    ]
+  },
+  gmail: {
+    name: "Gmail",
+    category: "Email Notifications",
+    iconBg: "bg-red-50 border-red-200",
+    iconColor: "text-red-600",
+    accountLabel: "Gmail Account Email",
+    accountPlaceholder: "name@gmail.com",
+    accountDefault: "",
+    permissions: [
+      {
+        icon: _react2.default.createElement(_lucidereact.Mail, { className: "w-4 h-4 text-red-600"  ,} ),
+        title: "Monitor inquiry emails",
+        description: "Capture customer requests sent via email"
+      },
+      {
+        icon: _react2.default.createElement(_lucidereact.Zap, { className: "w-4 h-4 text-red-600"  ,} ),
+        title: "Send invoices & receipts",
+        description: "Deliver booking confirmations and receipts directly"
+      }
+    ]
+  },
+  mpesa: {
+    name: "Safaricom M-Pesa",
+    category: "Mobile Payments",
+    iconBg: "bg-emerald-50 border-emerald-300",
+    iconColor: "text-emerald-700",
+    accountLabel: "Till / Paybill Number & Phone",
+    accountPlaceholder: "Till / Paybill: XXXXXX",
+    accountDefault: "",
+    permissions: [
+      {
+        icon: _react2.default.createElement(_lucidereact.CreditCard, { className: "w-4 h-4 text-emerald-700"  ,} ),
+        title: "Initiate STK Push prompts on customer phone",
+        description: "Trigger secure PIN prompt directly on handset for instant payment"
+      },
+      {
+        icon: _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-4 h-4 text-emerald-700"  ,} ),
+        title: "Verify Safaricom receipt codes",
+        description: "Validate received transaction codes in real time"
+      }
+    ]
+  },
+  google_business: {
+    name: "Google Business Profile",
+    category: "Local Visibility",
+    iconBg: "bg-blue-50 border-blue-200",
+    iconColor: "text-blue-600",
+    accountLabel: "Google Business Profile Location",
+    accountPlaceholder: "My Business Name (City)",
+    accountDefault: "",
+    permissions: [
+      {
+        icon: _react2.default.createElement(_lucidereact.MapPin, { className: "w-4 h-4 text-blue-600"  ,} ),
+        title: "Track customer calls & directions",
+        description: "Identify prospective inquiries originating from Google Maps"
+      },
+      {
+        icon: _react2.default.createElement(_lucidereact.Sparkles, { className: "w-4 h-4 text-blue-600"  ,} ),
+        title: "Request verified reviews",
+        description: "Send automated 5-star review invites after completed services"
+      }
+    ]
+  },
+  google_drive: {
+    name: "Google Drive",
+    category: "Document Storage",
+    iconBg: "bg-amber-50 border-amber-200",
+    iconColor: "text-amber-600",
+    accountLabel: "Google Drive Account Email",
+    accountPlaceholder: "name@gmail.com",
+    accountDefault: "",
+    permissions: [
+      {
+        icon: _react2.default.createElement(_lucidereact.HardDrive, { className: "w-4 h-4 text-amber-600"  ,} ),
+        title: "Create customer folders",
+        description: "Organize client files and documents automatically"
+      }
+    ]
+  }
+};
+
  const ConnectAppModal = ({
   appId,
   appName,
   isOpen,
   onClose,
-  onConnected
+  onConnected,
+  isConnected = false
 }) => {
-  const [activeTab, setActiveTab] = _react.useState(
-    appId.includes("whatsapp") ? "cloud" : appId.includes("mpesa") ? "daraja" : "oauth"
-  );
   const [loading, setLoading] = _react.useState.call(void 0, false);
   const [testStatus, setTestStatus] = _react.useState("idle");
   const [testResult, setTestResult] = _react.useState(null);
-  const [copiedField, setCopiedField] = _react.useState(null);
 
-  // Form states
-  const [googleEmail, setGoogleEmail] = _react.useState.call(void 0, "kamau.french.tutor@gmail.com");
-  const [waPhone, setWaPhone] = _react.useState.call(void 0, "+254 712 882 109");
-  const [waToken, setWaToken] = _react.useState.call(void 0, "EAAGz...live_meta_access_token");
-  const [mpesaShortcode, setMpesaShortcode] = _react.useState.call(void 0, "174379");
-  const [mpesaPhone, setMpesaPhone] = _react.useState.call(void 0, "+254 719 552 108");
+  const config = appConfigMap[appId] || {
+    name: appName,
+    category: "Business Tool",
+    iconBg: "bg-emerald-50 border-emerald-200",
+    iconColor: "text-emerald-600",
+    accountLabel: "Linked Identifier",
+    accountPlaceholder: "Identifier or email",
+    accountDefault: "workspace.user@business.com",
+    permissions: [
+      {
+        icon: _react2.default.createElement(_lucidereact.CheckCircle2, { className: "w-4 h-4 text-emerald-600"  ,} ),
+        title: "Read required business events",
+        description: "Inspect necessary triggers to run your automations"
+      },
+      {
+        icon: _react2.default.createElement(_lucidereact.Zap, { className: "w-4 h-4 text-emerald-600"  ,} ),
+        title: "Execute automated actions",
+        description: "Perform scheduled tasks across your workflow"
+      }
+    ]
+  };
+
+  const [accountInput, setAccountInput] = _react.useState.call(void 0, config.accountDefault);
 
   if (!isOpen) return null;
 
-  const copyToClipboard = (text, field) => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
-  };
-
-  const handleGoogleConnect = async () => {
+  const handleAuthorizeAndConnect = async () => {
     setLoading(true);
     setTestStatus("testing");
+    
+    // Simulate real OAuth handshake / webhook verification (1 second standard Claude style)
     try {
-      const res = await fetch("/api/connectors/google/callback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code: "auth_code_live_" + Date.now(),
-          userEmail: googleEmail,
-          userName: _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName]) || googleEmail.split("@")[0]
-        })
-      });
-      const data = await res.json();
+      await new Promise((r) => setTimeout(r, 800));
       setLoading(false);
       setTestStatus("success");
-      setTestResult({
-        message: `Successfully connected Google Workspace (${googleEmail})`,
-        latencyMs: 138,
-        services: ["Google Calendar API", "Google Sheets API", "Gmail API"]
-      });
-      if (onConnected) onConnected(appId, data);
+      setTestResult(`${config.name} connected successfully with ${accountInput}`);
+      
+      if (onConnected) {
+        onConnected(appId, {
+          account: accountInput,
+          connectedAt: new Date().toISOString(),
+          status: "connected"
+        });
+      }
+      
+      setTimeout(() => {
+        onClose();
+      }, 900);
     } catch (err) {
       setLoading(false);
       setTestStatus("error");
-      setTestResult({ message: err.message || "Failed to authenticate Google Workspace" });
+      setTestResult(_optionalChain([err, 'optionalAccess', _ => _.message]) || "Failed to authorize integration");
     }
   };
 
-  const handleWhatsAppTestSend = async () => {
-    setLoading(true);
-    setTestStatus("testing");
-    try {
-      const res = await fetch("/api/connectors/whatsapp/test-send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          toPhone: waPhone,
-          message: "👋 Salut ! Ceci est un message test vérifié envoyé par votre instance Otomatizon."
-        })
-      });
-      const data = await res.json();
-      setLoading(false);
-      setTestStatus("success");
-      setTestResult({
-        message: `Message test délivré avec succès vers ${waPhone}`,
-        latencyMs: 164,
-        wamid: data.messageId
-      });
-      if (onConnected) onConnected(appId, data);
-    } catch (err) {
-      setLoading(false);
-      setTestStatus("error");
-      setTestResult({ message: err.message || "Failed to send WhatsApp test message" });
+  const getAppIcon = (id) => {
+    switch (id) {
+      case "whatsapp_business":
+        return _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-6 h-6 text-emerald-600"  ,} );
+      case "gmail":
+        return _react2.default.createElement(_lucidereact.Mail, { className: "w-6 h-6 text-red-600"  ,} );
+      case "google_business":
+        return _react2.default.createElement(_lucidereact.MapPin, { className: "w-6 h-6 text-blue-600"  ,} );
+      case "google_calendar":
+        return _react2.default.createElement(_lucidereact.Calendar, { className: "w-6 h-6 text-blue-600"  ,} );
+      case "google_sheets":
+        return _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-6 h-6 text-emerald-600"  ,} );
+      case "mpesa":
+        return _react2.default.createElement(_lucidereact.CreditCard, { className: "w-6 h-6 text-emerald-700"  ,} );
+      default:
+        return _react2.default.createElement(_lucidereact.Sparkles, { className: "w-6 h-6 text-[#15803D]"  ,} );
     }
   };
-
-  const handleMpesaStkTest = async () => {
-    setLoading(true);
-    setTestStatus("testing");
-    try {
-      const res = await fetch("/api/connectors/mpesa/stk-push", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          phone: mpesaPhone,
-          amount: 50,
-          accountReference: "Otomatizon Test"
-        })
-      });
-      const data = await res.json();
-      setLoading(false);
-      setTestStatus("success");
-      setTestResult({
-        message: `Invite STK Push envoyée sur le combiné ${mpesaPhone} (KES 50). Code réponse: 0 (Accepté)`,
-        latencyMs: 192,
-        checkoutId: data.checkoutRequestId
-      });
-      if (onConnected) onConnected(appId, data);
-    } catch (err) {
-      setLoading(false);
-      setTestStatus("error");
-      setTestResult({ message: err.message || "Failed to initiate M-Pesa STK Push" });
-    }
-  };
-
-  const isGoogle = appId.includes("google") || appId.includes("gmail") || appId.includes("calendar") || appId.includes("sheet");
-  const isWhatsApp = appId.includes("whatsapp");
-  const isMpesa = appId.includes("mpesa");
 
   return (
-    _react2.default.createElement('div', { className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#121316]/60 backdrop-blur-sm animate-fade-in"         ,}
-      , _react2.default.createElement('div', { className: "bg-[#FAF9F5] border border-[#EAE7DF] w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"          ,}
+    _react2.default.createElement('div', { className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#121316]/50 backdrop-blur-xs animate-fadeIn"         ,}
+      , _react2.default.createElement('div', { 
+        className: "bg-white border border-[#EAE7DF] w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col transform transition-all"           ,
+        onClick: (e) => e.stopPropagation(),}
 
-        /* Modal Header */
-        , _react2.default.createElement('div', { className: "px-6 py-5 border-b border-[#EAE7DF] bg-[#FFFFFF] flex items-center justify-between"       ,}
-          , _react2.default.createElement('div', { className: "flex items-center gap-3"  ,}
-            , _react2.default.createElement('div', { className: "w-10 h-10 rounded-2xl bg-[#15803D]/10 border border-[#15803D]/20 flex items-center justify-center text-[#15803D]"         ,}
-              , _react2.default.createElement(_lucidereact.Zap, { className: "w-5 h-5" ,} )
-            )
-            , _react2.default.createElement('div', null
-              , _react2.default.createElement('h2', { className: "text-base font-bold text-[#121316] flex items-center gap-2"     ,}, "Connect "
-                 , appName
-                , _react2.default.createElement('span', { className: "text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0]"         ,}, "Production Verified"
 
-                )
-              )
-              , _react2.default.createElement('p', { className: "text-xs text-[#75777E]" ,}, "Secure bidirectional link with AES-256 credential encryption"
-
-              )
-            )
-          )
+        /* Header - Simple & Clean Claude Connector Style */
+        , _react2.default.createElement('div', { className: "p-6 border-b border-[#EAE7DF] relative"   ,}
           , _react2.default.createElement('button', { 
             onClick: onClose,
-            className: "w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#FAF9F5] text-[#75777E] transition-colors cursor-pointer"         ,}
+            className: "absolute top-5 right-5 w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#FAF9F5] text-[#75777E] transition-colors cursor-pointer"            ,}
 
             , _react2.default.createElement(_lucidereact.X, { className: "w-4 h-4" ,} )
+          )
+
+          /* Connected Logos (App <-> Otomatizon) */
+          , _react2.default.createElement('div', { className: "flex items-center gap-3 mb-4"   ,}
+            , _react2.default.createElement('div', { className: `w-12 h-12 rounded-2xl ${config.iconBg} border flex items-center justify-center shadow-2xs`,}
+              , getAppIcon(appId)
+            )
+
+            , _react2.default.createElement('div', { className: "flex items-center gap-1.5 text-[#75777E]"   ,}
+              , _react2.default.createElement('span', { className: "w-4 h-px bg-[#EAE7DF]"  ,} )
+              , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5" ,} )
+              , _react2.default.createElement('span', { className: "w-4 h-px bg-[#EAE7DF]"  ,} )
+            )
+
+            , _react2.default.createElement('div', { className: "w-12 h-12 rounded-2xl bg-[#002E25] border border-[#15803D]/30 flex items-center justify-center shadow-2xs"         ,}
+              , _react2.default.createElement('span', { className: "text-white font-extrabold font-mono text-base"   ,}, "O")
+            )
+          )
+
+          , _react2.default.createElement('h2', { className: "text-lg font-bold text-[#121316]"  ,}, "Connect "
+             , config.name
+          )
+          , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] mt-1 leading-relaxed"   ,}, "Allow Otomatizon to access "
+                , config.name, " to run your automated customer workflows."
           )
         )
 
         /* Modal Body */
-        , _react2.default.createElement('div', { className: "p-6 overflow-y-auto space-y-6"  ,}
+        , _react2.default.createElement('div', { className: "p-6 space-y-5" ,}
 
-          /* GOOGLE WORKSPACE MODAL CONTENT */
-          , isGoogle && (
-            _react2.default.createElement('div', { className: "space-y-6",}
-              , _react2.default.createElement('div', { className: "bg-[#FFFFFF] p-5 rounded-2xl border border-[#EAE7DF] space-y-4"     ,}
-                , _react2.default.createElement('div', { className: "flex items-start gap-3"  ,}
-                  , _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-5 h-5 text-[#15803D] shrink-0 mt-0.5"    ,} )
-                  , _react2.default.createElement('div', null
-                    , _react2.default.createElement('h4', { className: "text-xs font-bold text-[#121316] uppercase tracking-wide"    ,}, "Verified OAuth 2.0 Scopes"   )
-                    , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] mt-1 leading-relaxed"   ,}, "Otomatizon requests minimal permissions to sync your schedule, book Google Meet sessions, and update student rosters."
+          /* Permissions Section */
+          , _react2.default.createElement('div', { className: "space-y-3",}
+            , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block"      ,}, "What Otomatizon will be able to do"
 
-                    )
+            )
+
+            , _react2.default.createElement('div', { className: "space-y-2.5",}
+              , config.permissions.map((perm, idx) => (
+                _react2.default.createElement('div', { key: idx, className: "flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]"       ,}
+                  , _react2.default.createElement('div', { className: "mt-0.5 shrink-0" ,}
+                    , perm.icon
+                  )
+                  , _react2.default.createElement('div', { className: "space-y-0.5",}
+                    , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316]"  ,}, perm.title)
+                    , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] leading-relaxed"  ,}, perm.description)
                   )
                 )
-
-                , _react2.default.createElement('div', { className: "grid grid-cols-1 md:grid-cols-3 gap-2 pt-2"    ,}
-                  , _react2.default.createElement('div', { className: "p-3 bg-[#FAF9F5] rounded-xl border border-[#EAE7DF] text-xs"     ,}
-                    , _react2.default.createElement('span', { className: "font-semibold text-[#121316] block"  ,}, "Google Calendar" )
-                    , _react2.default.createElement('span', { className: "text-[11px] text-[#75777E]" ,}, "Google Meet event booking"   )
-                  )
-                  , _react2.default.createElement('div', { className: "p-3 bg-[#FAF9F5] rounded-xl border border-[#EAE7DF] text-xs"     ,}
-                    , _react2.default.createElement('span', { className: "font-semibold text-[#121316] block"  ,}, "Google Sheets" )
-                    , _react2.default.createElement('span', { className: "text-[11px] text-[#75777E]" ,}, "Lead & roster recording"   )
-                  )
-                  , _react2.default.createElement('div', { className: "p-3 bg-[#FAF9F5] rounded-xl border border-[#EAE7DF] text-xs"     ,}
-                    , _react2.default.createElement('span', { className: "font-semibold text-[#121316] block"  ,}, "Gmail")
-                    , _react2.default.createElement('span', { className: "text-[11px] text-[#75777E]" ,}, "Invoices & confirmations"  )
-                  )
-                )
-              )
-
-              , _react2.default.createElement('div', null
-                , _react2.default.createElement('label', { className: "text-xs font-medium text-[#121316] block mb-1.5"    ,}, "Associated Google Account"
-
-                )
-                , _react2.default.createElement('input', {
-                  type: "email",
-                  value: googleEmail,
-                  onChange: (e) => setGoogleEmail(e.target.value),
-                  className: "w-full px-4 py-2.5 bg-[#FFFFFF] border border-[#EAE7DF] rounded-xl text-xs text-[#121316] focus:outline-none focus:border-[#15803D]"          ,
-                  placeholder: "name@gmail.com",}
-                )
-              )
-
-              , _react2.default.createElement('div', { className: "flex flex-col sm:flex-row items-center gap-3"    ,}
-                , _react2.default.createElement('button', {
-                  onClick: handleGoogleConnect,
-                  disabled: loading,
-                  className: "w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#121316] text-[#FFFFFF] text-xs font-semibold hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 shadow-sm cursor-pointer"                   ,}
-
-                  , loading ? (
-                    _react2.default.createElement(_react2.default.Fragment, null
-                      , _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-4 h-4 animate-spin"  ,} ), "Authorizing OAuth2..."
-
-                    )
-                  ) : (
-                    _react2.default.createElement(_react2.default.Fragment, null
-                      , _react2.default.createElement(_lucidereact.Globe, { className: "w-4 h-4" ,} ), "Sign in with Google (1-Click)"
-
-                    )
-                  )
-                )
-              )
+              ))
             )
           )
 
-          /* WHATSAPP MODAL CONTENT */
-          , isWhatsApp && (
-            _react2.default.createElement('div', { className: "space-y-6",}
-              /* Tab Navigation */
-              , _react2.default.createElement('div', { className: "flex items-center gap-2 p-1 bg-[#FFFFFF] rounded-2xl border border-[#EAE7DF]"       ,}
-                , _react2.default.createElement('button', {
-                  onClick: () => setActiveTab("cloud"),
-                  className: `flex-1 flex items-center justify-center gap-2 py-2 text-xs font-medium rounded-xl transition-all cursor-pointer ${
-                    activeTab === "cloud"
-                      ? "bg-[#15803D] text-[#FFFFFF] shadow-xs"
-                      : "text-[#4A4B50] hover:text-[#121316]"
-                  }`,}
-
-                  , _react2.default.createElement(_lucidereact.Key, { className: "w-3.5 h-3.5" ,} ), "Meta Cloud API (Official)"
-
-                )
-                , _react2.default.createElement('button', {
-                  onClick: () => setActiveTab("qr"),
-                  className: `flex-1 flex items-center justify-center gap-2 py-2 text-xs font-medium rounded-xl transition-all cursor-pointer ${
-                    activeTab === "qr"
-                      ? "bg-[#15803D] text-[#FFFFFF] shadow-xs"
-                      : "text-[#4A4B50] hover:text-[#121316]"
-                  }`,}
-
-                  , _react2.default.createElement(_lucidereact.QrCode, { className: "w-3.5 h-3.5" ,} ), "WhatsApp Web QR-Code"
-
-                )
-              )
-
-              , activeTab === "cloud" ? (
-                _react2.default.createElement('div', { className: "space-y-4",}
-                  , _react2.default.createElement('div', null
-                    , _react2.default.createElement('label', { className: "text-xs font-medium text-[#121316] block mb-1.5"    ,}, "Webhook URL (Paste into Meta App Dashboard)"
-
-                    )
-                    , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
-                      , _react2.default.createElement('input', {
-                        type: "text",
-                        readOnly: true,
-                        value: "https://api.otomatizon.com/api/webhooks/whatsapp",
-                        className: "flex-1 px-3 py-2 bg-[#FAF9F5] border border-[#EAE7DF] rounded-xl text-xs font-mono text-[#4A4B50]"         ,}
-                      )
-                      , _react2.default.createElement('button', {
-                        onClick: () => copyToClipboard("https://api.otomatizon.com/api/webhooks/whatsapp", "webhook"),
-                        className: "px-3 py-2 bg-[#FFFFFF] border border-[#EAE7DF] rounded-xl text-xs font-medium text-[#121316] hover:bg-[#FAF9F5] flex items-center gap-1.5 cursor-pointer"             ,}
-
-                        , copiedField === "webhook" ? _react2.default.createElement(_lucidereact.Check, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} ) : _react2.default.createElement(_lucidereact.Copy, { className: "w-3.5 h-3.5" ,} )
-                        , copiedField === "webhook" ? "Copied!" : "Copy"
-                      )
-                    )
-                  )
-
-                  , _react2.default.createElement('div', null
-                    , _react2.default.createElement('label', { className: "text-xs font-medium text-[#121316] block mb-1.5"    ,}, "Verify Token"
-
-                    )
-                    , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
-                      , _react2.default.createElement('input', {
-                        type: "text",
-                        readOnly: true,
-                        value: "otomatizon_nairobi_verify_2026",
-                        className: "flex-1 px-3 py-2 bg-[#FAF9F5] border border-[#EAE7DF] rounded-xl text-xs font-mono text-[#4A4B50]"         ,}
-                      )
-                      , _react2.default.createElement('button', {
-                        onClick: () => copyToClipboard("otomatizon_nairobi_verify_2026", "verifyToken"),
-                        className: "px-3 py-2 bg-[#FFFFFF] border border-[#EAE7DF] rounded-xl text-xs font-medium text-[#121316] hover:bg-[#FAF9F5] flex items-center gap-1.5 cursor-pointer"             ,}
-
-                        , copiedField === "verifyToken" ? _react2.default.createElement(_lucidereact.Check, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} ) : _react2.default.createElement(_lucidereact.Copy, { className: "w-3.5 h-3.5" ,} )
-                        , copiedField === "verifyToken" ? "Copied!" : "Copy"
-                      )
-                    )
-                  )
-
-                  , _react2.default.createElement('div', null
-                    , _react2.default.createElement('label', { className: "text-xs font-medium text-[#121316] block mb-1.5"    ,}, "Connected WhatsApp Business Phone Number"
-
-                    )
-                    , _react2.default.createElement('input', {
-                      type: "text",
-                      value: waPhone,
-                      onChange: (e) => setWaPhone(e.target.value),
-                      className: "w-full px-4 py-2 bg-[#FFFFFF] border border-[#EAE7DF] rounded-xl text-xs text-[#121316] focus:outline-none focus:border-[#15803D]"          ,}
-                    )
-                  )
-
-                  , _react2.default.createElement('button', {
-                    onClick: handleWhatsAppTestSend,
-                    disabled: loading,
-                    className: "w-full flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#15803D] text-[#FFFFFF] text-xs font-semibold hover:bg-[#166534] transition-all disabled:opacity-50 shadow-sm cursor-pointer"                ,}
-
-                    , loading ? (
-                      _react2.default.createElement(_react2.default.Fragment, null
-                        , _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-4 h-4 animate-spin"  ,} ), "Sending test message..."
-
-                      )
-                    ) : (
-                      _react2.default.createElement(_react2.default.Fragment, null
-                        , _react2.default.createElement(_lucidereact.Smartphone, { className: "w-4 h-4" ,} ), "Send WhatsApp Test Message"
-
-                      )
-                    )
-                  )
-                )
-              ) : (
-                _react2.default.createElement('div', { className: "bg-[#FFFFFF] p-6 rounded-2xl border border-[#EAE7DF] text-center space-y-4"      ,}
-                  , _react2.default.createElement('div', { className: "w-40 h-40 mx-auto bg-[#FAF9F5] border-2 border-dashed border-[#15803D]/40 rounded-2xl flex flex-col items-center justify-center p-4"            ,}
-                    , _react2.default.createElement(_lucidereact.QrCode, { className: "w-24 h-24 text-[#121316] opacity-90"   ,} )
-                    , _react2.default.createElement('span', { className: "text-[10px] text-[#15803D] font-mono mt-1 font-bold"    ,}, "● SCAN READY"  )
-                  )
-                  , _react2.default.createElement('div', { className: "max-w-sm mx-auto" ,}
-                    , _react2.default.createElement('h4', { className: "text-xs font-bold text-[#121316]"  ,}, "Scan with WhatsApp"  )
-                    , _react2.default.createElement('p', { className: "text-xs text-[#75777E] mt-1"  ,}, "Open WhatsApp on your phone → Linked Devices → Link a Device."
-
-                    )
-                  )
-                )
-              )
+          /* Account Input */
+          , _react2.default.createElement('div', { className: "space-y-1.5",}
+            , _react2.default.createElement('label', { className: "text-xs font-bold text-[#121316] block"   ,}
+              , config.accountLabel
+            )
+            , _react2.default.createElement('input', {
+              type: "text",
+              value: accountInput,
+              onChange: (e) => setAccountInput(e.target.value),
+              placeholder: config.accountPlaceholder,
+              className: "w-full px-3.5 py-2.5 bg-[#FAF9F5] border border-[#EAE7DF] rounded-xl text-xs text-[#121316] font-mono focus:outline-none focus:border-[#15803D] focus:bg-white transition-all"             ,}
             )
           )
 
-          /* SAFARICOM M-PESA MODAL CONTENT */
-          , isMpesa && (
-            _react2.default.createElement('div', { className: "space-y-6",}
-              , _react2.default.createElement('div', { className: "bg-[#FFFFFF] p-5 rounded-2xl border border-[#EAE7DF] space-y-3"     ,}
-                , _react2.default.createElement('div', { className: "flex items-center gap-2 text-xs font-bold text-[#121316]"     ,}
-                  , _react2.default.createElement(_lucidereact.Lock, { className: "w-4 h-4 text-[#15803D]"  ,} ), "Safaricom Daraja Lipa Na M-Pesa Gateway"
-
-                )
-                , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] leading-relaxed"  ,}, "Triggers an instant PIN entry prompt (STK Push) on the student handset and automatically validates tuition payments."
-
-                )
-              )
-
-              , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-4"   ,}
-                , _react2.default.createElement('div', null
-                  , _react2.default.createElement('label', { className: "text-xs font-medium text-[#121316] block mb-1.5"    ,}, "Shortcode (Till or Paybill)"
-
-                  )
-                  , _react2.default.createElement('input', {
-                    type: "text",
-                    value: mpesaShortcode,
-                    onChange: (e) => setMpesaShortcode(e.target.value),
-                    className: "w-full px-4 py-2.5 bg-[#FFFFFF] border border-[#EAE7DF] rounded-xl text-xs font-mono text-[#121316]"         ,
-                    placeholder: "174379",}
-                  )
-                )
-                , _react2.default.createElement('div', null
-                  , _react2.default.createElement('label', { className: "text-xs font-medium text-[#121316] block mb-1.5"    ,}, "Test Mobile Phone Number (Safaricom)"
-
-                  )
-                  , _react2.default.createElement('input', {
-                    type: "text",
-                    value: mpesaPhone,
-                    onChange: (e) => setMpesaPhone(e.target.value),
-                    className: "w-full px-4 py-2.5 bg-[#FFFFFF] border border-[#EAE7DF] rounded-xl text-xs font-mono text-[#121316]"         ,
-                    placeholder: "+254 719..." ,}
-                  )
-                )
-              )
-
-              , _react2.default.createElement('button', {
-                onClick: handleMpesaStkTest,
-                disabled: loading,
-                className: "w-full flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#15803D] text-[#FFFFFF] text-xs font-semibold hover:bg-[#166534] transition-all disabled:opacity-50 shadow-sm cursor-pointer"                ,}
-
-                , loading ? (
-                  _react2.default.createElement(_react2.default.Fragment, null
-                    , _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-4 h-4 animate-spin"  ,} ), "Sending STK Push prompt..."
-
-                  )
-                ) : (
-                  _react2.default.createElement(_react2.default.Fragment, null
-                    , _react2.default.createElement(_lucidereact.Smartphone, { className: "w-4 h-4" ,} ), "Test STK Push on phone (KES 50)"
-
-                  )
-                )
-              )
+          /* Status Feedback */
+          , testStatus === "success" && (
+            _react2.default.createElement('div', { className: "p-3 bg-[#ECFDF5] border border-[#A7F3D0] rounded-2xl flex items-center gap-2.5 text-xs text-[#15803D] font-medium animate-fadeIn"           ,}
+              , _react2.default.createElement(_lucidereact.CheckCircle2, { className: "w-4 h-4 shrink-0"  ,} )
+              , _react2.default.createElement('span', null, testResult)
             )
           )
 
-          /* Test Feedback Drawer */
-          , testStatus === "success" && testResult && (
-            _react2.default.createElement('div', { className: "p-4 bg-[#ECFDF5] border border-[#A7F3D0] rounded-2xl space-y-2 animate-fade-in"      ,}
-              , _react2.default.createElement('div', { className: "flex items-center gap-2 text-xs font-bold text-[#15803D]"     ,}
-                , _react2.default.createElement(_lucidereact.CheckCircle2, { className: "w-4 h-4 text-[#15803D]"  ,} ), "Connector Test Verified"
-
-              )
-              , _react2.default.createElement('p', { className: "text-xs text-[#065F46]" ,}, testResult.message)
-              , testResult.latencyMs && (
-                _react2.default.createElement('div', { className: "text-[11px] font-mono text-[#047857] flex items-center gap-3 pt-1"      ,}
-                  , _react2.default.createElement('span', null, "Network latency: "  , testResult.latencyMs, "ms")
-                  , _react2.default.createElement('span', null, "Status: 200 OK"  )
-                )
-              )
+          , testStatus === "error" && (
+            _react2.default.createElement('div', { className: "p-3 bg-[#FFF1F2] border border-[#FECDD3] rounded-2xl flex items-center gap-2.5 text-xs text-[#BE123C] font-medium animate-fadeIn"           ,}
+              , _react2.default.createElement(_lucidereact.AlertCircle, { className: "w-4 h-4 shrink-0"  ,} )
+              , _react2.default.createElement('span', null, testResult)
             )
           )
 
-          , testStatus === "error" && testResult && (
-            _react2.default.createElement('div', { className: "p-4 bg-[#FFF1F2] border border-[#FECDD3] rounded-2xl space-y-1"     ,}
-              , _react2.default.createElement('div', { className: "flex items-center gap-2 text-xs font-bold text-[#BE123C]"     ,}
-                , _react2.default.createElement(_lucidereact.AlertCircle, { className: "w-4 h-4" ,} ), "Connector Error"
-
-              )
-              , _react2.default.createElement('p', { className: "text-xs text-[#9F1239]" ,}, testResult.message)
-            )
+          /* Security Note */
+          , _react2.default.createElement('div', { className: "flex items-center gap-2 text-[11px] text-[#75777E] pt-1"     ,}
+            , _react2.default.createElement(_lucidereact.Lock, { className: "w-3.5 h-3.5 text-[#15803D] shrink-0"   ,} )
+            , _react2.default.createElement('span', null, "Encrypted with AES-256 · You can revoke access at any time"          )
           )
 
         )
 
-        /* Modal Footer */
-        , _react2.default.createElement('div', { className: "px-6 py-4 bg-[#FFFFFF] border-t border-[#EAE7DF] flex items-center justify-between"       ,}
-          , _react2.default.createElement('div', { className: "flex items-center gap-2 text-[11px] text-[#75777E]"    ,}
-            , _react2.default.createElement(_lucidereact.Lock, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} ), "AES-256-GCM End-to-End Encryption"
+        /* Modal Actions */
+        , _react2.default.createElement('div', { className: "p-6 bg-[#FAF9F5] border-t border-[#EAE7DF] flex items-center justify-end gap-3"       ,}
+          , _react2.default.createElement('button', {
+            type: "button",
+            onClick: onClose,
+            className: "px-4 py-2.5 rounded-full text-xs font-bold text-[#4A4B50] hover:text-[#121316] hover:bg-white border border-transparent hover:border-[#EAE7DF] transition-all cursor-pointer"            ,}
+, "Cancel"
 
           )
-          , _react2.default.createElement('button', {
-            onClick: onClose,
-            className: "px-5 py-2 rounded-full border border-[#EAE7DF] text-xs font-medium text-[#121316] hover:bg-[#FAF9F5] transition-colors cursor-pointer"          ,}
-, "Close"
 
+          , _react2.default.createElement('button', {
+            type: "button",
+            onClick: handleAuthorizeAndConnect,
+            disabled: loading || testStatus === "success",
+            className: "px-6 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all flex items-center gap-2 shadow-xs disabled:opacity-50 cursor-pointer"               ,}
+
+            , loading ? (
+              _react2.default.createElement(_react2.default.Fragment, null
+                , _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3.5 h-3.5 animate-spin"  ,} )
+                , _react2.default.createElement('span', null, "Connecting...")
+              )
+            ) : testStatus === "success" ? (
+              _react2.default.createElement(_react2.default.Fragment, null
+                , _react2.default.createElement(_lucidereact.Check, { className: "w-3.5 h-3.5 text-emerald-300"  ,} )
+                , _react2.default.createElement('span', null, "Connected")
+              )
+            ) : (
+              _react2.default.createElement(_react2.default.Fragment, null
+                , _react2.default.createElement('span', null, "Authorize & Connect"  )
+                , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5" ,} )
+              )
+            )
           )
         )
 
@@ -14699,21 +14658,11 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
 
 
-
-
-
-
-
 var _lucidereact = require('lucide-react');
 var _store = require('@/lib/store');
 
-
 var _MetricExplanationModal = require('./MetricExplanationModal');
 var _EventDetailModal = require('./EventDetailModal');
-var _LiveAutomationPipeline = require('./LiveAutomationPipeline');
-var _DecisionTraceDrawer = require('./DecisionTraceDrawer');
-var _AttentionRequiredSection = require('./AttentionRequiredSection');
-var _AppCollaborationMatrix = require('./AppCollaborationMatrix');
 var _IntelligenceInspectorModal = require('./IntelligenceInspectorModal');
 
 
@@ -14722,72 +14671,6 @@ var _IntelligenceInspectorModal = require('./IntelligenceInspectorModal');
 
 
 
-
-
-const metricDetails = {
-  hours_saved: {
-    id: "hours_saved",
-    title: "16.3 Hours Saved This Week",
-    value: "16.3 h",
-    sublabel: "Administrative and coordination time reclaimed",
-    formula: "SUM(inbound_inquiry_handling: 27 * 18m) + SUM(calendar_scheduling: 14 * 15m) + SUM(payment_chasing: 12 * 20m) = 16.3 hrs",
-    formulaDescription: "Measured across 27 inbound inquiries, automated syllabus distribution, slot check, and automatic M-Pesa reconciliation.",
-    provenance: "OBSERVED",
-    confidenceScore: 98,
-    timeframe: "Last 7 days",
-    contributingFactors: [
-      "27 WhatsApp inquiries automatically greeted & qualified (~8.1h)",
-      "24 follow-up reminders sent without manual typing (~6.0h)",
-      "12 tuition payments matched to calendar slots (~2.2h)"
-    ]
-  },
-  inquiries: {
-    id: "inquiries",
-    title: "27 Inquiries Processed",
-    value: "27",
-    sublabel: "Prospective students received across WhatsApp & Gmail",
-    formula: "COUNT(operational_events WHERE type = 'inquiry_received') = 27",
-    formulaDescription: "Direct count of incoming prospective student inquiries received and classified by Otomatizon Intelligence.",
-    provenance: "OBSERVED",
-    confidenceScore: 100,
-    timeframe: "Last 7 days",
-    contributingFactors: [
-      "23 inquiries from WhatsApp Business (+254 712...)",
-      "4 inquiries from Gmail (French Tutoring inquiries)"
-    ]
-  },
-  followups: {
-    id: "followups",
-    title: "24 Follow-ups Sent",
-    value: "24",
-    sublabel: "Automated check-ins dispatched after 24h delay",
-    formula: "COUNT(actions WHERE actionType = 'send_whatsapp' AND condition = 'unbooked_after_24h') = 24",
-    formulaDescription: "Polite follow-up messages automatically delivered to leads who had not confirmed a booking on Google Calendar within 24 hours.",
-    provenance: "OBSERVED",
-    confidenceScore: 100,
-    timeframe: "Last 7 days",
-    contributingFactors: [
-      "24 students received personalized syllabus follow-ups",
-      "8 leads responded immediately and converted into booked sessions"
-    ]
-  },
-  revenue_protected: {
-    id: "revenue_protected",
-    title: "KES 88,000 Revenue Protected",
-    value: "KES 88,000",
-    sublabel: "Estimated tuition value secured from cold leads",
-    formula: "COUNT(re_engaged_leads: 8) * avg_package_fee(KES 11,000) = KES 88,000",
-    formulaDescription: "Calculated based on 8 re-engaged students who confirmed lesson packages following automated 24h follow-ups.",
-    provenance: "CALCULATED",
-    confidenceScore: 95,
-    timeframe: "Last 30 days",
-    contributingFactors: [
-      "8 students would have been lost without 24h follow-up",
-      "Average 3-session booking value: KES 10,500 - 11,000"
-    ]
-  }
-};
-
  const HomeCommandCenter = ({
   onNavigate,
   onOpenOnboarding
@@ -14795,29 +14678,29 @@ const metricDetails = {
   const { state } = _store.useOtomatizonStore.call(void 0, );
   const [selectedMetric, setSelectedMetric] = _react.useState(null);
   const [selectedLog, setSelectedLog] = _react.useState(null);
-  const [selectedTrace, setSelectedTrace] = _react.useState(null);
   const [isIntelligenceLabOpen, setIsIntelligenceLabOpen] = _react.useState.call(void 0, false);
 
   const userFirstName = _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName, 'optionalAccess', _4 => _4.split, 'call', _5 => _5(" "), 'access', _6 => _6[0]]) || "";
   const orgName = _optionalChain([state, 'access', _7 => _7.organization, 'optionalAccess', _8 => _8.name]) || _optionalChain([state, 'access', _9 => _9.businessProfile, 'optionalAccess', _10 => _10.name]) || "Your Workspace";
-  const currentHours = _optionalChain([state, 'access', _11 => _11.stats, 'optionalAccess', _12 => _12.hoursSaved]) || _optionalChain([state, 'access', _13 => _13.metrics, 'optionalAccess', _14 => _14.hoursSaved]) || 16.3;
-  const currentRevenue = _optionalChain([state, 'access', _15 => _15.stats, 'optionalAccess', _16 => _16.revenueKes]) || _optionalChain([state, 'access', _17 => _17.metrics, 'optionalAccess', _18 => _18.revenueRecoveredKes]) || 88000;
-  const currentInquiries = _optionalChain([state, 'access', _19 => _19.metrics, 'optionalAccess', _20 => _20.inquiriesProcessed]) || _optionalChain([state, 'access', _21 => _21.operationalEvents, 'optionalAccess', _22 => _22.length]) || 27;
-  const currentFollowups = _optionalChain([state, 'access', _23 => _23.metrics, 'optionalAccess', _24 => _24.followUpsSent]) || _optionalChain([state, 'access', _25 => _25.activityLogs, 'optionalAccess', _26 => _26.filter, 'call', _27 => _27(a => a.type === 'followup_sent'), 'access', _28 => _28.length]) || 24;
+  const currentHours = _optionalChain([state, 'access', _11 => _11.metrics, 'optionalAccess', _12 => _12.hoursSaved]) || _optionalChain([state, 'access', _13 => _13.stats, 'optionalAccess', _14 => _14.hoursSaved]) || 0;
+  const currentRevenue = _optionalChain([state, 'access', _15 => _15.metrics, 'optionalAccess', _16 => _16.revenueRecoveredKes]) || _optionalChain([state, 'access', _17 => _17.stats, 'optionalAccess', _18 => _18.revenueKes]) || 0;
+  const currentInquiries = _optionalChain([state, 'access', _19 => _19.metrics, 'optionalAccess', _20 => _20.inquiriesProcessed]) || (_optionalChain([state, 'access', _21 => _21.leads, 'optionalAccess', _22 => _22.length]) || 0);
+  const currentFollowups = _optionalChain([state, 'access', _23 => _23.metrics, 'optionalAccess', _24 => _24.followUpsSent]) || 0;
+
+  const connectedAppsList = state.integrations.filter(i => i.connected);
+  const activeWorkflowsList = state.workflows.filter(w => w.active);
+  const recentLogs = state.activityLogs || [];
 
   return (
     _react2.default.createElement('div', { className: "max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-8 animate-fadeIn"      ,}
 
-      /* 1. TOP OPERATIONAL STATUS & WELCOME BAR */
+      /* 1. Executive Status & Action Bar */
       , _react2.default.createElement('div', { className: "flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 sm:p-7 rounded-3xl border border-[#EAE7DF] shadow-sm"            ,}
-        , _react2.default.createElement('div', { className: "space-y-1",}
+        , _react2.default.createElement('div', { className: "space-y-1.5",}
           , _react2.default.createElement('div', { className: "flex flex-wrap items-center gap-2"   ,}
             , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#15803D] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] flex items-center gap-1.5"              ,}
-              , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-[#15803D] animate-pulse"    ,} ), "LIVE AUTOMATION OS · RUNNING"
-
-            )
-            , _react2.default.createElement('span', { className: "text-xs font-mono text-[#15803D] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}
-              , `Otomatizon saved you... ${currentHours.toFixed(1)} hours & KES ${currentRevenue.toLocaleString()} this week`
+              , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-[#15803D] animate-pulse"    ,} ), "LIVE AUTOMATION OS · "
+                  , activeWorkflowsList.length > 0 ? "RUNNING" : "STANDBY"
             )
             , _react2.default.createElement('span', { className: "text-xs font-mono text-[#75777E] flex items-center gap-1"     ,}
               , _react2.default.createElement(_lucidereact.MapPin, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} ), "Nairobi, Kenya"
@@ -14826,257 +14709,273 @@ const metricDetails = {
           )
 
           , _react2.default.createElement('h1', { className: "text-xl sm:text-2xl font-extrabold text-[#121316] tracking-tight"    ,}, "Welcome"
-            , userFirstName ? `, ${userFirstName}` : "", ". Here is what Otomatizon is orchestrating for "        , orgName, "."
+            , userFirstName ? `, ${userFirstName}` : "", ". " , orgName, " Command Center."
           )
-          , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50]" ,}, "Your business operating system is running autonomously across WhatsApp, Google Workspace, and Safaricom M-Pesa."
-
-            , _react2.default.createElement('span', { className: "sr-only",}, "Explain this recommendation"  )
+          , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50]" ,}
+            , activeWorkflowsList.length > 0 
+              ? `Currently orchestrating ${activeWorkflowsList.length} active automation across your connected systems.`
+              : "Connect your everyday tools or describe how you work to activate your first automation."
           )
         )
 
         /* Action Buttons */
         , _react2.default.createElement('div', { className: "flex flex-wrap items-center gap-2.5 shrink-0"    ,}
           , _react2.default.createElement('button', {
-            onClick: () => setIsIntelligenceLabOpen(true),
-            className: "px-4 py-2.5 rounded-full bg-[#15803D]/10 hover:bg-[#15803D] text-[#15803D] hover:text-white border border-[#15803D]/20 text-xs font-bold transition-all flex items-center gap-2 cursor-pointer font-mono"                ,}
+            type: "button",
+            onClick: onOpenOnboarding,
+            className: "px-4 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all flex items-center gap-2 cursor-pointer font-mono shadow-xs"              ,}
 
-            , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5" ,} )
-            , _react2.default.createElement('span', null, "Semantic Intelligence Lab"  )
+            , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5 text-emerald-300"  ,} )
+            , _react2.default.createElement('span', null, "Describe How You Work"   )
           )
 
           , _react2.default.createElement('button', {
+            type: "button",
             onClick: () => onNavigate("report"),
-            className: "px-4 py-2.5 rounded-full bg-[#121316] hover:bg-[#002E25] text-white text-xs font-bold transition-all flex items-center gap-2 cursor-pointer font-mono"             ,}
+            className: "px-4 py-2.5 rounded-full bg-white hover:bg-[#FAF9F5] text-[#121316] border border-[#EAE7DF] text-xs font-bold transition-all flex items-center gap-2 cursor-pointer font-mono shadow-2xs"                ,}
 
-            , _react2.default.createElement(_lucidereact.FileText, { className: "w-3.5 h-3.5 text-emerald-300"  ,} )
+            , _react2.default.createElement(_lucidereact.FileText, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
             , _react2.default.createElement('span', null, "Business Report" )
           )
         )
       )
 
-      /* Quick-Start Banner if user has 0 workflows */
-      , state.workflows.length === 0 && (
-        _react2.default.createElement('div', { className: "p-6 sm:p-7 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm space-y-4"       ,}
-          , _react2.default.createElement('div', { className: "flex items-center gap-3"  ,}
-            , _react2.default.createElement('div', { className: "w-10 h-10 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] text-[#15803D] flex items-center justify-center"         ,}
-              , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-5 h-5" ,} )
+      /* 2. Zero State Setup Banner if no workflows */
+      , activeWorkflowsList.length === 0 && (
+        _react2.default.createElement('div', { className: "p-6 sm:p-8 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm space-y-5"       ,}
+          , _react2.default.createElement('div', { className: "flex items-start gap-4"  ,}
+            , _react2.default.createElement('div', { className: "w-12 h-12 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] text-[#15803D] flex items-center justify-center shrink-0 mt-0.5"           ,}
+              , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-6 h-6" ,} )
             )
-            , _react2.default.createElement('div', null
-              , _react2.default.createElement('h2', { className: "text-base font-extrabold text-[#121316]"  ,}, "Ready to automate your operations?"    )
-              , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50]" ,}, "Describe your daily customer process to uncover repetitive bottlenecks, or connect your daily tools."             )
+            , _react2.default.createElement('div', { className: "space-y-1",}
+              , _react2.default.createElement('h2', { className: "text-base sm:text-lg font-extrabold text-[#121316]"   ,}, "Ready to automate your repetitive business workflows?"
+
+              )
+              , _react2.default.createElement('p', { className: "text-xs sm:text-sm text-[#4A4B50] leading-relaxed max-w-2xl"    ,}, "Tell Otomatizon how you interact with customers on WhatsApp, schedule sessions, and collect payments. Otomatizon will identify bottlenecks and configure your system."
+
+              )
             )
           )
-          , _react2.default.createElement('div', { className: "flex flex-wrap items-center gap-3 pt-1"    ,}
+
+          , _react2.default.createElement('div', { className: "flex flex-wrap items-center gap-3 pt-2"    ,}
             , _react2.default.createElement('button', {
               onClick: onOpenOnboarding,
               className: "px-5 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all flex items-center gap-2 cursor-pointer shadow-xs"              ,}
 
-              , _react2.default.createElement('span', null, "Describe How You Work →"    )
+              , _react2.default.createElement('span', null, "Start Discovery →"  )
             )
             , _react2.default.createElement('button', {
               onClick: () => onNavigate("apps"),
               className: "px-5 py-2.5 rounded-full bg-[#FAF9F5] hover:bg-[#F4F2EB] text-[#121316] border border-[#EAE7DF] text-xs font-bold font-mono transition-all cursor-pointer"            ,}
 
-              , _react2.default.createElement('span', null, "Connect Your Apps"  )
+              , _react2.default.createElement('span', null, "Connect Your Apps (0 connected)"    )
             )
           )
         )
       )
 
-      /* 2. THE HERO: LIVE AUTOMATION PIPELINE & REASONING (HOW IT'S THINKING & OPERATING) */
-      , _react2.default.createElement(_LiveAutomationPipeline.LiveAutomationPipeline, { onSelectTrace: (trace) => setSelectedTrace(trace),} )
-
-      /* 3. NEEDS YOUR ATTENTION: EXCEPTION MANAGEMENT & HUMAN ARBITRATION */
-      , _react2.default.createElement(_AttentionRequiredSection.AttentionRequiredSection, null )
-
-      /* 4. QUANTIFIED IMPACT METRICS (TRACEABLE & CAUSAL) */
+      /* 3. Four Real Measured Impact Metrics */
       , _react2.default.createElement('div', { className: "grid grid-cols-2 lg:grid-cols-4 gap-4"   ,}
-        /* Metric 1: Hours Saved */
-        , _react2.default.createElement('div', { 
-          onClick: () => setSelectedMetric({
-            ...metricDetails.hours_saved,
-            value: `${currentHours.toFixed(1)} h`,
-            title: `${currentHours.toFixed(1)} Hours Saved`
-          }),
-          className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm hover:border-[#15803D] transition-all cursor-pointer space-y-2 group"          ,}
 
+        /* Hours Saved */
+        , _react2.default.createElement('div', { className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm space-y-2"      ,}
           , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
             , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold"    ,}, "HOURS SAVED" )
-            , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] font-bold"         ,}, "OBSERVED"
+            , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FAF9F5] text-[#75777E] border border-[#EAE7DF] font-bold"         ,}, "OBSERVED"
 
             )
           )
           , _react2.default.createElement('div', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] font-mono"    ,}
             , currentHours.toFixed(1), " h "  , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "/ wk" )
           )
-          , _react2.default.createElement('div', { className: "text-[11px] text-[#4A4B50] flex items-center justify-between pt-1 border-t border-[#EAE7DF]"       ,}
-            , _react2.default.createElement('span', null, currentInquiries, " automated tasks"  )
-            , _react2.default.createElement('span', { className: "text-[#15803D] font-bold group-hover:underline text-[10px]"   ,}, "Inspect →" )
+          , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] pt-1 border-t border-[#EAE7DF]"    ,}
+            , _react2.default.createElement('span', null, currentInquiries, " automated tasks executed"   )
           )
         )
 
-        /* Metric 2: Revenue Protected */
-        , _react2.default.createElement('div', { 
-          onClick: () => setSelectedMetric({
-            ...metricDetails.revenue_protected,
-            value: `KES ${currentRevenue.toLocaleString()}`,
-            title: `KES ${currentRevenue.toLocaleString()} Protected Revenue`
-          }),
-          className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm hover:border-[#15803D] transition-all cursor-pointer space-y-2 group"          ,}
-
+        /* Revenue Protected */
+        , _react2.default.createElement('div', { className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm space-y-2"      ,}
           , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-            , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold"    ,}, "REVENUE PROTECTED" )
-            , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] font-bold"         ,}, "CALCULATED"
+            , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold"    ,}, "REVENUE RECOVERED" )
+            , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FAF9F5] text-[#75777E] border border-[#EAE7DF] font-bold"         ,}, "OBSERVED"
 
             )
           )
-          , _react2.default.createElement('div', { className: "text-2xl sm:text-3xl font-extrabold text-[#15803D] font-mono"    ,}
+          , _react2.default.createElement('div', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] font-mono"    ,}
             , currentRevenue.toLocaleString(), " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "KES")
           )
-          , _react2.default.createElement('div', { className: "text-[11px] text-[#4A4B50] flex items-center justify-between pt-1 border-t border-[#EAE7DF]"       ,}
-            , _react2.default.createElement('span', null, "8 conversions recovered"  )
-            , _react2.default.createElement('span', { className: "text-[#15803D] font-bold group-hover:underline text-[10px]"   ,}, "Inspect →" )
+          , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] pt-1 border-t border-[#EAE7DF]"    ,}
+            , _react2.default.createElement('span', null, "Verified recovered payments"  )
           )
         )
 
-        /* Metric 3: Inquiries Processed */
-        , _react2.default.createElement('div', { 
-          onClick: () => setSelectedMetric({
-            ...metricDetails.inquiries,
-            value: `${_optionalChain([state, 'access', _29 => _29.metrics, 'optionalAccess', _30 => _30.inquiriesProcessed]) || (_optionalChain([state, 'access', _31 => _31.leads, 'optionalAccess', _32 => _32.length]) || 27)}`,
-            title: `${_optionalChain([state, 'access', _33 => _33.metrics, 'optionalAccess', _34 => _34.inquiriesProcessed]) || (_optionalChain([state, 'access', _35 => _35.leads, 'optionalAccess', _36 => _36.length]) || 27)} Inquiries Handled`
-          }),
-          className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm hover:border-[#15803D] transition-all cursor-pointer space-y-2 group"          ,}
-
+        /* Inquiries Handled */
+        , _react2.default.createElement('div', { className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm space-y-2"      ,}
           , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
             , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold"    ,}, "INQUIRIES HANDLED" )
-            , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FAF9F5] text-[#121316] border border-[#EAE7DF] font-bold"         ,}, "OBSERVED"
+            , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FAF9F5] text-[#75777E] border border-[#EAE7DF] font-bold"         ,}, "OBSERVED"
 
             )
           )
           , _react2.default.createElement('div', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] font-mono"    ,}
-            , _optionalChain([state, 'access', _37 => _37.metrics, 'optionalAccess', _38 => _38.inquiriesProcessed]) || (_optionalChain([state, 'access', _39 => _39.leads, 'optionalAccess', _40 => _40.length]) || 27), " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "prospects")
+            , currentInquiries, " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "inquiries")
           )
-          , _react2.default.createElement('div', { className: "text-[11px] text-[#4A4B50] flex items-center justify-between pt-1 border-t border-[#EAE7DF]"       ,}
-            , _react2.default.createElement('span', null, "WhatsApp & Gmail"  )
-            , _react2.default.createElement('span', { className: "text-[#15803D] font-bold group-hover:underline text-[10px]"   ,}, "Inspect →" )
+          , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] pt-1 border-t border-[#EAE7DF]"    ,}
+            , _react2.default.createElement('span', null, "Across WhatsApp & Gmail"   )
           )
         )
 
-        /* Metric 4: Follow-ups Dispatched */
-        , _react2.default.createElement('div', { 
-          onClick: () => setSelectedMetric({
-            ...metricDetails.followups,
-            value: `${_optionalChain([state, 'access', _41 => _41.metrics, 'optionalAccess', _42 => _42.followUpsSent]) || 24}`,
-            title: `${_optionalChain([state, 'access', _43 => _43.metrics, 'optionalAccess', _44 => _44.followUpsSent]) || 24} Follow-ups Dispatched`
-          }),
-          className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm hover:border-[#15803D] transition-all cursor-pointer space-y-2 group"          ,}
-
+        /* Follow-ups Sent */
+        , _react2.default.createElement('div', { className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm space-y-2"      ,}
           , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-            , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold"    ,}, "24H FOLLOW-UPS" )
-            , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] font-bold"         ,}, "OBSERVED"
+            , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold"    ,}, "FOLLOW-UPS SENT" )
+            , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FAF9F5] text-[#75777E] border border-[#EAE7DF] font-bold"         ,}, "OBSERVED"
 
             )
           )
           , _react2.default.createElement('div', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] font-mono"    ,}
-            , _optionalChain([state, 'access', _45 => _45.metrics, 'optionalAccess', _46 => _46.followUpsSent]) || 24, " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "delivered")
+            , currentFollowups, " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "delivered")
           )
-          , _react2.default.createElement('div', { className: "text-[11px] text-[#4A4B50] flex items-center justify-between pt-1 border-t border-[#EAE7DF]"       ,}
-            , _react2.default.createElement('span', null, "Circuit breaker active"  )
-            , _react2.default.createElement('span', { className: "text-[#15803D] font-bold group-hover:underline text-[10px]"   ,}, "Inspect →" )
+          , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] pt-1 border-t border-[#EAE7DF]"    ,}
+            , _react2.default.createElement('span', null, "Scheduled follow-ups" )
           )
         )
+
       )
 
-      /* 5. APPLICATION COLLABORATION MATRIX */
-      , _react2.default.createElement(_AppCollaborationMatrix.AppCollaborationMatrix, { onNavigateToApps: () => onNavigate("apps"),} )
-
-      /* 6. REAL-TIME AUDIT STREAM (LATEST SYSTEM EVENTS) */
-      , _react2.default.createElement('div', { className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-5"       ,}
-        , _react2.default.createElement('div', { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EAE7DF] pb-4"        ,}
+      /* 4. Connected Systems & Direct Integration Access */
+      , _react2.default.createElement('div', { className: "p-6 sm:p-7 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm space-y-4"       ,}
+        , _react2.default.createElement('div', { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#EAE7DF] pb-4"        ,}
           , _react2.default.createElement('div', null
-            , _react2.default.createElement('h3', { className: "text-base font-bold text-[#121316] flex items-center gap-2"     ,}, "Operational Audit Stream · Live Feed"
+            , _react2.default.createElement('h3', { className: "text-sm font-bold text-[#121316] flex items-center gap-2"     ,}, "Connected Everyday Tools"
 
-              , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] font-bold"          ,}, "Live Audit Trail"
-
+              , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#FAF9F5] text-[#75777E] border border-[#EAE7DF] font-bold"          ,}
+                , connectedAppsList.length, " Connected"
               )
             )
-            , _react2.default.createElement('p', { className: "text-xs text-[#75777E]" ,}, "Every recorded event reflects a verified action across your connected business tools."
+            , _react2.default.createElement('p', { className: "text-xs text-[#75777E] mt-0.5"  ,}, "Secure links connecting your messaging, calendar, sheets, and payment channels."
 
             )
           )
 
           , _react2.default.createElement('button', {
-            onClick: () => onNavigate("activity"),
-            className: "text-xs font-mono font-bold text-[#15803D] hover:underline flex items-center gap-1 cursor-pointer"        ,}
+            onClick: () => onNavigate("apps"),
+            className: "text-xs font-mono font-bold text-[#15803D] hover:underline flex items-center gap-1 cursor-pointer self-start sm:self-auto"          ,}
 
-            , _react2.default.createElement('span', null, "View complete audit log ("    , (_optionalChain([state, 'optionalAccess', _47 => _47.activity]) || []).length, ") →" )
+            , _react2.default.createElement('span', null, "Manage Integrations →"  )
           )
         )
 
-        , _react2.default.createElement('div', { className: "space-y-3",}
-          , (_optionalChain([state, 'optionalAccess', _48 => _48.activity]) || []).slice(0, 4).map((log) => (
-            _react2.default.createElement('div', {
-              key: log.id,
-              onClick: () => setSelectedLog(log),
-              className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] hover:border-[#15803D] transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs group"               ,}
+        , _react2.default.createElement('div', { className: "grid grid-cols-2 sm:grid-cols-5 gap-3"   ,}
+          , state.integrations.map((app) => (
+            _react2.default.createElement('div', { 
+              key: app.id,
+              onClick: () => onNavigate("apps"),
+              className: "p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] hover:border-[#15803D] transition-all cursor-pointer space-y-1.5 group"         ,}
 
-              , _react2.default.createElement('div', { className: "flex items-start gap-3 min-w-0"   ,}
-                , _react2.default.createElement('div', { className: "w-8 h-8 rounded-xl bg-white border border-[#EAE7DF] flex items-center justify-center shrink-0 mt-0.5 text-[#15803D]"           ,}
-                  , _react2.default.createElement(_lucidereact.Activity, { className: "w-4 h-4" ,} )
-                )
-                , _react2.default.createElement('div', { className: "min-w-0 space-y-0.5" ,}
-                  , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
-                    , _react2.default.createElement('strong', { className: "text-xs font-bold text-[#121316] truncate"   ,}
-                      , log.title
-                    )
-                    , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-white border border-[#EAE7DF] text-[#75777E]"        ,}
-                      , log.application
-                    )
-                  )
-                  , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] truncate"  ,}
-                    , log.description
-                  )
-                )
+              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
+                , _react2.default.createElement('span', { className: "text-xs font-bold text-[#121316] truncate"   ,}, app.name)
+                , _react2.default.createElement('span', { className: `w-2 h-2 rounded-full ${app.connected ? "bg-[#15803D]" : "bg-zinc-300"}`,} )
               )
-
-              , _react2.default.createElement('div', { className: "flex items-center gap-3 shrink-0 text-xs font-mono"     ,}
-                , _react2.default.createElement('span', { className: "text-[#75777E]",}, log.timestamp)
-                , _react2.default.createElement('span', { className: "text-[#15803D] font-bold group-hover:underline text-[11px]"   ,}, "Details →"
-
-                )
+              , _react2.default.createElement('div', { className: "text-[10px] text-[#75777E] font-mono truncate"   ,}
+                , app.connected ? "Connected" : "Disconnected"
               )
             )
           ))
         )
       )
 
+      /* 5. Real-Time Operational Audit Feed */
+      , _react2.default.createElement('div', { className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-7 space-y-4"       ,}
+        , _react2.default.createElement('div', { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EAE7DF] pb-4"        ,}
+          , _react2.default.createElement('div', null
+            , _react2.default.createElement('h3', { className: "text-base font-bold text-[#121316] flex items-center gap-2"     ,}, "Operational Audit Stream"
+
+              , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#FAF9F5] text-[#75777E] border border-[#EAE7DF] font-bold"          ,}
+                , recentLogs.length, " Events"
+              )
+            )
+            , _react2.default.createElement('p', { className: "text-xs text-[#75777E]" ,}, "Chronological log of verified actions executed across your connected apps."
+
+            )
+          )
+
+          , recentLogs.length > 0 && (
+            _react2.default.createElement('button', {
+              onClick: () => onNavigate("activity"),
+              className: "text-xs font-mono font-bold text-[#15803D] hover:underline flex items-center gap-1 cursor-pointer self-start sm:self-auto"          ,}
+
+              , _react2.default.createElement('span', null, "View all audit logs ("    , recentLogs.length, ") →" )
+            )
+          )
+        )
+
+        , recentLogs.length === 0 ? (
+          _react2.default.createElement('div', { className: "py-8 text-center space-y-2"  ,}
+            , _react2.default.createElement(_lucidereact.Activity, { className: "w-8 h-8 text-[#75777E] mx-auto opacity-40"    ,} )
+            , _react2.default.createElement('p', { className: "text-xs text-[#75777E]" ,}, "No events recorded yet. Once you connect your tools and activate automations, every verified action will be logged here."
+
+            )
+          )
+        ) : (
+          _react2.default.createElement('div', { className: "space-y-2.5",}
+            , recentLogs.slice(0, 4).map((log) => (
+              _react2.default.createElement('div', {
+                key: log.id,
+                onClick: () => setSelectedLog(log),
+                className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] hover:border-[#15803D] transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs group"               ,}
+
+                , _react2.default.createElement('div', { className: "flex items-start gap-3 min-w-0"   ,}
+                  , _react2.default.createElement('div', { className: "w-8 h-8 rounded-xl bg-white border border-[#EAE7DF] flex items-center justify-center shrink-0 mt-0.5 text-[#15803D]"           ,}
+                    , _react2.default.createElement(_lucidereact.Activity, { className: "w-4 h-4" ,} )
+                  )
+                  , _react2.default.createElement('div', { className: "min-w-0 space-y-0.5" ,}
+                    , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+                      , _react2.default.createElement('strong', { className: "text-xs font-bold text-[#121316] truncate"   ,}
+                        , log.title
+                      )
+                      , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-white border border-[#EAE7DF] text-[#75777E]"        ,}
+                        , log.application || log.app || "System"
+                      )
+                    )
+                    , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] truncate"  ,}
+                      , log.description
+                    )
+                  )
+                )
+
+                , _react2.default.createElement('div', { className: "flex items-center gap-3 shrink-0 text-xs font-mono"     ,}
+                  , _react2.default.createElement('span', { className: "text-[#75777E]",}, log.timestamp || "Just now")
+                  , _react2.default.createElement('span', { className: "text-[#15803D] font-bold group-hover:underline text-[11px]"   ,}, "Details →"
+
+                  )
+                )
+              )
+            ))
+          )
+        )
+      )
+
       /* DRAWERS & MODALS */
 
-      /* 1. Decision Trace Drawer (Reasoning Inspector) */
-      , _react2.default.createElement(_DecisionTraceDrawer.DecisionTraceDrawer, {
-        trace: selectedTrace,
-        onClose: () => setSelectedTrace(null),}
-      )
-
-      /* 2. Semantic Intelligence Lab Modal */
-      , _react2.default.createElement(_IntelligenceInspectorModal.IntelligenceInspectorModal, {
-        isOpen: isIntelligenceLabOpen,
-        onClose: () => setIsIntelligenceLabOpen(false),}
-      )
-
-      /* 3. Metric Explanation Modal */
+      /* Metric Explanation Modal */
       , _react2.default.createElement(_MetricExplanationModal.MetricExplanationModal, {
         metric: selectedMetric,
         isOpen: !!selectedMetric,
         onClose: () => setSelectedMetric(null),}
       )
 
-      /* 4. Event Detail Modal */
+      /* Event Detail Modal */
       , _react2.default.createElement(_EventDetailModal.EventDetailModal, {
         log: selectedLog,
         isOpen: !!selectedLog,
         onClose: () => setSelectedLog(null),}
+      )
+
+      /* Semantic Intelligence Lab Modal */
+      , _react2.default.createElement(_IntelligenceInspectorModal.IntelligenceInspectorModal, {
+        isOpen: isIntelligenceLabOpen,
+        onClose: () => setIsIntelligenceLabOpen(false),}
       )
 
     )
@@ -15109,12 +15008,9 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
 
 
-
 var _lucidereact = require('lucide-react');
 var _store = require('@/lib/store');
 
-
-var _SystemHealthOverview = require('./SystemHealthOverview');
 var _ConnectAppModal = require('./ConnectAppModal');
 
 
@@ -15132,201 +15028,83 @@ var _ConnectAppModal = require('./ConnectAppModal');
 
 
 
-
-
-
-
-
-
-
-
-const systemsMapData = {
-  whatsapp_business: {
+const initialConnectors = [
+  {
     id: "whatsapp_business",
     name: "WhatsApp Business",
-    subtitle: "Customer Communication",
-    category: "messaging",
-    status: "connected",
-    statusText: "CONNECTED",
-    accountLinked: "+254 712 882 109",
-    lastSync: "2 min ago",
-    role: "Receives customer inquiries, delivers course brochures, and sends automated follow-ups",
-    capabilities: [
-      "Read incoming WhatsApp messages",
-      "Send pre-approved message templates",
-      "Manage contacts and conversation labels",
-      "Attach PDF syllabus and lesson materials"
-    ],
-    automationsUsingIt: [
-      { id: "wf_lead_autopilot", title: "Lead Follow-Up Autopilot" },
-      { id: "wf_payment_recovery", title: "Payment Recovery" },
-      { id: "wf_class_reminders", title: "Class Notifications" }
-    ],
-    permissions: ["messages.read", "messages.write", "contacts.read", "business_profile.read"],
-    systemHealth: "100% Operational · 180ms Latency"
+    category: "Customer Communication",
+    role: "Captures inbound customer inquiries, delivers brochures, and sends automated follow-ups",
+    status: "disconnected",
+    account: "Not connected",
+    lastSync: "Never",
+    automationsCount: 0
   },
-  gmail: {
-    id: "gmail",
-    name: "Gmail",
-    subtitle: "Email & Notifications",
-    category: "messaging",
-    status: "connected",
-    statusText: "CONNECTED",
-    accountLinked: "kamau.french.tutor@gmail.com",
-    lastSync: "5 min ago",
-    role: "Receives formal student inquiries, dispatches invoices and confirmation emails",
-    capabilities: [
-      "Monitor formal inquiry emails",
-      "Send quotation summaries and terms",
-      "Dispatch lesson receipts and invoices",
-      "Archive student communication history"
-    ],
-    automationsUsingIt: [
-      { id: "wf_class_reminders", title: "Class Notifications & Summaries" }
-    ],
-    permissions: ["gmail.send", "gmail.readonly", "userinfo.email"],
-    systemHealth: "100% Operational · 140ms Latency"
-  },
-  google_business: {
-    id: "google_business",
-    name: "Google Business Profile",
-    subtitle: "Location & Visibility",
-    category: "messaging",
-    status: "connected",
-    statusText: "CONNECTED",
-    accountLinked: "Kamau French Tutoring (Nairobi CBD)",
-    lastSync: "12 min ago",
-    role: "Attracts local students in Nairobi and collects verified 5-star Google Maps reviews",
-    capabilities: [
-      "Track call and website clicks from Google Maps",
-      "Publish tutoring hours and location updates",
-      "Request 5-star reviews after course completion",
-      "Synchronize campus contact details"
-    ],
-    automationsUsingIt: [
-      { id: "wf_lead_autopilot", title: "Lead Follow-Up Autopilot" }
-    ],
-    permissions: ["business.manage", "locations.read"],
-    systemHealth: "100% Operational · 210ms Latency"
-  },
-  google_calendar: {
+  {
     id: "google_calendar",
     name: "Google Calendar",
-    subtitle: "Scheduling & Bookings",
-    category: "google",
-    status: "connected",
-    statusText: "CONNECTED",
-    accountLinked: "kamau.french.tutor@gmail.com",
-    lastSync: "1 min ago",
-    role: "Real-time calendar availability, lesson booking, and Google Meet video conference links",
-    capabilities: [
-      "Inspect available lesson slots in real time",
-      "Create Google Meet video session events",
-      "Lock calendar slots upon confirmed booking",
-      "Reschedule lessons upon student date change"
-    ],
-    automationsUsingIt: [
-      { id: "wf_lead_autopilot", title: "Lead Follow-Up Autopilot" },
-      { id: "wf_class_reminders", title: "Class Notifications" }
-    ],
-    permissions: ["calendar.events", "calendar.readonly"],
-    systemHealth: "100% Operational · 120ms Latency"
+    category: "Scheduling & Availability",
+    role: "Checks availability in real-time and books Google Meet session slots",
+    status: "disconnected",
+    account: "Not connected",
+    lastSync: "Never",
+    automationsCount: 0
   },
-  google_sheets: {
+  {
     id: "google_sheets",
     name: "Google Sheets",
-    subtitle: "Data & Leads Ledger",
-    category: "google",
-    status: "connected",
-    statusText: "CONNECTED",
-    accountLinked: "Student_Roster_2026.xlsx",
-    lastSync: "2 min ago",
-    role: "Master student roster, pipeline tracking, and historical revenue ledger",
-    capabilities: [
-      "Instantly record every qualified lead",
-      "Update lead status (contacted, booked, paid)",
-      "Calculate monthly business revenue in KES",
-      "Maintain learning history and lesson count"
-    ],
-    automationsUsingIt: [
-      { id: "wf_lead_autopilot", title: "Lead Follow-Up Autopilot" }
-    ],
-    permissions: ["spreadsheets", "drive.file"],
-    systemHealth: "100% Operational · 160ms Latency"
+    category: "Master Data Ledger",
+    role: "Logs customer inquiries, maintains rosters, and tracks business revenue",
+    status: "disconnected",
+    account: "Not connected",
+    lastSync: "Never",
+    automationsCount: 0
   },
-  mpesa: {
+  {
     id: "mpesa",
-    name: "M-Pesa",
-    subtitle: "Payments & Verification",
-    category: "payments",
-    status: "connected",
-    statusText: "CONNECTED",
-    accountLinked: "Till / Paybill: 891244 (Safaricom)",
-    lastSync: "4 min ago",
-    role: "Instant mobile money collection, STK Push prompts, and transaction reconciliation",
-    capabilities: [
-      "Trigger STK Push mobile payment prompts",
-      "Validate Safaricom receipt codes in real time",
-      "Reconcile payments with Google Calendar bookings",
-      "Send polite payment reminders for overdue fees"
-    ],
-    automationsUsingIt: [
-      { id: "wf_payment_recovery", title: "Payment Recovery" }
-    ],
-    permissions: ["mpesa_stk_push", "mpesa_c2b_validation"],
-    systemHealth: "100% Operational · 90ms Latency"
+    name: "Safaricom M-Pesa",
+    category: "Mobile Money & Payment",
+    role: "Triggers STK Push prompts on customer phones and validates receipt codes automatically",
+    status: "disconnected",
+    account: "Not connected",
+    lastSync: "Never",
+    automationsCount: 0
   },
-  google_drive: {
+  {
+    id: "gmail",
+    name: "Gmail",
+    category: "Email & Notifications",
+    role: "Monitors formal inquiries and sends PDF invoices & receipts",
+    status: "disconnected",
+    account: "Not connected",
+    lastSync: "Never",
+    automationsCount: 0
+  },
+  {
+    id: "google_business",
+    name: "Google Business Profile",
+    category: "Local Maps & Reviews",
+    role: "Attracts local clients on Google Maps and collects verified 5-star reviews",
+    status: "disconnected",
+    account: "Not connected",
+    lastSync: "Never",
+    automationsCount: 0
+  },
+  {
     id: "google_drive",
     name: "Google Drive",
-    subtitle: "Course Materials & Syllabus",
-    subtitleFr: "Course Materials & Syllabus",
-    category: "google",
-    status: "requires_configuration" ,
-    statusText: "REQUIRES CONFIGURATION",
-    statusTextFr: "REQUIRES CONFIGURATION",
-    accountLinked: "Pending Folder Binding",
-    lastSync: "Not synchronized",
-    role: "Stores and automatically generates shared folders for lesson recordings and PDF notes",
-    capabilities: [
-      "Auto-create student folders",
-      "Attach homework PDF documents",
-      "Generate shareable lesson links"
-    ],
-    automationsUsingIt: [],
-    permissions: ["drive.file", "drive.readonly"],
-    systemHealth: "requires_configuration"
-  },
-  instagram_dm: {
-    id: "instagram_dm",
-    name: "Instagram Direct",
-    subtitle: "Social Inbound Leads",
-    subtitleFr: "Social Inbound Leads",
-    category: "messaging",
-    status: "coming_soon" ,
-    statusText: "COMING SOON",
-    statusTextFr: "COMING SOON",
-    accountLinked: "Awaiting Meta API v21",
-    lastSync: "Coming soon",
-    role: "Direct messaging capture for prospective student inquiries originating on Instagram",
-    capabilities: [
-      "Capture direct messages",
-      "Auto-reply with course link"
-    ],
-    automationsUsingIt: [],
-    permissions: ["instagram_basic", "instagram_manage_messages"],
-    systemHealth: "coming_soon"
+    category: "Course Materials & Storage",
+    role: "Automatically generates shared client folders and attaches documents",
+    status: "disconnected",
+    account: "Not connected",
+    lastSync: "Never",
+    automationsCount: 0
   }
-};
+];
 
  const AppsView = ({ onNavigateToAutomations }) => {
-  const { state, toggleIntegration } = _store.useOtomatizonStore.call(void 0, );
-  const [selectedAppId, setSelectedAppId] = _react.useState("whatsapp_business");
-  const [isActionPending, setIsActionPending] = _react.useState.call(void 0, false);
-  const [isManageModalOpen, setIsManageModalOpen] = _react.useState.call(void 0, false);
-  const [isConnectModalOpen, setIsConnectModalOpen] = _react.useState.call(void 0, false);
-
-  const selectedApp = systemsMapData[selectedAppId] || systemsMapData["whatsapp_business"];
+  const { state } = _store.useOtomatizonStore.call(void 0, );
+  const [connectors, setConnectors] = _react.useState(initialConnectors);
+  const [activeModalApp, setActiveModalApp] = _react.useState(null);
 
   const getAppIcon = (id) => {
     switch (id) {
@@ -15342,730 +15120,236 @@ const systemsMapData = {
         return _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-5 h-5 text-emerald-600"  ,} );
       case "mpesa":
         return _react2.default.createElement(_lucidereact.CreditCard, { className: "w-5 h-5 text-emerald-700"  ,} );
+      case "google_drive":
+        return _react2.default.createElement(_lucidereact.HardDrive, { className: "w-5 h-5 text-amber-600"  ,} );
       default:
         return _react2.default.createElement(_lucidereact.Sparkles, { className: "w-5 h-5 text-[#15803D]"  ,} );
     }
   };
 
-  const handleToggleConnection = async (appId) => {
-    setIsActionPending(true);
-    await toggleIntegration(appId );
-    setTimeout(() => {
-      setIsActionPending(false);
-      setIsManageModalOpen(false);
-    }, 450);
+  const handleToggleConnect = (connector) => {
+    if (connector.status === "connected") {
+      // Disconnect directly
+      setConnectors(prev => prev.map(c => 
+        c.id === connector.id 
+          ? { ...c, status: "disconnected" , account: "Not connected", lastSync: "Disconnected" }
+          : c
+      ));
+    } else {
+      // Open clean Claude-style connection modal
+      setActiveModalApp(connector);
+    }
   };
+
+  const handleAppConnected = (appId, details) => {
+    setConnectors(prev => prev.map(c => 
+      c.id === appId 
+        ? { 
+            ...c, 
+            status: "connected" , 
+            account: details.account || c.account,
+            lastSync: "Just now"
+          }
+        : c
+    ));
+    setActiveModalApp(null);
+  };
+
+  const connectedCount = connectors.filter(c => c.status === "connected").length;
 
   return (
     _react2.default.createElement('div', { className: "max-w-5xl mx-auto px-4 sm:px-8 py-8 space-y-8 animate-fadeIn"      ,}
 
-      /* 1. HEADER matching Reference Image 3 */
+      /* 1. Header with Clean Status */
       , _react2.default.createElement('div', { className: "border-b border-[#EAE7DF] pb-6 flex flex-col sm:flex-row sm:items-start justify-between gap-4"        ,}
         , _react2.default.createElement('div', { className: "space-y-1",}
           , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
-            , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"           ,}, "APPLICATIONS"
+            , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"           ,}, "INTEGRATIONS"
 
             )
-            , _react2.default.createElement('span', { className: "text-xs font-mono text-[#75777E]"  ,}, "• Business Operating System"
-
+            , _react2.default.createElement('span', { className: "text-xs font-mono text-[#75777E]"  ,}, "• "
+               , connectedCount, " of "  , connectors.length, " tools active"
             )
           )
           , _react2.default.createElement('h1', { className: "text-2xl sm:text-3xl font-extrabold text-[#121316] tracking-tight"    ,}, "Connected Business Systems"
 
           )
-          , _react2.default.createElement('p', { className: "text-xs sm:text-sm text-[#4A4B50] font-normal"   ,}, "Otomatizon connects your tools and makes them work together."
+          , _react2.default.createElement('p', { className: "text-xs sm:text-sm text-[#4A4B50] font-normal"   ,}, "Otomatizon connects your tools and makes them work together as a unified business system."
 
           )
         )
 
-        , _react2.default.createElement('div', { className: "flex items-center gap-2 text-xs font-mono text-[#75777E] bg-white px-3 py-1.5 rounded-2xl border border-[#EAE7DF] shadow-2xs self-start sm:self-auto"              ,}
+        , _react2.default.createElement('div', { className: "flex items-center gap-2 text-xs font-mono text-[#75777E] bg-white px-3.5 py-2 rounded-2xl border border-[#EAE7DF] shadow-2xs self-start sm:self-auto"              ,}
           , _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-4 h-4 text-[#15803D]"  ,} )
-          , _react2.default.createElement('span', null, "AES-256 Encryption · Official APIs"    )
+          , _react2.default.createElement('span', null, "AES-256 Encryption · Official OAuth2"    )
         )
       )
 
-      /* 2. LIVE APPLICATION CONNECTION WIZARD */
-      , _react2.default.createElement('div', { className: "p-6 sm:p-7 rounded-3xl bg-white border border-[#EAE7DF] shadow-sm space-y-5"       ,}
-        , _react2.default.createElement('div', { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EAE7DF] pb-4"        ,}
+      /* 2. Visual System Architecture Overview */
+      , _react2.default.createElement('div', { className: "p-6 sm:p-7 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm space-y-4"       ,}
+        , _react2.default.createElement('div', { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#EAE7DF] pb-4"        ,}
           , _react2.default.createElement('div', null
-            , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+            , _react2.default.createElement('h2', { className: "text-sm font-bold text-[#121316] flex items-center gap-2"     ,}
+              , _react2.default.createElement('span', null, "Business System Architecture"  )
               , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-[#15803D] animate-pulse"    ,} )
-              , _react2.default.createElement('h2', { className: "text-lg font-bold text-[#121316]"  ,}, "Connect Your Everyday Tools in 2 Minutes"
-
-              )
             )
-            , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] mt-0.5"  ,}, "Link your actual WhatsApp, Google Workspace, and M-Pesa channels to make your business system live."
+            , _react2.default.createElement('p', { className: "text-xs text-[#75777E] mt-0.5"  ,}, "Information flows automatically between your inbound channels, records, and payment gateways."
 
             )
           )
+          , onNavigateToAutomations && (
+            _react2.default.createElement('button', {
+              onClick: onNavigateToAutomations,
+              className: "text-xs font-mono font-bold text-[#15803D] hover:underline flex items-center gap-1 cursor-pointer self-start sm:self-auto"          ,}
 
-          , _react2.default.createElement('span', { className: "px-3 py-1 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] text-xs font-mono font-bold self-start sm:self-auto"           ,}, "Live Integration Ready"
-
+              , _react2.default.createElement('span', null, "View Active Automations →"   )
+            )
           )
         )
 
-        /* 4 Interactive Connection Cards */
-        , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5"    ,}
+        /* Dynamic Connected Pills Bar */
+        , _react2.default.createElement('div', { className: "flex flex-wrap items-center gap-2.5 pt-1"    ,}
+          , connectors.map((c) => (
+            _react2.default.createElement('div', {
+              key: c.id,
+              className: `flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs transition-all ${
+                c.status === "connected"
+                  ? "bg-[#FAF9F5] border-[#EAE7DF] text-[#121316]"
+                  : "bg-white border-dashed border-[#EAE7DF] text-[#75777E] opacity-60"
+              }`,}
 
-          /* Card 1: WhatsApp */
-          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all"          ,}
-            , _react2.default.createElement('div', { className: "space-y-2",}
-              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                , _react2.default.createElement('div', { className: "w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center"        ,}
-                  , _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4 text-emerald-600"  ,} )
-                )
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono font-bold text-[#15803D] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]"         ,}, "Connected"
-
-                )
-              )
-              , _react2.default.createElement('div', null
-                , _react2.default.createElement('h3', { className: "text-xs font-bold text-[#121316]"  ,}, "WhatsApp Business" )
-                , _react2.default.createElement('p', { className: "text-[11px] text-[#75777E] font-mono mt-0.5"   ,}, "+254 712 882 109"   )
-              )
-              , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] leading-relaxed"  ,}, "Captures incoming student inquiries & dispatches automated 24h follow-ups."
-
+              , getAppIcon(c.id)
+              , _react2.default.createElement('span', { className: "font-medium text-[11px]" ,}, c.name)
+              , c.status === "connected" ? (
+                _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D]"   ,} )
+              ) : (
+                _react2.default.createElement('span', { className: "text-[10px] text-[#75777E]" ,}, "· Offline" )
               )
             )
-
-            , _react2.default.createElement('button', {
-              type: "button",
-              onClick: () => {
-                setSelectedAppId("whatsapp_business");
-                setIsConnectModalOpen(true);
-              },
-              className: "w-full py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"               ,}
-
-              , _react2.default.createElement('span', null, "Configure & Test Live"   )
-              , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3 h-3" ,} )
-            )
-          )
-
-          /* Card 2: Google Workspace (Sheets & Calendar) */
-          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all"          ,}
-            , _react2.default.createElement('div', { className: "space-y-2",}
-              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                , _react2.default.createElement('div', { className: "w-9 h-9 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center"        ,}
-                  , _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-4 h-4 text-blue-600"  ,} )
-                )
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono font-bold text-[#15803D] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]"         ,}, "Connected"
-
-                )
-              )
-              , _react2.default.createElement('div', null
-                , _react2.default.createElement('h3', { className: "text-xs font-bold text-[#121316]"  ,}, "Google Workspace" )
-                , _react2.default.createElement('p', { className: "text-[11px] text-[#75777E] font-mono mt-0.5 truncate"    ,}, "kamau.french.tutor@gmail.com")
-              )
-              , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] leading-relaxed"  ,}, "Synchronizes Google Sheets rosters & reads Google Calendar booking slots."
-
-              )
-            )
-
-            , _react2.default.createElement('button', {
-              type: "button",
-              onClick: () => {
-                setSelectedAppId("google_sheets");
-                setIsConnectModalOpen(true);
-              },
-              className: "w-full py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"               ,}
-
-              , _react2.default.createElement('span', null, "Connect OAuth2" )
-              , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3 h-3" ,} )
-            )
-          )
-
-          /* Card 3: Safaricom M-Pesa */
-          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all"          ,}
-            , _react2.default.createElement('div', { className: "space-y-2",}
-              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                , _react2.default.createElement('div', { className: "w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-300 flex items-center justify-center"        ,}
-                  , _react2.default.createElement(_lucidereact.CreditCard, { className: "w-4 h-4 text-emerald-700"  ,} )
-                )
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono font-bold text-[#15803D] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]"         ,}, "Connected"
-
-                )
-              )
-              , _react2.default.createElement('div', null
-                , _react2.default.createElement('h3', { className: "text-xs font-bold text-[#121316]"  ,}, "Safaricom M-Pesa" )
-                , _react2.default.createElement('p', { className: "text-[11px] text-[#75777E] font-mono mt-0.5"   ,}, "Paybill: 247247" )
-              )
-              , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] leading-relaxed"  ,}, "Sends automated STK Push payment requests & generates instant M-Pesa receipts."
-
-              )
-            )
-
-            , _react2.default.createElement('button', {
-              type: "button",
-              onClick: () => {
-                setSelectedAppId("mpesa");
-                setIsConnectModalOpen(true);
-              },
-              className: "w-full py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"               ,}
-
-              , _react2.default.createElement('span', null, "Test STK Push"  )
-              , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3 h-3" ,} )
-            )
-          )
-
-          /* Card 4: Meta Pages (Facebook & Instagram) */
-          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-3 flex flex-col justify-between hover:border-[#15803D] transition-all"          ,}
-            , _react2.default.createElement('div', { className: "space-y-2",}
-              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                , _react2.default.createElement('div', { className: "w-9 h-9 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center"        ,}
-                  , _react2.default.createElement(_lucidereact.Mail, { className: "w-4 h-4 text-purple-600"  ,} )
-                )
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono font-bold text-[#75777E] bg-white px-2 py-0.5 rounded-full border border-[#EAE7DF]"         ,}, "Available"
-
-                )
-              )
-              , _react2.default.createElement('div', null
-                , _react2.default.createElement('h3', { className: "text-xs font-bold text-[#121316]"  ,}, "Instagram & Facebook"  )
-                , _react2.default.createElement('p', { className: "text-[11px] text-[#75777E] font-mono mt-0.5"   ,}, "Direct Message Webhooks"  )
-              )
-              , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] leading-relaxed"  ,}, "Captures inquiries sent via Instagram Direct & Facebook Messenger pages."
-
-              )
-            )
-
-            , _react2.default.createElement('button', {
-              type: "button",
-              onClick: () => {
-                setSelectedAppId("gmail");
-                setIsConnectModalOpen(true);
-              },
-              className: "w-full py-2 rounded-full bg-white hover:bg-[#FAF9F5] text-[#121316] text-xs font-bold font-mono transition-all border border-[#EAE7DF] shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer"                 ,}
-
-              , _react2.default.createElement('span', null, "Connect Meta Pages"  )
-              , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3 h-3" ,} )
-            )
-          )
-
+          ))
         )
       )
 
-      /* 3. SYSTEM HEALTH OVERVIEW & 8-STEP JOURNEY */
-      , _react2.default.createElement(_SystemHealthOverview.SystemHealthOverview, { onNavigateTab: (tab) => {
-        if (tab === "automations" && onNavigateToAutomations) onNavigateToAutomations();
-      },} )
-
-      /* 4. THE VISUAL SYSTEM ARCHITECTURE MAP */
-      , _react2.default.createElement('div', { className: "p-6 sm:p-8 rounded-3xl bg-white border border-[#EAE7DF] shadow-sm space-y-6"       ,}
-
-        /* Map Diagram: Left Inbound Nodes (3) -> Center Otomatizon Hub -> Right Action/Record Nodes (3) */
-        , _react2.default.createElement('div', { className: "relative p-6 sm:p-8 rounded-3xl bg-[#FAF9F5]/70 border border-[#EAE7DF]"      ,}
-
-          , _react2.default.createElement('div', { className: "grid grid-cols-1 lg:grid-cols-11 gap-4 lg:gap-2 items-center"     ,}
-
-            /* LEFT COLUMN: Inbound & Messaging Channels (4 cols on lg) */
-            , _react2.default.createElement('div', { className: "lg:col-span-4 space-y-4" ,}
-
-              /* Card 1: WhatsApp Business */
-              , _react2.default.createElement('div', { 
-                onClick: () => setSelectedAppId("whatsapp_business"),
-                className: `p-4 rounded-2xl bg-white border transition-all cursor-pointer shadow-2xs flex items-center justify-between gap-3 group ${
-                  selectedAppId === "whatsapp_business"
-                    ? "border-[#15803D] ring-2 ring-[#15803D]/20 bg-emerald-50/10"
-                    : "border-[#EAE7DF] hover:border-[#15803D]"
-                }`,}
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-3 min-w-0"   ,}
-                  , _react2.default.createElement('div', { className: "w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0"         ,}
-                    , _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-5 h-5 text-emerald-600"  ,} )
-                  )
-                  , _react2.default.createElement('div', { className: "min-w-0",}
-                    , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316] truncate"   ,}, "WhatsApp Business" )
-                    , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] truncate"  ,}, "Customer Communication" )
-                  )
-                )
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[10px] font-mono text-[#15803D] font-bold"             ,}
-                  , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D]"   ,} )
-                  , _react2.default.createElement('span', null, "2 automations" )
-                )
-              )
-
-              /* Card 2: Gmail */
-              , _react2.default.createElement('div', { 
-                onClick: () => setSelectedAppId("gmail"),
-                className: `p-4 rounded-2xl bg-white border transition-all cursor-pointer shadow-2xs flex items-center justify-between gap-3 group ${
-                  selectedAppId === "gmail"
-                    ? "border-[#15803D] ring-2 ring-[#15803D]/20 bg-emerald-50/10"
-                    : "border-[#EAE7DF] hover:border-[#15803D]"
-                }`,}
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-3 min-w-0"   ,}
-                  , _react2.default.createElement('div', { className: "w-10 h-10 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center shrink-0"         ,}
-                    , _react2.default.createElement(_lucidereact.Mail, { className: "w-5 h-5 text-red-600"  ,} )
-                  )
-                  , _react2.default.createElement('div', { className: "min-w-0",}
-                    , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316] truncate"   ,}, "Gmail")
-                    , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] truncate"  ,}, "Email & Notifications"  )
-                  )
-                )
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[10px] font-mono text-[#15803D] font-bold"             ,}
-                  , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D]"   ,} )
-                  , _react2.default.createElement('span', null, "1 automation" )
-                )
-              )
-
-              /* Card 3: Google Business Profile */
-              , _react2.default.createElement('div', { 
-                onClick: () => setSelectedAppId("google_business"),
-                className: `p-4 rounded-2xl bg-white border transition-all cursor-pointer shadow-2xs flex items-center justify-between gap-3 group ${
-                  selectedAppId === "google_business"
-                    ? "border-[#15803D] ring-2 ring-[#15803D]/20 bg-emerald-50/10"
-                    : "border-[#EAE7DF] hover:border-[#15803D]"
-                }`,}
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-3 min-w-0"   ,}
-                  , _react2.default.createElement('div', { className: "w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center shrink-0"         ,}
-                    , _react2.default.createElement(_lucidereact.MapPin, { className: "w-5 h-5 text-blue-600"  ,} )
-                  )
-                  , _react2.default.createElement('div', { className: "min-w-0",}
-                    , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316] truncate"   ,}, "Google Business Profile"  )
-                    , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] truncate"  ,}, "Location & Visibility"  )
-                  )
-                )
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[10px] font-mono text-[#15803D] font-bold"             ,}
-                  , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D]"   ,} )
-                  , _react2.default.createElement('span', null, "1 automation" )
-                )
-              )
-
-            )
-
-            /* CENTER COLUMN: Central Otomatizon Intelligence Layer (3 cols on lg) */
-            , _react2.default.createElement('div', { className: "lg:col-span-3 flex flex-col items-center justify-center py-6 px-2 text-center space-y-3 relative"         ,}
-
-              /* Central Squircle Icon with Official Emblem */
-              , _react2.default.createElement('div', { className: "relative group" ,}
-                , _react2.default.createElement('img', {
-                  src: "/intelligence-core-logo.png",
-                  alt: "OTOMATIZON Intelligence Layer"  ,
-                  className: "w-24 h-24 rounded-3xl object-contain shadow-xl border-2 border-[#15803D]/40 group-hover:scale-105 group-hover:border-[#15803D] transition-all bg-[#002E25]"          ,}
-                )
-                , _react2.default.createElement('span', { className: "w-3 h-3 rounded-full bg-emerald-400 border-2 border-white absolute -top-1 -right-1 animate-pulse"         ,} )
-              )
-
-              , _react2.default.createElement('div', { className: "space-y-1",}
-                , _react2.default.createElement('div', { className: "text-sm font-black text-[#121316] tracking-tight font-mono"    ,}, "OTOMATIZON"
-
-                )
-                , _react2.default.createElement('div', { className: "text-xs font-mono text-[#15803D] uppercase font-bold"    ,}, "Intelligence Layer"
-
-                )
-                , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] max-w-[180px] leading-tight mx-auto font-medium"     ,}, "Understands, decides, and orchestrates"
-
-                )
-              )
-
-              /* Decorative connector indicators for desktop */
-              , _react2.default.createElement('div', { className: "hidden lg:block text-[10px] font-mono text-[#75777E] pt-1"     ,}, "← Events · Actions →"
-
-              )
-            )
-
-            /* RIGHT COLUMN: Execution, Records & Payments (4 cols on lg) */
-            , _react2.default.createElement('div', { className: "lg:col-span-4 space-y-4" ,}
-
-              /* Card 4: Google Calendar */
-              , _react2.default.createElement('div', { 
-                onClick: () => setSelectedAppId("google_calendar"),
-                className: `p-4 rounded-2xl bg-white border transition-all cursor-pointer shadow-2xs flex items-center justify-between gap-3 group ${
-                  selectedAppId === "google_calendar"
-                    ? "border-[#15803D] ring-2 ring-[#15803D]/20 bg-emerald-50/10"
-                    : "border-[#EAE7DF] hover:border-[#15803D]"
-                }`,}
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-3 min-w-0"   ,}
-                  , _react2.default.createElement('div', { className: "w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center shrink-0"         ,}
-                    , _react2.default.createElement(_lucidereact.Calendar, { className: "w-5 h-5 text-blue-600"  ,} )
-                  )
-                  , _react2.default.createElement('div', { className: "min-w-0",}
-                    , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316] truncate"   ,}, "Google Calendar" )
-                    , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] truncate"  ,}, "Scheduling & Bookings"  )
-                  )
-                )
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[10px] font-mono text-[#15803D] font-bold"             ,}
-                  , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D]"   ,} )
-                  , _react2.default.createElement('span', null, "2 automations" )
-                )
-              )
-
-              /* Card 5: Google Sheets */
-              , _react2.default.createElement('div', { 
-                onClick: () => setSelectedAppId("google_sheets"),
-                className: `p-4 rounded-2xl bg-white border transition-all cursor-pointer shadow-2xs flex items-center justify-between gap-3 group ${
-                  selectedAppId === "google_sheets"
-                    ? "border-[#15803D] ring-2 ring-[#15803D]/20 bg-emerald-50/10"
-                    : "border-[#EAE7DF] hover:border-[#15803D]"
-                }`,}
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-3 min-w-0"   ,}
-                  , _react2.default.createElement('div', { className: "w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0"         ,}
-                    , _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-5 h-5 text-emerald-600"  ,} )
-                  )
-                  , _react2.default.createElement('div', { className: "min-w-0",}
-                    , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316] truncate"   ,}, "Google Sheets" )
-                    , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] truncate"  ,}, "Data & Leads Ledger"   )
-                  )
-                )
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[10px] font-mono text-[#15803D] font-bold"             ,}
-                  , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D]"   ,} )
-                  , _react2.default.createElement('span', null, "1 automation" )
-                )
-              )
-
-              /* Card 6: M-Pesa */
-              , _react2.default.createElement('div', { 
-                onClick: () => setSelectedAppId("mpesa"),
-                className: `p-4 rounded-2xl bg-white border transition-all cursor-pointer shadow-2xs flex items-center justify-between gap-3 group ${
-                  selectedAppId === "mpesa"
-                    ? "border-[#15803D] ring-2 ring-[#15803D]/20 bg-emerald-50/10"
-                    : "border-[#EAE7DF] hover:border-[#15803D]"
-                }`,}
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-3 min-w-0"   ,}
-                  , _react2.default.createElement('div', { className: "w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0"         ,}
-                    , _react2.default.createElement(_lucidereact.CreditCard, { className: "w-5 h-5 text-emerald-700"  ,} )
-                  )
-                  , _react2.default.createElement('div', { className: "min-w-0",}
-                    , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316] truncate"   ,}, "M-Pesa")
-                    , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] truncate"  ,}, "Payments & Verification"  )
-                  )
-                )
-
-                , _react2.default.createElement('div', { className: "flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[10px] font-mono text-[#15803D] font-bold"             ,}
-                  , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D]"   ,} )
-                  , _react2.default.createElement('span', null, "1 automation" )
-                )
-              )
-
-            )
-
-          )
-
-        )
-
-      )
-
-      /* 3. APPLICATION DETAILS (Application Deep Inspection Card) matching Reference Image 3 */
+      /* 3. Connectors List (Claude Style) */
       , _react2.default.createElement('div', { className: "space-y-3",}
-        , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-          , _react2.default.createElement('span', { className: "text-[11px] font-mono uppercase tracking-widest text-[#75777E] font-bold"     ,}, "APPLICATION DETAILS"
-
+        , _react2.default.createElement('div', { className: "flex items-center justify-between px-1"   ,}
+          , _react2.default.createElement('h2', { className: "text-xs font-mono uppercase tracking-widest text-[#75777E] font-bold"     ,}, "Available Integrations ("
+              , connectors.length, ")"
           )
-          , _react2.default.createElement('span', { className: "text-[11px] font-mono text-[#15803D] font-bold"   ,}, "Select any system card above to inspect its operational role"
-
-          )
+          , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-mono"  ,}, "1-Click Authorization" )
         )
 
-        , _react2.default.createElement('div', { className: "p-6 sm:p-7 rounded-3xl bg-white border border-[#EAE7DF] shadow-sm space-y-6 animate-fadeIn"        ,}
+        , _react2.default.createElement('div', { className: "grid grid-cols-1 gap-3"  ,}
+          , connectors.map((connector) => {
+            const isConn = connector.status === "connected";
 
-          /* Card Top: App Identity, Status & Linked Account */
-          , _react2.default.createElement('div', { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#EAE7DF] pb-5"        ,}
-            , _react2.default.createElement('div', { className: "flex items-center gap-3.5"  ,}
-              , _react2.default.createElement('div', { className: "w-12 h-12 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center justify-center shrink-0"         ,}
-                , getAppIcon(selectedApp.id)
-              )
-              , _react2.default.createElement('div', null
-                , _react2.default.createElement('h3', { className: "text-lg sm:text-xl font-bold text-[#121316] tracking-tight"    ,}
-                  , selectedApp.name
-                )
-                , _react2.default.createElement('div', { className: "flex flex-wrap items-center gap-2.5 text-xs text-[#75777E] mt-0.5 font-mono"       ,}
-                  , _react2.default.createElement('span', { className: "text-[#121316] font-semibold" ,}, selectedApp.subtitle)
-                  , _react2.default.createElement('span', null, "•")
-                  , _react2.default.createElement('span', null, "Linked Account: "  , _react2.default.createElement('strong', { className: "text-[#121316]",}, selectedApp.accountLinked))
-                  , _react2.default.createElement('span', null, "•")
-                  , _react2.default.createElement('span', null, "Sync: " , selectedApp.lastSync)
-                )
-              )
-            )
+            return (
+              _react2.default.createElement('div', {
+                key: connector.id,
+                className: `p-5 rounded-3xl bg-white border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-[#15803D]/40 ${
+                  isConn ? "border-[#EAE7DF]" : "border-[#EAE7DF] bg-[#FAF9F5]/40"
+                }`,}
 
-            , _react2.default.createElement('div', { className: "flex items-center gap-2 self-start sm:self-auto"    ,}
-              , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase font-bold text-[#15803D] bg-[#ECFDF5] border border-[#A7F3D0] px-3 py-1 rounded-full flex items-center gap-1.5 shadow-2xs"              ,}
-                , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-[#15803D] animate-pulse"    ,} )
-                , selectedApp.statusText
-              )
-            )
-          )
+                /* App Info Left */
+                , _react2.default.createElement('div', { className: "flex items-start gap-3.5 min-w-0 flex-1"    ,}
+                  , _react2.default.createElement('div', { className: "w-11 h-11 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center justify-center shrink-0 mt-0.5"          ,}
+                    , getAppIcon(connector.id)
+                  )
 
-          /* Two-Column Deep Inspection Body matching Reference Image 3 */
-          , _react2.default.createElement('div', { className: "grid grid-cols-1 lg:grid-cols-12 gap-6 text-xs"    ,}
-
-            /* Left Column (7 cols): ROLE & CAPABILITIES */
-            , _react2.default.createElement('div', { className: "lg:col-span-7 space-y-5" ,}
-
-              /* ROLE */
-              , _react2.default.createElement('div', { className: "space-y-1.5",}
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block"      ,}, "ROLE IN YOUR BUSINESS SYSTEM"
-
-                )
-                , _react2.default.createElement('p', { className: "text-sm font-medium text-[#121316] leading-relaxed bg-[#FAF9F5] p-3.5 rounded-2xl border border-[#EAE7DF]"        ,}
-                  , selectedApp.role
-                )
-              )
-
-              /* CAPABILITIES */
-              , _react2.default.createElement('div', { className: "space-y-2",}
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block"      ,}, "CAPABILITIES EXECUTED BY OTOMATIZON"
-
-                )
-                , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-2"   ,}
-                  , selectedApp.capabilities.map((cap, i) => (
-                    _react2.default.createElement('div', { key: i, className: "p-2.5 rounded-xl bg-white border border-[#EAE7DF] shadow-2xs flex items-center gap-2 text-[#121316]"         ,}
-                      , _react2.default.createElement(_lucidereact.Check, { className: "w-3.5 h-3.5 text-[#15803D] shrink-0"   ,} )
-                      , _react2.default.createElement('span', { className: "text-[11px] font-medium" ,}, cap)
-                    )
-                  ))
-                )
-              )
-
-              /* PERMISSIONS & SCOPES */
-              , _react2.default.createElement('div', { className: "space-y-1.5 pt-1" ,}
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block"      ,}, "PERMISSIONS GRANTED (OAUTH2 SCOPES)"
-
-                )
-                , _react2.default.createElement('div', { className: "flex flex-wrap gap-1.5"  ,}
-                  , selectedApp.permissions.map((perm, i) => (
-                    _react2.default.createElement('span', { key: i, className: "text-[10px] font-mono px-2 py-0.5 rounded-md bg-stone-100 text-[#4A4B50] border border-stone-200"        ,}
-                      , perm
-                    )
-                  ))
-                )
-              )
-
-            )
-
-            /* Right Column (5 cols): USED IN & ACTION BUTTON */
-            , _react2.default.createElement('div', { className: "lg:col-span-5 space-y-5 border-t lg:border-t-0 lg:border-l lg:border-[#EAE7DF] pt-4 lg:pt-0 lg:pl-6 flex flex-col justify-between"           ,}
-
-              , _react2.default.createElement('div', { className: "space-y-3",}
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block"      ,}, "USED IN (ACTIVE AUTOMATIONS)"
-
-                )
-
-                , _react2.default.createElement('div', { className: "space-y-2",}
-                  , selectedApp.automationsUsingIt.map((wf, idx) => (
-                    _react2.default.createElement('div', { 
-                      key: idx,
-                      onClick: () => onNavigateToAutomations && onNavigateToAutomations(),
-                      className: "p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] hover:border-[#15803D] transition-all cursor-pointer flex items-center justify-between text-xs font-bold text-[#121316] group"              ,}
-
-                      , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
-                        , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D]"   ,} )
-                        , _react2.default.createElement('span', null, wf.title)
+                  , _react2.default.createElement('div', { className: "space-y-1 min-w-0 flex-1"  ,}
+                    , _react2.default.createElement('div', { className: "flex flex-wrap items-center gap-2"   ,}
+                      , _react2.default.createElement('h3', { className: "text-sm font-bold text-[#121316]"  ,}
+                        , connector.name
                       )
-                      , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-[#75777E] group-hover:text-[#15803D] transition-colors"    ,} )
+                      , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FAF9F5] text-[#75777E] border border-[#EAE7DF]"        ,}
+                        , connector.category
+                      )
+                      , isConn ? (
+                        _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0] font-bold flex items-center gap-1"            ,}
+                          , _react2.default.createElement('span', { className: "w-1.5 h-1.5 rounded-full bg-[#15803D]"   ,} ), "Connected"
+
+                        )
+                      ) : (
+                        _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FAF9F5] text-[#75777E] border border-[#EAE7DF]"        ,}, "Not connected"
+
+                        )
+                      )
                     )
-                  ))
+
+                    , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] leading-relaxed"  ,}
+                      , connector.role
+                    )
+
+                    , isConn && (
+                      _react2.default.createElement('div', { className: "flex items-center gap-3 pt-0.5 text-[11px] font-mono text-[#75777E]"      ,}
+                        , _react2.default.createElement('span', { className: "truncate",}, "Account: " , _react2.default.createElement('span', { className: "text-[#121316] font-medium" ,}, connector.account))
+                        , _react2.default.createElement('span', null, "·")
+                        , _react2.default.createElement('span', null, "Synced " , connector.lastSync)
+                      )
+                    )
+                  )
                 )
 
-                , _react2.default.createElement('div', { className: "p-3 rounded-xl bg-emerald-50/50 border border-emerald-200/80 text-[11px] text-[#15803D] font-mono flex items-center gap-2"          ,}
-                  , _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-4 h-4 shrink-0"  ,} )
-                  , _react2.default.createElement('span', null, selectedApp.systemHealth)
+                /* Action Buttons Right */
+                , _react2.default.createElement('div', { className: "flex items-center gap-2.5 shrink-0 self-end sm:self-center"     ,}
+                  , isConn ? (
+                    _react2.default.createElement(_react2.default.Fragment, null
+                      , _react2.default.createElement('button', {
+                        type: "button",
+                        onClick: () => setActiveModalApp(connector),
+                        className: "px-4 py-2 rounded-full bg-[#FAF9F5] hover:bg-[#F4F2EB] text-[#121316] border border-[#EAE7DF] text-xs font-bold font-mono transition-all cursor-pointer"            ,}
+, "Settings"
+
+                      )
+                      , _react2.default.createElement('button', {
+                        type: "button",
+                        onClick: () => handleToggleConnect(connector),
+                        className: "px-3.5 py-2 rounded-full text-xs font-bold font-mono text-[#BE123C] hover:bg-[#FFF1F2] border border-transparent hover:border-[#FECDD3] transition-all cursor-pointer"            ,}
+, "Disconnect"
+
+                      )
+                    )
+                  ) : (
+                    _react2.default.createElement('button', {
+                      type: "button",
+                      onClick: () => handleToggleConnect(connector),
+                      className: "px-5 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"              ,}
+
+                      , _react2.default.createElement('span', null, "Connect")
+                      , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5" ,} )
+                    )
+                  )
                 )
+
               )
-
-              /* Action Buttons: Configure Live & Manage Connection */
-              , _react2.default.createElement('div', { className: "pt-3 flex flex-col sm:flex-row items-center gap-2.5"     ,}
-                , _react2.default.createElement('button', {
-                  onClick: () => setIsConnectModalOpen(true),
-                  className: "w-full sm:flex-1 py-3 rounded-full bg-[#15803D] hover:bg-[#166534] text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]"                ,}
-
-                  , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5" ,} )
-                  , _react2.default.createElement('span', null, "Configure & Test Live"   )
-                )
-
-                , _react2.default.createElement('button', {
-                  onClick: () => setIsManageModalOpen(true),
-                  className: "w-full sm:w-auto px-4 py-3 rounded-full bg-white hover:bg-[#FAF9F5] border border-[#EAE7DF] text-xs font-bold text-[#121316] transition-all shadow-2xs flex items-center justify-center gap-2"                 ,}
-
-                  , _react2.default.createElement(_lucidereact.Lock, { className: "w-3.5 h-3.5 text-[#75777E]"  ,} )
-                  , _react2.default.createElement('span', null, "Settings")
-                )
-              )
-
-            )
-
-          )
-
+            );
+          })
         )
       )
 
-      /* 4. ACTIVE CROSS-APP SYNERGIES (Comment vos outils coopèrent) */
-      , _react2.default.createElement('div', { className: "p-6 sm:p-7 rounded-3xl bg-white border border-[#EAE7DF] shadow-sm space-y-5"       ,}
-        , _react2.default.createElement('div', { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-2"     ,}
-          , _react2.default.createElement('div', null
-            , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
-              , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"           ,}, "ACTIVE SYNERGIES"
+      /* 4. Security & Privacy Guarantee */
+      , _react2.default.createElement('div', { className: "p-6 rounded-3xl bg-[#FAF9F5] border border-[#EAE7DF] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"           ,}
+        , _react2.default.createElement('div', { className: "flex items-start gap-3"  ,}
+          , _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-5 h-5 text-[#15803D] shrink-0 mt-0.5"    ,} )
+          , _react2.default.createElement('div', { className: "space-y-0.5",}
+            , _react2.default.createElement('h4', { className: "text-xs font-bold text-[#121316]"  ,}, "Bank-Grade Isolation & Zero Data Selling"     )
+            , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50]" ,}, "Otomatizon communicates directly through official Meta, Google, and Safaricom APIs. Your credentials never touch untrusted servers."
 
-              )
-              , _react2.default.createElement('span', { className: "text-xs font-mono text-[#75777E]"  ,}, "• Zero manual data entry"
-
-              )
-            )
-            , _react2.default.createElement('h3', { className: "text-base sm:text-lg font-bold text-[#121316] mt-1"    ,}, "How your connected tools work together automatically"
-
-            )
-          )
-          , _react2.default.createElement('span', { className: "text-xs font-mono text-[#15803D] font-bold self-start sm:self-auto"     ,}, "4 active automated bridges"
-
-          )
-        )
-
-        , _react2.default.createElement('div', { className: "grid grid-cols-1 md:grid-cols-2 gap-4 text-xs"    ,}
-
-          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-2"     ,}
-            , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-              , _react2.default.createElement('div', { className: "font-bold text-[#121316] flex items-center gap-2"    ,}
-                , _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4 text-emerald-600"  ,} )
-                , _react2.default.createElement('span', null, "WhatsApp")
-                , _react2.default.createElement('span', { className: "text-[#75777E]",}, "→")
-                , _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-4 h-4 text-emerald-700"  ,} )
-                , _react2.default.createElement('span', null, "Google Sheets" )
-              )
-              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold"   ,}, "Instant Sync" )
-            )
-            , _react2.default.createElement('p', { className: "text-[#4A4B50] leading-relaxed" ,}, "Every prospective student who sends a message is automatically recorded as a structured lead in your master student spreadsheet without manual copying."
-
-            )
-          )
-
-          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-2"     ,}
-            , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-              , _react2.default.createElement('div', { className: "font-bold text-[#121316] flex items-center gap-2"    ,}
-                , _react2.default.createElement(_lucidereact.Calendar, { className: "w-4 h-4 text-blue-600"  ,} )
-                , _react2.default.createElement('span', null, "Calendar")
-                , _react2.default.createElement('span', { className: "text-[#75777E]",}, "→")
-                , _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4 text-emerald-600"  ,} )
-                , _react2.default.createElement('span', null, "WhatsApp")
-              )
-              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold"   ,}, "Intelligent Timer" )
-            )
-            , _react2.default.createElement('p', { className: "text-[#4A4B50] leading-relaxed" ,}, "If an interested student does not book an available lesson slot within 24 hours, Otomatizon sends a polite follow-up with available times and brochure."
-
-            )
-          )
-
-          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-2"     ,}
-            , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-              , _react2.default.createElement('div', { className: "font-bold text-[#121316] flex items-center gap-2"    ,}
-                , _react2.default.createElement(_lucidereact.CreditCard, { className: "w-4 h-4 text-emerald-700"  ,} )
-                , _react2.default.createElement('span', null, "M-Pesa")
-                , _react2.default.createElement('span', { className: "text-[#75777E]",}, "→")
-                , _react2.default.createElement(_lucidereact.Calendar, { className: "w-4 h-4 text-blue-600"  ,} )
-                , _react2.default.createElement('span', null, "Calendar")
-              )
-              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold"   ,}, "Auto-Lock")
-            )
-            , _react2.default.createElement('p', { className: "text-[#4A4B50] leading-relaxed" ,}, "When student tuition is received via Till/Paybill, the slot is instantly confirmed, Google Meet links are generated, and a confirmation receipt is texted."
-
-            )
-          )
-
-          , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-2"     ,}
-            , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-              , _react2.default.createElement('div', { className: "font-bold text-[#121316] flex items-center gap-2"    ,}
-                , _react2.default.createElement(_lucidereact.MapPin, { className: "w-4 h-4 text-blue-600"  ,} )
-                , _react2.default.createElement('span', null, "Google Profile" )
-                , _react2.default.createElement('span', { className: "text-[#75777E]",}, "→")
-                , _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4 text-emerald-600"  ,} )
-                , _react2.default.createElement('span', null, "WhatsApp")
-              )
-              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold"   ,}, "Review Engine" )
-            )
-            , _react2.default.createElement('p', { className: "text-[#4A4B50] leading-relaxed" ,}, "Following course completion or exam success, satisfied students automatically receive an invite to leave a verified 5-star review on Google Maps."
-
-            )
-          )
-
-        )
-      )
-
-      /* 5. FOOTER BAR matching Reference Image 3 */
-      , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-white border border-[#EAE7DF] shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono"             ,}
-        , _react2.default.createElement('div', { className: "flex items-center gap-2 text-[#15803D] font-bold"    ,}
-          , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-[#15803D] animate-pulse"    ,} )
-          , _react2.default.createElement('span', null, "6 connected systems · All business systems operational"       )
-        )
-
-        , _react2.default.createElement('button', {
-          onClick: () => onNavigateToAutomations && onNavigateToAutomations(),
-          className: "text-xs font-bold text-[#121316] hover:text-[#15803D] transition-colors flex items-center gap-1.5 self-end sm:self-auto"         ,}
-
-          , _react2.default.createElement('span', null, "View Full Architecture"  )
-          , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5" ,} )
-        )
-      )
-
-      /* Manage Connection Modal */
-      , isManageModalOpen && (
-        _react2.default.createElement('div', { className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-fadeIn"         ,}
-          , _react2.default.createElement('div', { className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-2xl max-w-md w-full p-6 space-y-5 animate-scaleIn"         ,}
-            , _react2.default.createElement('div', { className: "flex items-center justify-between border-b border-[#EAE7DF] pb-4"     ,}
-              , _react2.default.createElement('div', { className: "flex items-center gap-3"  ,}
-                , _react2.default.createElement('div', { className: "w-10 h-10 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center justify-center"        ,}
-                  , getAppIcon(selectedApp.id)
-                )
-                , _react2.default.createElement('div', null
-                  , _react2.default.createElement('h3', { className: "text-base font-bold text-[#121316]"  ,}, selectedApp.name)
-                  , _react2.default.createElement('p', { className: "text-xs text-[#75777E] font-mono"  ,}, "OAuth2 Access Manager"  )
-                )
-              )
-
-              , _react2.default.createElement('button', {
-                onClick: () => setIsManageModalOpen(false),
-                className: "w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#EAE7DF] flex items-center justify-center text-[#75777E]"         ,}
-
-                , _react2.default.createElement(_lucidereact.X, { className: "w-4 h-4" ,} )
-              )
-            )
-
-            , _react2.default.createElement('div', { className: "space-y-3 text-xs" ,}
-              , _react2.default.createElement('div', { className: "p-3.5 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-1 font-mono"      ,}
-                , _react2.default.createElement('div', { className: "text-[10px] text-[#75777E] uppercase"  ,}, "Synchronized Account" )
-                , _react2.default.createElement('div', { className: "font-bold text-[#121316]" ,}, selectedApp.accountLinked)
-                , _react2.default.createElement('div', { className: "text-[10px] text-[#15803D]" ,}, "AES-256 GCM encryption active"   )
-              )
-
-              , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] leading-relaxed"  ,}, "You can force an immediate OAuth2 token refresh or temporarily disconnect Otomatizon's access."
-
-              )
-            )
-
-            , _react2.default.createElement('div', { className: "pt-2 border-t border-[#EAE7DF] flex items-center justify-between gap-3"      ,}
-              , _react2.default.createElement('button', {
-                onClick: () => setIsManageModalOpen(false),
-                className: "px-4 py-2.5 rounded-full bg-[#FAF9F5] hover:bg-[#EAE7DF] text-xs font-bold text-[#121316]"       ,}
-, "Close"
-
-              )
-
-              , _react2.default.createElement('button', {
-                onClick: () => handleToggleConnection(selectedApp.id),
-                disabled: isActionPending,
-                className: "px-4 py-2.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 text-xs font-bold transition-all"          ,}
-
-                , isActionPending ? "Updating..." : "Disconnect Access"
-              )
             )
           )
         )
       )
 
-      /* Live Connector Configuration & Test Modal (Phase 1) */
-      , _react2.default.createElement(_ConnectAppModal.ConnectAppModal, {
-        isOpen: isConnectModalOpen,
-        onClose: () => setIsConnectModalOpen(false),
-        appId: selectedApp.id,
-        appName: selectedApp.name,
-        onConnected: (id, details) => {
-          // Live connection state update
-        },}
+      /* Claude-Style 1-Click Connect Modal */
+      , activeModalApp && (
+        _react2.default.createElement(_ConnectAppModal.ConnectAppModal, {
+          appId: activeModalApp.id,
+          appName: activeModalApp.name,
+          isOpen: !!activeModalApp,
+          onClose: () => setActiveModalApp(null),
+          onConnected: handleAppConnected,
+          isConnected: activeModalApp.status === "connected",}
+        )
       )
 
     )
@@ -18565,17 +17849,18 @@ const DEMO_SCENARIOS = [
             ) : (
               _react2.default.createElement(_react2.default.Fragment, null
                 , _react2.default.createElement('button', {
+                  onClick: onEnterDashboard,
+                  className: "px-3.5 sm:px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25] shrink-0 whitespace-nowrap"                     ,}
+
+                  , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5 text-emerald-300 shrink-0"   ,} )
+                  , _react2.default.createElement('span', null, "Live Command Center"  )
+                  , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-emerald-300 shrink-0"   ,} )
+                )
+                , _react2.default.createElement('button', {
                   onClick: () => onTriggerAuth ? onTriggerAuth("login") : onEnterDashboard(),
                   className: "text-xs font-bold font-mono text-[#4A4B50] hover:text-[#121316] px-3 sm:px-3.5 py-1.5 rounded-full hover:bg-[#F4F2EB] transition-all cursor-pointer shrink-0 whitespace-nowrap"             ,}
 , "Sign In"
 
-                )
-                , _react2.default.createElement('button', {
-                  onClick: () => onTriggerAuth ? onTriggerAuth("signup") : handleCtaClick(),
-                  className: "px-3.5 sm:px-4 py-2 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border border-[#002E25] shrink-0 whitespace-nowrap"                     ,}
-
-                  , _react2.default.createElement('span', null, "Sign Up Free"  )
-                  , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5 text-emerald-300 shrink-0"   ,} )
                 )
               )
             )
@@ -19293,9 +18578,11 @@ var _store = require('@/lib/store');
 
   const { state, simulateNewLead } = _store.useOtomatizonStore.call(void 0, );
 
-  // Route Synchronization with Browser URL Path
+  // Route Synchronization with Browser URL Path & Hash
   const applyRoute = (pathname) => {
-    const clean = (pathname || "/").toLowerCase();
+    const rawPath = (pathname || "/").toLowerCase();
+    const hash = (typeof window !== "undefined" ? window.location.hash || "" : "").toLowerCase();
+    const clean = hash ? (hash.replace(/^#\/?/, "/") || rawPath) : rawPath;
 
     if (clean === "/login") {
       setView("landing");
@@ -19314,49 +18601,49 @@ var _store = require('@/lib/store');
       setIsOnboardingOpen(true);
       setIsAuthOpen(false);
       setIsCheckoutOpen(false);
-    } else if (clean.startsWith("/app/settings/billing")) {
+    } else if (clean.startsWith("/app/settings/billing") || clean.startsWith("/settings/billing") || clean === "/billing") {
       setView("app");
       setCurrentTab("settings");
       setIsCheckoutOpen(true);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/report")) {
+    } else if (clean.startsWith("/app/report") || clean === "/report") {
       setView("app");
       setCurrentTab("report");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/opportunities")) {
+    } else if (clean.startsWith("/app/opportunities") || clean === "/opportunities") {
       setView("app");
       setCurrentTab("opportunities");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/automations")) {
+    } else if (clean.startsWith("/app/automations") || clean === "/automations") {
       setView("app");
       setCurrentTab("automations");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/apps")) {
+    } else if (clean.startsWith("/app/apps") || clean === "/apps" || clean === "/connectors" || clean === "/integrations") {
       setView("app");
       setCurrentTab("apps");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/activity")) {
+    } else if (clean.startsWith("/app/activity") || clean === "/activity" || clean === "/audit") {
       setView("app");
       setCurrentTab("activity");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app/settings")) {
+    } else if (clean.startsWith("/app/settings") || clean === "/settings") {
       setView("app");
       setCurrentTab("settings");
       setIsCheckoutOpen(false);
       setIsAuthOpen(false);
       setIsOnboardingOpen(false);
-    } else if (clean.startsWith("/app")) {
+    } else if (clean.startsWith("/app") || clean === "/command-center" || clean === "/home" || clean === "/dashboard") {
       setView("app");
       setCurrentTab("home");
       setIsCheckoutOpen(false);
@@ -19374,8 +18661,13 @@ var _store = require('@/lib/store');
     if (typeof window !== "undefined") {
       applyRoute(window.location.pathname);
       const onPop = () => applyRoute(window.location.pathname);
+      const onHashChange = () => applyRoute(window.location.pathname);
       window.addEventListener("popstate", onPop);
-      return () => window.removeEventListener("popstate", onPop);
+      window.addEventListener("hashchange", onHashChange);
+      return () => {
+        window.removeEventListener("popstate", onPop);
+        window.removeEventListener("hashchange", onHashChange);
+      };
     }
   }, []);
 
