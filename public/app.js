@@ -17449,8 +17449,34 @@ var _store = require('@/lib/store');
 
 const DEMO_SCENARIOS = [
   {
+    id: "clinic",
+    label: "PME / Clinique locale",
+    tagline: "Appointment no-shows and unconfirmed M-Pesa consultation deposits.",
+    input: "Patients call or WhatsApp for dental consultations. We write their names in a notebook and check M-Pesa messages on a shared reception phone.",
+    discovery: {
+      title: "Unverified Booking Deposits & No-Shows",
+      description: "Patients forget appointments; M-Pesa receipts checked manually.",
+      impact: "CRITICAL"
+    },
+    whyItMatters: "No-shows cost private practices and SMEs up to 30% of daily revenue because reminders aren't sent and deposits aren't automatically verified.",
+    recommended: "Match incoming M-Pesa confirmation codes directly with calendar bookings and dispatch automated appointment reminders."
+  },
+  {
+    id: "consulting",
+    label: "Consultant en affaires",
+    tagline: "Discovery calls booked without qualification or agenda prep.",
+    input: "Clients fill out my Google Form or email me. I manually send Calendly links and create folders in Google Drive for their onboarding files.",
+    discovery: {
+      title: "Manual Client Onboarding Friction",
+      description: "Drive folders & welcome dossiers created manually per client.",
+      impact: "HIGH IMPACT"
+    },
+    whyItMatters: "Consultants and service agencies spend 45 minutes per new client creating shared folders, sending prep materials, and confirming meeting times across separate tools.",
+    recommended: "Trigger automatic Google Drive folder creation, share onboarding questionnaire, and log client details into Google Sheets on booking confirmation."
+  },
+  {
     id: "tutoring",
-    label: "French Tutor",
+    label: "Professeur de français",
     tagline: "High WhatsApp message volume, manual scheduling & payment chasing.",
     input: "I teach French online. Students message me on WhatsApp. I send them prices manually, schedule them in Google Calendar, and ask for M-Pesa payments.",
     discovery: {
@@ -17460,32 +17486,6 @@ const DEMO_SCENARIOS = [
     },
     whyItMatters: "Prospective students inquire on WhatsApp, but if they don't pick a slot immediately, following up manually takes hours and leads go cold.",
     recommended: "Automatically send syllabus, verify Google Calendar booking, and send a single polite WhatsApp reminder after 24 hours if unbooked."
-  },
-  {
-    id: "consulting",
-    label: "Business Consultant",
-    tagline: "Discovery calls booked without qualification or agenda prep.",
-    input: "Clients fill out my Google Form or email me. I manually send Calendly links and create folders in Google Drive for their onboarding files.",
-    discovery: {
-      title: "Manual Client Onboarding Friction",
-      description: "Drive folders & welcome dossiers created manually per client.",
-      impact: "HIGH IMPACT"
-    },
-    whyItMatters: "Consultants spend 45 minutes per new client creating shared folders, sending prep materials, and confirming meeting times across separate tools.",
-    recommended: "Trigger automatic Google Drive folder creation, share onboarding questionnaire, and log client details into Google Sheets on booking confirmation."
-  },
-  {
-    id: "clinic",
-    label: "Local SME / Clinic",
-    tagline: "Appointment no-shows and unconfirmed M-Pesa consultation deposits.",
-    input: "Patients call or WhatsApp for dental consultations. We write their names in a notebook and check M-Pesa messages on a shared reception phone.",
-    discovery: {
-      title: "Unverified Booking Deposits & No-Shows",
-      description: "Patients forget appointments; M-Pesa receipts checked manually.",
-      impact: "CRITICAL"
-    },
-    whyItMatters: "No-shows cost private practices up to 30% of daily revenue because reminders aren't sent and deposits aren't automatically verified.",
-    recommended: "Match incoming M-Pesa confirmation codes directly with calendar bookings."
   }
 ];
 
@@ -18097,15 +18097,15 @@ const DEMO_SCENARIOS = [
         )
       )
 
-      /* 8. SECTION 6 — REAL WORKFLOW JOURNEY (COACH / TUTOR) */
+      /* 8. SECTION 6 — REAL WORKFLOW JOURNEY (LOCAL SME / SERVICE BUSINESS) */
       , _react2.default.createElement('section', { className: "py-20 sm:py-24 border-t border-[#EAE7DF] bg-[#F4F2EB]/50"    ,}
         , _react2.default.createElement('div', { className: "max-w-4xl mx-auto px-4 sm:px-6 space-y-10"    ,}
 
           , _react2.default.createElement('div', { className: "text-center space-y-2 max-w-2xl mx-auto"   ,}
-            , _react2.default.createElement('span', { className: "text-[11px] font-mono uppercase tracking-wider text-[#75777E] font-semibold block"      ,}, "COACH / TUTOR EXAMPLE"
+            , _react2.default.createElement('span', { className: "text-[11px] font-mono uppercase tracking-wider text-[#75777E] font-semibold block"      ,}, "PME & CLINIQUE LOCALE / SERVICE BUSINESS"
 
             )
-            , _react2.default.createElement('h2', { className: "text-2xl sm:text-4xl font-extrabold text-[#121316] tracking-tight"    ,}, "From first message to paid session."
+            , _react2.default.createElement('h2', { className: "text-2xl sm:text-4xl font-extrabold text-[#121316] tracking-tight"    ,}, "From first customer message to paid appointment."
 
             )
           )
