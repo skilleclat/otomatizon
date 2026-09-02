@@ -25,24 +25,24 @@ interface IntelligenceInspectorModalProps {
 
 const PRESET_MESSAGES = [
   {
-    lang: "FR",
-    label: "Français (Demande de cours)",
-    text: "Bonjour M. Kamau, je cherche des cours particuliers de français pour ma fille en classe de 4e, disponible le mardi vers 16h. Quels sont vos tarifs ?"
+    lang: "EN",
+    label: "Customer Quote Request",
+    text: "Hello, I would like to get a quotation for dental consultation and cleaning services this Saturday morning at 10am. What are your available slots?"
   },
   {
     lang: "EN",
-    label: "English (Maths Booking)",
-    text: "Hi James! I need urgent Grade 8 Mathematics coaching for my son Brian. We are looking for Saturday morning slots at 10am. Can we schedule this week?"
+    label: "Business Service Inquiry",
+    text: "Hi! We are looking for corporate consulting and accounting onboarding for our team starting next Monday. Could you share your brochure and fees?"
   },
   {
     lang: "SW",
-    label: "Swahili / Sheng (Piano classes)",
-    text: "Niaje bro! Nataka piano lessons weekend kwa house Lavington. Ni ngapi per session ya 1 hour?"
+    label: "Swahili / Sheng Inquiry",
+    text: "Niaje! Nataka quotation ya branding services weekend hii. Ni ngapi per project and how do we book?"
   },
   {
     lang: "PAY",
-    label: "Paiement M-Pesa",
-    text: "Bonjour, j'ai envoyé les KES 3,500 par M-Pesa. Réf: QAH8991204 pour le cours de français de demain 15h. Merci de confirmer !"
+    label: "M-Pesa Payment Receipt",
+    text: "Hello, I have sent KES 4,500 via M-Pesa. Confirmation Ref: QAH8991204 for our scheduled appointment. Please confirm!"
   }
 ];
 

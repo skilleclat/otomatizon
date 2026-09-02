@@ -46,8 +46,8 @@ interface DemoScenario {
 const DEMO_SCENARIOS: DemoScenario[] = [
   {
     id: "sme",
-    label: "Petite & Moyenne Entreprise (PME)",
-    tagline: "Devis non relancés, suivi des commandes clients et vérification des paiements M-Pesa.",
+    label: "SME & Local Business",
+    tagline: "Unfollowed customer quotes, manual order tracking, and M-Pesa payment chasing.",
     input: "Clients send inquiries on WhatsApp and Instagram for quotes and services. We write orders in a spreadsheet, manually follow up on delayed approvals, and verify M-Pesa receipts on the office phone.",
     discovery: {
       title: "Unfollowed Customer Quotes & Payment Delays",
@@ -59,7 +59,7 @@ const DEMO_SCENARIOS: DemoScenario[] = [
   },
   {
     id: "consulting",
-    label: "Consultant en affaires",
+    label: "Business Consultant",
     tagline: "Discovery calls booked without qualification or agenda prep.",
     input: "Clients fill out my Google Form or email me. I manually send Calendly links and create folders in Google Drive for their onboarding files.",
     discovery: {
@@ -72,7 +72,7 @@ const DEMO_SCENARIOS: DemoScenario[] = [
   },
   {
     id: "clinic",
-    label: "Clinique & Cabinet médical",
+    label: "Local Clinic & Healthcare",
     tagline: "Appointment no-shows and unconfirmed M-Pesa consultation deposits.",
     input: "Patients call or WhatsApp for medical consultations. We write their names in a notebook, send reminders manually, and check M-Pesa messages on a shared reception phone.",
     discovery: {
@@ -85,9 +85,9 @@ const DEMO_SCENARIOS: DemoScenario[] = [
   },
   {
     id: "tutoring",
-    label: "Professeur de français",
+    label: "Solo Tutor & Educator",
     tagline: "High WhatsApp message volume, manual scheduling & payment chasing.",
-    input: "I teach French online. Students message me on WhatsApp. I send them prices manually, schedule them in Google Calendar, and ask for M-Pesa payments.",
+    input: "I teach students online. Students message me on WhatsApp. I send them prices manually, schedule them in Google Calendar, and ask for M-Pesa payments.",
     discovery: {
       title: "Inbound Lead Follow-Up Delay",
       description: "Students who don't book immediately are forgotten.",
