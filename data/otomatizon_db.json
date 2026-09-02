@@ -1,62 +1,7 @@
 {
-  "users": [
-    {
-      "id": "user_1788364616257",
-      "fullName": "Security Test",
-      "email": "sec.test@example.com",
-      "phone": "+254 700 000 000",
-      "organizationId": "org_1788364616257",
-      "passwordHash": "0b86f5c9953fd92d9470933be1f8a3163abba401fc5d714c6e7540d65ce507f23c1c552521906670e2ffc87e34731e5583de1dbb73764d268e6211af5804a671",
-      "salt": "c6d892bdd755805a790edb661b7214dd",
-      "createdAt": "2026-09-02T15:56:56.257Z"
-    }
-  ],
-  "organizations": [
-    {
-      "id": "org_1788364616257",
-      "name": "Security Test's Practice",
-      "planId": "starter",
-      "createdAt": "2026-09-02T15:56:56.259Z"
-    }
-  ],
-  "businessProfiles": [
-    {
-      "id": "bp_1788364616259",
-      "organizationId": "org_1788364616257",
-      "name": "Security Test's Practice",
-      "businessName": "Security Test's Practice",
-      "businessType": "Service Provider",
-      "city": "Nairobi",
-      "country": "Kenya",
-      "currency": "KES",
-      "customerAcquisitionChannels": [
-        "WhatsApp"
-      ],
-      "toolsUsed": [
-        "WhatsApp Business",
-        "Google Calendar"
-      ],
-      "biggestRepetitiveTask": "Client follow-ups"
-    }
-  ],
-  "workflows": [],
-  "executions": [],
-  "leads": [],
-  "operationalEvents": [],
-  "activityLogs": [],
-  "teamMembers": [],
-  "subscriptions": [
-    {
-      "id": "sub_1788364616259",
-      "organizationId": "org_1788364616257",
-      "planId": "starter",
-      "status": "active",
-      "currentPeriodStart": "2026-09-02T15:56:56.259Z",
-      "currentPeriodEnd": "2026-10-02T15:56:56.259Z",
-      "priceKesMonthly": 499
-    }
-  ],
-  "opportunities": [],
+  "users": [],
+  "organizations": [],
+  "businessProfiles": [],
   "connections": [
     {
       "id": "whatsapp_business",
@@ -144,6 +89,14 @@
       "errorCount": 0
     }
   ],
+  "workflows": [],
+  "executions": [],
+  "leads": [],
+  "operationalEvents": [],
+  "activityLogs": [],
+  "teamMembers": [],
+  "subscriptions": [],
+  "opportunities": [],
   "scheduledJobs": [
     {
       "id": "job_fu_01",
@@ -153,8 +106,8 @@
       "targetEntityId": "lead_live_01",
       "targetEntityName": "Mercy Chebet",
       "targetPhone": "+254 719 552 108",
-      "scheduledFor": "2026-09-03T09:24:06.658Z",
-      "createdAt": "2026-09-02T09:24:06.660Z",
+      "scheduledFor": "2026-09-03T10:23:07.272Z",
+      "createdAt": "2026-09-02T10:23:07.277Z",
       "status": "scheduled",
       "conditionDescription": "Cancel if Mercy Chebet books a slot or completes payment",
       "payload": {
@@ -173,8 +126,8 @@
       "targetEntityId": "lead_live_02",
       "targetEntityName": "Brian Omondi",
       "targetPhone": "+254 722 334 455",
-      "scheduledFor": "2026-09-03T13:24:06.660Z",
-      "createdAt": "2026-09-02T13:24:06.660Z",
+      "scheduledFor": "2026-09-03T14:23:07.277Z",
+      "createdAt": "2026-09-02T14:23:07.277Z",
       "status": "scheduled",
       "conditionDescription": "Cancel if Brian Omondi confirms lesson slot",
       "payload": {
@@ -193,8 +146,8 @@
       "targetEntityId": "lead_live_03",
       "targetEntityName": "Sylvie Dubois",
       "targetPhone": "+254 712 990 112",
-      "scheduledFor": "2026-09-02T23:24:06.660Z",
-      "createdAt": "2026-09-01T23:24:06.660Z",
+      "scheduledFor": "2026-09-03T00:23:07.277Z",
+      "createdAt": "2026-09-02T00:23:07.277Z",
       "status": "scheduled",
       "conditionDescription": "Cancel if M-Pesa tuition payment verified",
       "payload": {

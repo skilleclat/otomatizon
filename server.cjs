@@ -192,7 +192,7 @@ async function sendOtpEmail({ email, fullName, code }) {
         body: JSON.stringify({
           from: process.env.EMAIL_FROM || "Otomatizon Security <onboarding@resend.dev>",
           to: [normalizedEmail],
-          subject: `Votre code de sécurité Otomatizon : ${code}`,
+          subject: `Your Otomatizon Security Code: ${code}`,
           html: `
             <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 540px; margin: 0 auto; padding: 32px 24px; background: #FAF9F5; color: #121316; border-radius: 24px; border: 1px solid #EAE7DF;">
               <div style="margin-bottom: 24px;">
@@ -200,12 +200,12 @@ async function sendOtpEmail({ email, fullName, code }) {
                 <p style="color: #15803D; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 0 0;">Business Automation Operating System</p>
               </div>
               <div style="background: #FFFFFF; padding: 28px 24px; border-radius: 16px; border: 1px solid #EAE7DF; text-align: center;">
-                <h2 style="font-size: 18px; font-weight: 700; margin-top: 0; color: #121316;">Vérification de votre compte</h2>
-                <p style="color: #4A4B50; font-size: 13px; line-height: 1.5; margin-bottom: 24px;">Bonjour ${fullName || ""}, voici votre code de sécurité à 6 chiffres pour valider votre identité et lancer votre espace de travail :</p>
+                <h2 style="font-size: 18px; font-weight: 700; margin-top: 0; color: #121316;">Verify Your Account</h2>
+                <p style="color: #4A4B50; font-size: 13px; line-height: 1.5; margin-bottom: 24px;">Hello ${fullName || "there"}, here is your 6-digit verification code to confirm your email address and access your Otomatizon workspace:</p>
                 <div style="display: inline-block; padding: 14px 28px; background: #002E25; color: #FFFFFF; font-size: 32px; font-weight: 800; letter-spacing: 8px; border-radius: 12px; font-family: monospace;">
                   ${code}
                 </div>
-                <p style="color: #75777E; font-size: 11px; margin-top: 24px; margin-bottom: 0;">Ce code est valide pendant 10 minutes. Ne le partagez avec personne.</p>
+                <p style="color: #75777E; font-size: 11px; margin-top: 24px; margin-bottom: 0;">This code is valid for 10 minutes. For your security, do not share it with anyone.</p>
               </div>
               <div style="margin-top: 24px; text-align: center; font-size: 11px; color: #75777E; font-family: monospace;">
                 Nairobi, Kenya &bull; 256-bit Encrypted Delivery
@@ -227,7 +227,7 @@ async function sendOtpEmail({ email, fullName, code }) {
   }
 
   console.log(`[EMAIL DISPATCH] 6-digit OTP generated for ${normalizedEmail}: ${code}`);
-  return { success: true, provider: "system", code };
+  return { success: true, provider: "system" };
 }
 
   // 3a. Auth Send OTP (Real Email Dispatch)
@@ -238,7 +238,7 @@ async function sendOtpEmail({ email, fullName, code }) {
       const fullName = body.fullName || "User";
       
       if (!email || !email.includes("@")) {
-        return sendJson(res, 400, { error: "Adresse email invalide" });
+        return sendJson(res, 400, { error: "Please provide a valid email address" });
       }
 
       // Generate secure 6-digit numeric OTP
@@ -247,13 +247,11 @@ async function sendOtpEmail({ email, fullName, code }) {
 
       pendingOtps.set(email, { code, expiresAt, fullName });
 
-      const dispatchResult = await sendOtpEmail({ email, fullName, code });
+      await sendOtpEmail({ email, fullName, code });
 
       return sendJson(res, 200, {
         success: true,
         message: `Security code sent to ${email}`,
-        code: code,
-        provider: dispatchResult.provider || "system",
         expiresInSeconds: 600
       });
     } catch (err) {

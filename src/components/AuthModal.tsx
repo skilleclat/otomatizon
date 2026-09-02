@@ -51,7 +51,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   // OTP Verification State
-  const [receivedOtpCode, setReceivedOtpCode] = useState<string | null>(null);
   const [otpDigits, setOtpDigits] = useState<string[]>(["", "", "", "", "", ""]);
   const [resendCountdown, setResendCountdown] = useState<number>(45);
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -60,7 +59,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     if (isOpen) {
       setMode(initialMode);
       setMessage(null);
-      setReceivedOtpCode(null);
     }
   }, [isOpen, initialMode]);
 
@@ -141,16 +139,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setMessage(null);
 
     try {
-      const res = await fetch("/api/auth/send-otp", {
+      await fetch("/api/auth/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), fullName: fullName.trim(), phone: phone.trim() })
       });
-      const data = await res.json();
-      
-      if (data && data.code) {
-        setReceivedOtpCode(data.code);
-      }
 
       setOtpDigits(["", "", "", "", "", ""]);
       setResendCountdown(45);
@@ -158,7 +151,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       setMode("verify_otp");
       setMessage({ 
         type: "success", 
-        text: `A 6-digit verification code was generated for ${email.trim()}.` 
+        text: `A 6-digit verification code has been sent to ${email.trim()}. Please check your email inbox.` 
       });
     } catch (err: any) {
       console.warn("OTP dispatch error:", err.message);
@@ -188,15 +181,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
       otpInputRefs.current[index - 1]?.focus();
-    }
-  };
-
-  // Autofill received OTP
-  const handleUseReceivedCode = () => {
-    if (receivedOtpCode && receivedOtpCode.length === 6) {
-      const digits = receivedOtpCode.split("");
-      setOtpDigits(digits);
-      handleVerifyOtpDirect(receivedOtpCode);
     }
   };
 
@@ -540,23 +524,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 Enter the 6-digit verification code sent to <strong className="text-[#121316]">{email}</strong>.
               </p>
             </div>
-
-            {/* Instant Code Notification Card (Ensures no user is blocked) */}
-            {receivedOtpCode && (
-              <div className="p-3 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-between gap-2 font-mono">
-                <div className="space-y-0.5">
-                  <div className="text-[10px] text-[#15803D] uppercase font-bold">Your Verification Code:</div>
-                  <div className="text-base font-bold text-[#002E25] tracking-widest">{receivedOtpCode}</div>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleUseReceivedCode}
-                  className="px-3 py-1.5 rounded-full bg-[#15803D] text-white text-[11px] font-bold hover:bg-[#166534] transition-colors cursor-pointer"
-                >
-                  Autofill &rarr;
-                </button>
-              </div>
-            )}
 
             <form onSubmit={handleVerifyOtpSubmit} className="space-y-4">
               {/* 6 Digit Input Boxes */}

@@ -8895,7 +8895,6 @@ var _BrandLogo = require('@/components/BrandLogo');
   const [message, setMessage] = _react.useState(null);
 
   // OTP Verification State
-  const [receivedOtpCode, setReceivedOtpCode] = _react.useState(null);
   const [otpDigits, setOtpDigits] = _react.useState(["", "", "", "", "", ""]);
   const [resendCountdown, setResendCountdown] = _react.useState(45);
   const otpInputRefs = _react.useRef([]);
@@ -8904,7 +8903,6 @@ var _BrandLogo = require('@/components/BrandLogo');
     if (isOpen) {
       setMode(initialMode);
       setMessage(null);
-      setReceivedOtpCode(null);
     }
   }, [isOpen, initialMode]);
 
@@ -8985,16 +8983,11 @@ var _BrandLogo = require('@/components/BrandLogo');
     setMessage(null);
 
     try {
-      const res = await fetch("/api/auth/send-otp", {
+      await fetch("/api/auth/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), fullName: fullName.trim(), phone: phone.trim() })
       });
-      const data = await res.json();
-      
-      if (data && data.code) {
-        setReceivedOtpCode(data.code);
-      }
 
       setOtpDigits(["", "", "", "", "", ""]);
       setResendCountdown(45);
@@ -9002,7 +8995,7 @@ var _BrandLogo = require('@/components/BrandLogo');
       setMode("verify_otp");
       setMessage({ 
         type: "success", 
-        text: `A 6-digit verification code was generated for ${email.trim()}.` 
+        text: `A 6-digit verification code has been sent to ${email.trim()}. Please check your email inbox.` 
       });
     } catch (err) {
       console.warn("OTP dispatch error:", err.message);
@@ -9032,15 +9025,6 @@ var _BrandLogo = require('@/components/BrandLogo');
   const handleOtpKeyDown = (index, e) => {
     if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
       _optionalChain([otpInputRefs, 'access', _8 => _8.current, 'access', _9 => _9[index - 1], 'optionalAccess', _10 => _10.focus, 'call', _11 => _11()]);
-    }
-  };
-
-  // Autofill received OTP
-  const handleUseReceivedCode = () => {
-    if (receivedOtpCode && receivedOtpCode.length === 6) {
-      const digits = receivedOtpCode.split("");
-      setOtpDigits(digits);
-      handleVerifyOtpDirect(receivedOtpCode);
     }
   };
 
@@ -9382,23 +9366,6 @@ var _BrandLogo = require('@/components/BrandLogo');
               )
               , _react2.default.createElement('p', { className: "text-[#4A4B50] text-xs max-w-xs mx-auto"   ,}, "Enter the 6-digit verification code sent to "
                        , _react2.default.createElement('strong', { className: "text-[#121316]",}, email), "."
-              )
-            )
-
-            /* Instant Code Notification Card (Ensures no user is blocked) */
-            , receivedOtpCode && (
-              _react2.default.createElement('div', { className: "p-3 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-between gap-2 font-mono"         ,}
-                , _react2.default.createElement('div', { className: "space-y-0.5",}
-                  , _react2.default.createElement('div', { className: "text-[10px] text-[#15803D] uppercase font-bold"   ,}, "Your Verification Code:"  )
-                  , _react2.default.createElement('div', { className: "text-base font-bold text-[#002E25] tracking-widest"   ,}, receivedOtpCode)
-                )
-                , _react2.default.createElement('button', {
-                  type: "button",
-                  onClick: handleUseReceivedCode,
-                  className: "px-3 py-1.5 rounded-full bg-[#15803D] text-white text-[11px] font-bold hover:bg-[#166534] transition-colors cursor-pointer"         ,}
-, "Autofill →"
-
-                )
               )
             )
 
