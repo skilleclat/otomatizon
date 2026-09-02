@@ -13543,199 +13543,100 @@ const appConfigMap
 
             )
           ) : isWhatsApp ? (
-            /* SECTION 2: WHATSAPP QR CODE SCANNER (WHATSAPP WEB LINKED DEVICE STYLE) */
+            /* SECTION 2: WHATSAPP BUSINESS VERIFIED CONNECTOR (OPTION 3 - CLAUDE CONNECTORS STYLE) */
             _react2.default.createElement('div', { className: "space-y-4",}
 
-              /* Mode Toggle Pills */
-              , _react2.default.createElement('div', { className: "grid grid-cols-2 p-1 bg-[#FAF9F5] border border-[#EAE7DF] rounded-2xl text-xs font-mono"        ,}
-                , _react2.default.createElement('button', {
-                  type: "button",
-                  onClick: () => setWhatsappMode("qr"),
-                  className: `py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                    whatsappMode === "qr"
-                      ? "bg-white text-[#121316] shadow-xs"
-                      : "text-[#75777E] hover:text-[#121316]"
-                  }`,}
+              /* Permissions Section */
+              , _react2.default.createElement('div', { className: "space-y-3",}
+                , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block"      ,}, "Permissions requested by Otomatizon"
 
-                  , _react2.default.createElement(_lucidereact.QrCode, { className: "w-3.5 h-3.5 text-emerald-600"  ,} )
-                  , _react2.default.createElement('span', null, "Scan QR Code (Instant)"   )
                 )
-                , _react2.default.createElement('button', {
-                  type: "button",
-                  onClick: () => setWhatsappMode("phone"),
-                  className: `py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                    whatsappMode === "phone"
-                      ? "bg-white text-[#121316] shadow-xs"
-                      : "text-[#75777E] hover:text-[#121316]"
-                  }`,}
 
-                  , _react2.default.createElement(_lucidereact.Smartphone, { className: "w-3.5 h-3.5 text-[#75777E]"  ,} )
-                  , _react2.default.createElement('span', null, "Phone / Pairing Code"   )
+                , _react2.default.createElement('div', { className: "space-y-2.5",}
+                  , _react2.default.createElement('div', { className: "flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]"       ,}
+                    , _react2.default.createElement('div', { className: "mt-0.5 shrink-0 text-emerald-700"  ,}
+                      , _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4" ,} )
+                    )
+                    , _react2.default.createElement('div', { className: "space-y-0.5",}
+                      , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316]"  ,}, "Inbound Inquiry Detection"  )
+                      , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] leading-relaxed"  ,}, "Listens for new customer messages and inquiry requests sent to your WhatsApp number."
+
+                      )
+                    )
+                  )
+
+                  , _react2.default.createElement('div', { className: "flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]"       ,}
+                    , _react2.default.createElement('div', { className: "mt-0.5 shrink-0 text-emerald-700"  ,}
+                      , _react2.default.createElement(_lucidereact.Zap, { className: "w-4 h-4" ,} )
+                    )
+                    , _react2.default.createElement('div', { className: "space-y-0.5",}
+                      , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316]"  ,}, "Automated Follow-ups & Brochures"   )
+                      , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] leading-relaxed"  ,}, "Dispatches automated brochures, booking confirmations, and 24h recovery reminders."
+
+                      )
+                    )
+                  )
+
+                  , _react2.default.createElement('div', { className: "flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]"       ,}
+                    , _react2.default.createElement('div', { className: "mt-0.5 shrink-0 text-emerald-700"  ,}
+                      , _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-4 h-4" ,} )
+                    )
+                    , _react2.default.createElement('div', { className: "space-y-0.5",}
+                      , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316]"  ,}, "Cross-System Orchestration" )
+                      , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E] leading-relaxed"  ,}, "Synchronizes customer contacts with Google Sheets and booked sessions with Google Calendar."
+
+                      )
+                    )
+                  )
                 )
               )
 
-              , whatsappMode === "qr" ? (
-                /* QR Code Scanner Interface */
-                _react2.default.createElement('div', { className: "space-y-4 text-xs font-mono"  ,}
-
-                  , _react2.default.createElement('div', { className: "p-5 bg-[#FAF9F5] border border-[#EAE7DF] rounded-3xl flex flex-col sm:flex-row items-center gap-6"         ,}
-
-                    /* Official WhatsApp Web QR Code Canvas */
-                    , _react2.default.createElement('div', { className: "relative w-48 h-48 shrink-0 bg-white p-2.5 rounded-2xl border border-[#EAE7DF] shadow-md flex items-center justify-center"            ,}
-
-                      , qrScanningState === "pairing" ? (
-                        _react2.default.createElement('div', { className: "flex flex-col items-center justify-center text-center space-y-2 p-2 animate-pulse"       ,}
-                          , _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-8 h-8 text-emerald-600 animate-spin"   ,} )
-                          , _react2.default.createElement('span', { className: "text-[11px] font-bold text-[#121316]"  ,}, "Pairing with handset..."  )
-                          , _react2.default.createElement('span', { className: "text-[9px] text-[#75777E]" ,}, "Syncing conversation history"  )
-                        )
-                      ) : qrScanningState === "connected" ? (
-                        _react2.default.createElement('div', { className: "flex flex-col items-center justify-center text-center space-y-2 p-2 text-emerald-700"       ,}
-                          , _react2.default.createElement(_lucidereact.CheckCircle, { className: "w-10 h-10 text-emerald-600"  ,} )
-                          , _react2.default.createElement('span', { className: "text-xs font-bold" ,}, "WhatsApp Linked!" )
-                          , _react2.default.createElement('span', { className: "text-[10px] text-[#121316] font-mono"  ,}, linkedPhoneNumber || "+254 712 345 678")
-                        )
-                      ) : realQrDataUrl ? (
-                        /* Authentic Real WhatsApp Web Multi-Device QR Code Image */
-                        _react2.default.createElement('div', { className: "relative w-full h-full flex items-center justify-center group"      ,}
-                          , _react2.default.createElement('img', { 
-                            src: realQrDataUrl, 
-                            alt: "WhatsApp Web Multi-Device QR Code"    , 
-                            className: "w-full h-full object-contain rounded-xl select-none"    ,} 
-                          )
-                        )
-                      ) : (
-                        /* Connecting to WhatsApp Socket */
-                        _react2.default.createElement('div', { className: "flex flex-col items-center justify-center text-center space-y-2 p-2"      ,}
-                          , _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-7 h-7 text-emerald-600 animate-spin"   ,} )
-                          , _react2.default.createElement('span', { className: "text-[11px] font-bold text-[#121316]"  ,}, "Connecting to WhatsApp..."  )
-                          , _react2.default.createElement('span', { className: "text-[9px] text-[#75777E]" ,}, "Opening official socket"  )
-                        )
-                      )
-                    )
-
-                    /* Step-by-Step Instructions */
-                    , _react2.default.createElement('div', { className: "space-y-2.5 flex-1" ,}
-                      , _react2.default.createElement('div', { className: "font-bold text-[#121316] text-xs uppercase tracking-wider flex items-center gap-1.5"       ,}
-                        , _react2.default.createElement(_lucidereact.Smartphone, { className: "w-4 h-4 text-emerald-600"  ,} )
-                        , _react2.default.createElement('span', null, "How to link your WhatsApp:"    )
-                      )
-
-                      , _react2.default.createElement('ol', { className: "space-y-1.5 text-[11px] text-[#4A4B50] list-decimal list-inside leading-snug"     ,}
-                        , _react2.default.createElement('li', null, "Open " , _react2.default.createElement('strong', { className: "text-[#121316]",}, "WhatsApp"), " on your phone."   )
-                        , _react2.default.createElement('li', null, "Tap " , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Menu ⋮" ), " or "  , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Settings"), ".")
-                        , _react2.default.createElement('li', null, "Select " , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Linked Devices" ), " (" , _react2.default.createElement('em', null, "Appareils connectés" ), ").")
-                        , _react2.default.createElement('li', null, "Tap " , _react2.default.createElement('strong', { className: "text-[#121316]",}, "Link a Device"  ), " and point your camera."    )
-                      )
-
-                      , _react2.default.createElement('div', { className: "pt-2 flex items-center justify-between text-[10px] text-[#75777E]"     ,}
-                        , _react2.default.createElement('span', null, "Status: " , _react2.default.createElement('strong', { className: "text-emerald-700",}, realQrDataUrl ? `Live QR (${qrRefreshTimer}s)` : "Connecting to WhatsApp..."))
-                        , _react2.default.createElement('button', { 
-                          type: "button", 
-                          onClick: () => {
-                            setRealQrDataUrl(null);
-                            fetchBaileysQr();
-                          },
-                          className: "hover:underline text-emerald-700 font-bold cursor-pointer flex items-center gap-1"      ,}
-
-                          , _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3 h-3" ,} )
-                          , _react2.default.createElement('span', null, "Refresh QR" )
-                        )
-                      )
-                    )
-
+              /* Phone Input Box */
+              , _react2.default.createElement('div', { className: "space-y-1.5 font-mono" ,}
+                , _react2.default.createElement('label', { className: "text-xs font-bold text-[#121316] flex items-center justify-between"     ,}
+                  , _react2.default.createElement('span', null, "Your WhatsApp Business Phone Number *"     )
+                  , _react2.default.createElement('span', { className: "text-[10px] text-emerald-700 font-normal"  ,}, "With country code"  )
+                )
+                , _react2.default.createElement('div', { className: "relative",}
+                  , _react2.default.createElement(_lucidereact.Smartphone, { className: "w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2"      ,} )
+                  , _react2.default.createElement('input', {
+                    type: "tel",
+                    required: true,
+                    value: phoneInput,
+                    onChange: (e) => setPhoneInput(e.target.value),
+                    placeholder: "+254 712 345 678"   ,
+                    className: "w-full pl-10 pr-4 py-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] text-xs font-mono focus:bg-white focus:border-[#15803D] focus:outline-none transition-all"             ,}
                   )
+                )
+              )
 
-                  /* Direct Instant Pairing Trigger */
-                  , _react2.default.createElement('div', { className: "pt-1 flex flex-col sm:flex-row items-center justify-between gap-3"      ,}
-                    , _react2.default.createElement('button', {
-                      type: "button",
-                      onClick: () => handleInstantPairDevice("+254 712 345 678"),
-                      disabled: loading || qrScanningState === "pairing",
-                      className: "w-full sm:w-auto px-5 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"                   ,}
+              /* Security Badge */
+              , _react2.default.createElement('div', { className: "flex items-center gap-2 text-[11px] text-[#75777E] font-mono"     ,}
+                , _react2.default.createElement(_lucidereact.Lock, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
+                , _react2.default.createElement('span', null, "WhatsApp Business Channel · 256-Bit Encrypted Communication"      )
+              )
 
-                      , loading ? (
-                        _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3.5 h-3.5 animate-spin"  ,} )
-                      ) : (
-                        _react2.default.createElement(_react2.default.Fragment, null
-                          , _react2.default.createElement(_lucidereact.Zap, { className: "w-3.5 h-3.5 text-emerald-400"  ,} )
-                          , _react2.default.createElement('span', null, "⚡ Link Device Now (+254 712 345 678)"       )
-                        )
-                      )
-                    )
-
-                    , _react2.default.createElement('button', {
-                      type: "button",
-                      onClick: onClose,
-                      className: "px-4 py-2 text-xs font-semibold text-[#75777E] hover:text-[#121316] transition-colors cursor-pointer"       ,}
+              /* Action Buttons */
+              , _react2.default.createElement('div', { className: "pt-2 flex items-center justify-end gap-3 font-mono"     ,}
+                , _react2.default.createElement('button', {
+                  type: "button",
+                  onClick: onClose,
+                  className: "px-5 py-2.5 rounded-full text-xs font-semibold text-[#75777E] hover:text-[#121316] hover:bg-[#FAF9F5] transition-colors cursor-pointer"         ,}
 , "Cancel"
-
-                    )
-                  )
 
                 )
-              ) : (
-                /* Phone Number & Pairing Code Alternative */
-                _react2.default.createElement('div', { className: "space-y-4 font-mono text-xs"  ,}
-                  , _react2.default.createElement('div', { className: "p-4 bg-[#FAF9F5] border border-[#EAE7DF] rounded-2xl space-y-3"     ,}
-                    , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                      , _react2.default.createElement('span', { className: "font-bold text-[#121316] text-[11px] uppercase tracking-wider"    ,}, "Official WhatsApp 8-Digit Pairing Code"
+                , _react2.default.createElement('button', {
+                  type: "button",
+                  onClick: () => handleInstantPairDevice(phoneInput.trim() || "+254 712 345 678"),
+                  disabled: loading,
+                  className: "px-6 py-3 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2 disabled:opacity-50 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"                ,}
 
-                      )
-                      , _react2.default.createElement('span', { className: "text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200"        ,}, "No Camera Required"
-
-                      )
-                    )
-
-                    , _react2.default.createElement('div', { className: "bg-white p-3 rounded-xl border border-[#EAE7DF] flex items-center justify-between"       ,}
-                      , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
-                        , _react2.default.createElement('span', { className: "text-base font-extrabold text-[#002E25] tracking-widest"   ,}, activePairingCode)
-                      )
-                      , _react2.default.createElement('button', {
-                        type: "button",
-                        onClick: handleRequestPairingCode,
-                        disabled: pairingCodeLoading,
-                        className: "text-[10px] text-emerald-700 hover:underline font-bold flex items-center gap-1 cursor-pointer"       ,}
-
-                        , pairingCodeLoading ? _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3 h-3 animate-spin"  ,} ) : _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3 h-3" ,} )
-                        , _react2.default.createElement('span', null, "New Code" )
-                      )
-                    )
-
-                    , _react2.default.createElement('p', { className: "text-[11px] text-[#4A4B50] leading-snug"  ,}, "In WhatsApp on your phone, tap "
-                            , _react2.default.createElement('strong', null, "Linked Devices > Link with phone number"      ), " and enter the code above."
-                    )
-                  )
-
-                  , _react2.default.createElement('div', null
-                    , _react2.default.createElement('label', { className: "text-[10px] uppercase font-bold text-[#75777E] block mb-1"     ,}, "Your WhatsApp Business Phone Number *"
-
-                    )
-                    , _react2.default.createElement('input', {
-                      type: "tel",
-                      required: true,
-                      value: phoneInput,
-                      onChange: (e) => setPhoneInput(e.target.value),
-                      placeholder: "+254 712 345 678"   ,
-                      className: "w-full px-4 py-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] text-xs font-mono focus:bg-white focus:border-[#15803D] focus:outline-none transition-all"            ,}
-                    )
-                  )
-
-                  , _react2.default.createElement('div', { className: "pt-2 flex items-center justify-end gap-3 font-mono"     ,}
-                    , _react2.default.createElement('button', {
-                      type: "button",
-                      onClick: onClose,
-                      className: "px-5 py-2.5 rounded-full text-xs font-semibold text-[#75777E] hover:text-[#121316] hover:bg-[#FAF9F5] transition-colors cursor-pointer"         ,}
-, "Cancel"
-
-                    )
-                    , _react2.default.createElement('button', {
-                      type: "button",
-                      disabled: loading,
-                      onClick: () => handleInstantPairDevice(phoneInput.trim() || "+254 712 345 678"),
-                      className: "px-6 py-3 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"                ,}
-
-                      , loading ? _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-4 h-4 animate-spin"  ,} ) : _react2.default.createElement('span', null, "Authorize & Connect Phone →"    )
+                  , loading ? (
+                    _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3.5 h-3.5 animate-spin"  ,} )
+                  ) : (
+                    _react2.default.createElement(_react2.default.Fragment, null
+                      , _react2.default.createElement('span', null, "Authorize & Connect WhatsApp"   )
+                      , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5" ,} )
                     )
                   )
                 )

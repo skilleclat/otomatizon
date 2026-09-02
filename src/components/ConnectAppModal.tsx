@@ -757,203 +757,104 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
 
             </div>
           ) : isWhatsApp ? (
-            /* SECTION 2: WHATSAPP QR CODE SCANNER (WHATSAPP WEB LINKED DEVICE STYLE) */
+            /* SECTION 2: WHATSAPP BUSINESS VERIFIED CONNECTOR (OPTION 3 - CLAUDE CONNECTORS STYLE) */
             <div className="space-y-4">
               
-              {/* Mode Toggle Pills */}
-              <div className="grid grid-cols-2 p-1 bg-[#FAF9F5] border border-[#EAE7DF] rounded-2xl text-xs font-mono">
-                <button
-                  type="button"
-                  onClick={() => setWhatsappMode("qr")}
-                  className={`py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                    whatsappMode === "qr"
-                      ? "bg-white text-[#121316] shadow-xs"
-                      : "text-[#75777E] hover:text-[#121316]"
-                  }`}
-                >
-                  <QrCode className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Scan QR Code (Instant)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setWhatsappMode("phone")}
-                  className={`py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                    whatsappMode === "phone"
-                      ? "bg-white text-[#121316] shadow-xs"
-                      : "text-[#75777E] hover:text-[#121316]"
-                  }`}
-                >
-                  <Smartphone className="w-3.5 h-3.5 text-[#75777E]" />
-                  <span>Phone / Pairing Code</span>
-                </button>
+              {/* Permissions Section */}
+              <div className="space-y-3">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block">
+                  Permissions requested by Otomatizon
+                </span>
+
+                <div className="space-y-2.5">
+                  <div className="flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]">
+                    <div className="mt-0.5 shrink-0 text-emerald-700">
+                      <MessageSquare className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <div className="text-xs font-bold text-[#121316]">Inbound Inquiry Detection</div>
+                      <div className="text-[11px] text-[#75777E] leading-relaxed">
+                        Listens for new customer messages and inquiry requests sent to your WhatsApp number.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]">
+                    <div className="mt-0.5 shrink-0 text-emerald-700">
+                      <Zap className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <div className="text-xs font-bold text-[#121316]">Automated Follow-ups &amp; Brochures</div>
+                      <div className="text-[11px] text-[#75777E] leading-relaxed">
+                        Dispatches automated brochures, booking confirmations, and 24h recovery reminders.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]">
+                    <div className="mt-0.5 shrink-0 text-emerald-700">
+                      <FileSpreadsheet className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <div className="text-xs font-bold text-[#121316]">Cross-System Orchestration</div>
+                      <div className="text-[11px] text-[#75777E] leading-relaxed">
+                        Synchronizes customer contacts with Google Sheets and booked sessions with Google Calendar.
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {whatsappMode === "qr" ? (
-                /* QR Code Scanner Interface */
-                <div className="space-y-4 text-xs font-mono">
-                  
-                  <div className="p-5 bg-[#FAF9F5] border border-[#EAE7DF] rounded-3xl flex flex-col sm:flex-row items-center gap-6">
-                    
-                    {/* Official WhatsApp Web QR Code Canvas */}
-                    <div className="relative w-48 h-48 shrink-0 bg-white p-2.5 rounded-2xl border border-[#EAE7DF] shadow-md flex items-center justify-center">
-                      
-                      {qrScanningState === "pairing" ? (
-                        <div className="flex flex-col items-center justify-center text-center space-y-2 p-2 animate-pulse">
-                          <RefreshCw className="w-8 h-8 text-emerald-600 animate-spin" />
-                          <span className="text-[11px] font-bold text-[#121316]">Pairing with handset...</span>
-                          <span className="text-[9px] text-[#75777E]">Syncing conversation history</span>
-                        </div>
-                      ) : qrScanningState === "connected" ? (
-                        <div className="flex flex-col items-center justify-center text-center space-y-2 p-2 text-emerald-700">
-                          <CheckCircle className="w-10 h-10 text-emerald-600" />
-                          <span className="text-xs font-bold">WhatsApp Linked!</span>
-                          <span className="text-[10px] text-[#121316] font-mono">{linkedPhoneNumber || "+254 712 345 678"}</span>
-                        </div>
-                      ) : realQrDataUrl ? (
-                        /* Authentic Real WhatsApp Web Multi-Device QR Code Image */
-                        <div className="relative w-full h-full flex items-center justify-center group">
-                          <img 
-                            src={realQrDataUrl} 
-                            alt="WhatsApp Web Multi-Device QR Code" 
-                            className="w-full h-full object-contain rounded-xl select-none" 
-                          />
-                        </div>
-                      ) : (
-                        /* Connecting to WhatsApp Socket */
-                        <div className="flex flex-col items-center justify-center text-center space-y-2 p-2">
-                          <RefreshCw className="w-7 h-7 text-emerald-600 animate-spin" />
-                          <span className="text-[11px] font-bold text-[#121316]">Connecting to WhatsApp...</span>
-                          <span className="text-[9px] text-[#75777E]">Opening official socket</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Step-by-Step Instructions */}
-                    <div className="space-y-2.5 flex-1">
-                      <div className="font-bold text-[#121316] text-xs uppercase tracking-wider flex items-center gap-1.5">
-                        <Smartphone className="w-4 h-4 text-emerald-600" />
-                        <span>How to link your WhatsApp:</span>
-                      </div>
-                      
-                      <ol className="space-y-1.5 text-[11px] text-[#4A4B50] list-decimal list-inside leading-snug">
-                        <li>Open <strong className="text-[#121316]">WhatsApp</strong> on your phone.</li>
-                        <li>Tap <strong className="text-[#121316]">Menu ⋮</strong> or <strong className="text-[#121316]">Settings</strong>.</li>
-                        <li>Select <strong className="text-[#121316]">Linked Devices</strong> (<em>Appareils connectés</em>).</li>
-                        <li>Tap <strong className="text-[#121316]">Link a Device</strong> and point your camera.</li>
-                      </ol>
-
-                      <div className="pt-2 flex items-center justify-between text-[10px] text-[#75777E]">
-                        <span>Status: <strong className="text-emerald-700">{realQrDataUrl ? `Live QR (${qrRefreshTimer}s)` : "Connecting to WhatsApp..."}</strong></span>
-                        <button 
-                          type="button" 
-                          onClick={() => {
-                            setRealQrDataUrl(null);
-                            fetchBaileysQr();
-                          }}
-                          className="hover:underline text-emerald-700 font-bold cursor-pointer flex items-center gap-1"
-                        >
-                          <RefreshCw className="w-3 h-3" />
-                          <span>Refresh QR</span>
-                        </button>
-                      </div>
-                    </div>
-
-                  </div>
-
-                  {/* Direct Instant Pairing Trigger */}
-                  <div className="pt-1 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <button
-                      type="button"
-                      onClick={() => handleInstantPairDevice("+254 712 345 678")}
-                      disabled={loading || qrScanningState === "pairing"}
-                      className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
-                    >
-                      {loading ? (
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <>
-                          <Zap className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>⚡ Link Device Now (+254 712 345 678)</span>
-                        </>
-                      )}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      className="px-4 py-2 text-xs font-semibold text-[#75777E] hover:text-[#121316] transition-colors cursor-pointer"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-
+              {/* Phone Input Box */}
+              <div className="space-y-1.5 font-mono">
+                <label className="text-xs font-bold text-[#121316] flex items-center justify-between">
+                  <span>Your WhatsApp Business Phone Number *</span>
+                  <span className="text-[10px] text-emerald-700 font-normal">With country code</span>
+                </label>
+                <div className="relative">
+                  <Smartphone className="w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="tel"
+                    required
+                    value={phoneInput}
+                    onChange={(e) => setPhoneInput(e.target.value)}
+                    placeholder="+254 712 345 678"
+                    className="w-full pl-10 pr-4 py-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] text-xs font-mono focus:bg-white focus:border-[#15803D] focus:outline-none transition-all"
+                  />
                 </div>
-              ) : (
-                /* Phone Number & Pairing Code Alternative */
-                <div className="space-y-4 font-mono text-xs">
-                  <div className="p-4 bg-[#FAF9F5] border border-[#EAE7DF] rounded-2xl space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-[#121316] text-[11px] uppercase tracking-wider">
-                        Official WhatsApp 8-Digit Pairing Code
-                      </span>
-                      <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                        No Camera Required
-                      </span>
-                    </div>
+              </div>
 
-                    <div className="bg-white p-3 rounded-xl border border-[#EAE7DF] flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-base font-extrabold text-[#002E25] tracking-widest">{activePairingCode}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleRequestPairingCode}
-                        disabled={pairingCodeLoading}
-                        className="text-[10px] text-emerald-700 hover:underline font-bold flex items-center gap-1 cursor-pointer"
-                      >
-                        {pairingCodeLoading ? <RefreshCw className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
-                        <span>New Code</span>
-                      </button>
-                    </div>
+              {/* Security Badge */}
+              <div className="flex items-center gap-2 text-[11px] text-[#75777E] font-mono">
+                <Lock className="w-3.5 h-3.5 text-[#15803D]" />
+                <span>WhatsApp Business Channel &middot; 256-Bit Encrypted Communication</span>
+              </div>
 
-                    <p className="text-[11px] text-[#4A4B50] leading-snug">
-                      In WhatsApp on your phone, tap <strong>Linked Devices &gt; Link with phone number</strong> and enter the code above.
-                    </p>
-                  </div>
-
-                  <div>
-                    <label className="text-[10px] uppercase font-bold text-[#75777E] block mb-1">
-                      Your WhatsApp Business Phone Number *
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      value={phoneInput}
-                      onChange={(e) => setPhoneInput(e.target.value)}
-                      placeholder="+254 712 345 678"
-                      className="w-full px-4 py-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] text-xs font-mono focus:bg-white focus:border-[#15803D] focus:outline-none transition-all"
-                    />
-                  </div>
-
-                  <div className="pt-2 flex items-center justify-end gap-3 font-mono">
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      className="px-5 py-2.5 rounded-full text-xs font-semibold text-[#75777E] hover:text-[#121316] hover:bg-[#FAF9F5] transition-colors cursor-pointer"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      disabled={loading}
-                      onClick={() => handleInstantPairDevice(phoneInput.trim() || "+254 712 345 678")}
-                      className="px-6 py-3 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
-                    >
-                      {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <span>Authorize &amp; Connect Phone &rarr;</span>}
-                    </button>
-                  </div>
-                </div>
-              )}
+              {/* Action Buttons */}
+              <div className="pt-2 flex items-center justify-end gap-3 font-mono">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-5 py-2.5 rounded-full text-xs font-semibold text-[#75777E] hover:text-[#121316] hover:bg-[#FAF9F5] transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleInstantPairDevice(phoneInput.trim() || "+254 712 345 678")}
+                  disabled={loading}
+                  className="px-6 py-3 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2 disabled:opacity-50 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  {loading ? (
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <>
+                      <span>Authorize &amp; Connect WhatsApp</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </>
+                  )}
+                </button>
+              </div>
 
             </div>
           ) : (
