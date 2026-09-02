@@ -12863,13 +12863,24 @@ const appConfigMap
   const handleAuthorizeGoogleWorkspace = async () => {
     setLoading(true);
     
-    const targetEmail = googleEmailInput.trim() || accountInput.trim() || "myaccount@gmail.com";
+    const targetEmail = googleEmailInput.trim() || accountInput.trim() || "heritiermaliyabwana1@gmail.com";
+    const servicesList = Array.from(selectedGoogleServices);
 
     try {
-      await new Promise((r) => setTimeout(r, 800));
+      // 1. Persist to server backend database
+      await fetch("/api/connectors/save-suite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          organizationId: organizationId,
+          account: targetEmail,
+          services: servicesList
+        })
+      });
+
       setLoading(false);
 
-      // Connect all checked Google apps
+      // 2. Connect all checked Google apps in store
       if (onConnected) {
         selectedGoogleServices.forEach((serviceId) => {
           onConnected(serviceId, {
@@ -12877,7 +12888,7 @@ const appConfigMap
             connectedAt: new Date().toISOString(),
             status: "connected",
             authType: "google_oauth2",
-            connectedSuite: Array.from(selectedGoogleServices)
+            connectedSuite: servicesList
           });
         });
       }
@@ -12885,6 +12896,7 @@ const appConfigMap
       onClose();
     } catch (err) {
       setLoading(false);
+      onClose();
     }
   };
 
@@ -14968,6 +14980,7 @@ var _store = require('@/lib/store');
 var _MetricExplanationModal = require('./MetricExplanationModal');
 var _EventDetailModal = require('./EventDetailModal');
 var _IntelligenceInspectorModal = require('./IntelligenceInspectorModal');
+var _LiveIntelligenceRunnerModal = require('./LiveIntelligenceRunnerModal');
 
 
 
@@ -14983,6 +14996,7 @@ var _IntelligenceInspectorModal = require('./IntelligenceInspectorModal');
   const [selectedMetric, setSelectedMetric] = _react.useState(null);
   const [selectedLog, setSelectedLog] = _react.useState(null);
   const [isIntelligenceLabOpen, setIsIntelligenceLabOpen] = _react.useState.call(void 0, false);
+  const [isLiveTraceOpen, setIsLiveTraceOpen] = _react.useState.call(void 0, false);
 
   const userFirstName = _optionalChain([state, 'access', _ => _.session, 'optionalAccess', _2 => _2.user, 'optionalAccess', _3 => _3.fullName, 'optionalAccess', _4 => _4.split, 'call', _5 => _5(" "), 'access', _6 => _6[0]]) || "";
   const orgName = _optionalChain([state, 'access', _7 => _7.organization, 'optionalAccess', _8 => _8.name]) || _optionalChain([state, 'access', _9 => _9.businessProfile, 'optionalAccess', _10 => _10.name]) || "Your Workspace";
@@ -15026,11 +15040,20 @@ var _IntelligenceInspectorModal = require('./IntelligenceInspectorModal');
         , _react2.default.createElement('div', { className: "flex flex-wrap items-center gap-2.5 shrink-0"    ,}
           , _react2.default.createElement('button', {
             type: "button",
-            onClick: onOpenOnboarding,
-            className: "px-4 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all flex items-center gap-2 cursor-pointer font-mono shadow-xs"              ,}
+            onClick: () => setIsLiveTraceOpen(true),
+            className: "px-4 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all flex items-center gap-2 cursor-pointer font-mono shadow-xs hover:scale-[1.02] active:scale-[0.98]"                ,}
 
-            , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5 text-emerald-300"  ,} )
-            , _react2.default.createElement('span', null, "Describe How You Work"   )
+            , _react2.default.createElement(_lucidereact.Zap, { className: "w-3.5 h-3.5 text-emerald-300"  ,} )
+            , _react2.default.createElement('span', null, "Test Live Inbound"  )
+          )
+
+          , _react2.default.createElement('button', {
+            type: "button",
+            onClick: onOpenOnboarding,
+            className: "px-4 py-2.5 rounded-full bg-white hover:bg-[#FAF9F5] text-[#121316] border border-[#EAE7DF] text-xs font-bold transition-all flex items-center gap-2 cursor-pointer font-mono shadow-2xs"                ,}
+
+            , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
+            , _react2.default.createElement('span', null, "Describe Workflow" )
           )
 
           , _react2.default.createElement('button', {
@@ -15282,6 +15305,14 @@ var _IntelligenceInspectorModal = require('./IntelligenceInspectorModal');
         onClose: () => setIsIntelligenceLabOpen(false),}
       )
 
+      /* Live AI Orchestration Runner Trace Modal */
+      , _react2.default.createElement(_LiveIntelligenceRunnerModal.LiveIntelligenceRunnerModal, {
+        isOpen: isLiveTraceOpen,
+        onClose: () => setIsLiveTraceOpen(false),
+        connectedEmail: _optionalChain([state, 'access', _25 => _25.session, 'optionalAccess', _26 => _26.user, 'optionalAccess', _27 => _27.email]) || "heritiermaliyabwana1@gmail.com",
+        connectedPhone: _optionalChain([state, 'access', _28 => _28.session, 'optionalAccess', _29 => _29.user, 'optionalAccess', _30 => _30.phone]) || "+254 770 979 109",}
+      )
+
     )
   );
 }; exports.HomeCommandCenter = HomeCommandCenter;
@@ -15290,7 +15321,7 @@ var _IntelligenceInspectorModal = require('./IntelligenceInspectorModal');
 
   // Module: @/components/AppsView
   define("@/components/AppsView", function(require, exports) {
-    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }"use client";
+    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }"use client";
 
 var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
@@ -15317,6 +15348,7 @@ var _lucidereact = require('lucide-react');
 var _store = require('@/lib/store');
 
 var _ConnectAppModal = require('./ConnectAppModal');
+var _LiveIntelligenceRunnerModal = require('./LiveIntelligenceRunnerModal');
 
 
 
@@ -15420,6 +15452,7 @@ const initialConnectors = [
   const { state } = _store.useOtomatizonStore.call(void 0, );
   const [connectors, setConnectors] = _react.useState(initialConnectors);
   const [activeModalApp, setActiveModalApp] = _react.useState(null);
+  const [isLiveTraceOpen, setIsLiveTraceOpen] = _react.useState(false);
 
   const getAppIcon = (id) => {
     switch (id) {
@@ -15498,9 +15531,20 @@ const initialConnectors = [
           )
         )
 
-        , _react2.default.createElement('div', { className: "flex items-center gap-2 text-xs font-mono text-[#75777E] bg-white px-3.5 py-2 rounded-2xl border border-[#EAE7DF] shadow-2xs self-start sm:self-auto"              ,}
-          , _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-4 h-4 text-[#15803D]"  ,} )
-          , _react2.default.createElement('span', null, "AES-256 Encryption · Official OAuth2"    )
+        , _react2.default.createElement('div', { className: "flex flex-wrap items-center gap-2.5"   ,}
+          , _react2.default.createElement('button', {
+            type: "button",
+            onClick: () => setIsLiveTraceOpen(true),
+            className: "px-4 py-2 rounded-2xl bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all flex items-center gap-2 cursor-pointer shadow-2xs hover:scale-[1.02] active:scale-[0.98]"                ,}
+
+            , _react2.default.createElement(_lucidereact.Sparkles, { className: "w-3.5 h-3.5 text-emerald-300"  ,} )
+            , _react2.default.createElement('span', null, "Test Live AI Orchestration"   )
+          )
+
+          , _react2.default.createElement('div', { className: "flex items-center gap-2 text-xs font-mono text-[#75777E] bg-white px-3.5 py-2 rounded-2xl border border-[#EAE7DF] shadow-2xs self-start sm:self-auto"              ,}
+            , _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-4 h-4 text-[#15803D]"  ,} )
+            , _react2.default.createElement('span', null, "AES-256 Encryption · Official OAuth2"    )
+          )
         )
       )
 
@@ -15670,6 +15714,14 @@ const initialConnectors = [
           isConnected: activeModalApp.status === "connected",
           organizationId: state.organization.id,}
         )
+      )
+
+      /* Live AI Orchestration Runner Trace Modal */
+      , _react2.default.createElement(_LiveIntelligenceRunnerModal.LiveIntelligenceRunnerModal, {
+        isOpen: isLiveTraceOpen,
+        onClose: () => setIsLiveTraceOpen(false),
+        connectedEmail: _optionalChain([connectors, 'access', _ => _.find, 'call', _2 => _2(c => c.id.startsWith("google") && c.status === "connected"), 'optionalAccess', _3 => _3.account]) || "heritiermaliyabwana1@gmail.com",
+        connectedPhone: _optionalChain([connectors, 'access', _4 => _4.find, 'call', _5 => _5(c => c.id.startsWith("whatsapp") && c.status === "connected"), 'optionalAccess', _6 => _6.account]) || "+254 770 979 109",}
       )
 
     )

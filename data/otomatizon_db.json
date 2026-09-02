@@ -6,8 +6,8 @@
       "email": "amina.odhiambo@gmail.com",
       "phone": "+254 722 111 222",
       "organizationId": "org_1788371046317",
-      "passwordHash": "d27c0ace2f9048ab0dcb1612ef6b6f41dba1bde7ae0818808e4f762a82ae37a3e1c4e7a4ae11ba6374212f50ac06c63749529fee361a1ca195affa3333edfa04",
-      "salt": "4772484f438eccf2d831dc2875ed190d",
+      "passwordHash": "3d8bc07255086d7a51a330816596364a4a7e093ccf8e19d7e3b337c5523863e886054a5406816f6e0ea2cfc6154665d6118e40dc279e59a8f449696463a28487",
+      "salt": "8cae74aa4f5212fbf6de0c10ca296679",
       "createdAt": "2026-09-02T17:44:06.317Z"
     }
   ],
@@ -138,6 +138,19 @@
   "workflows": [],
   "executions": [
     {
+      "id": "exec_1788376125334",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 3,
+      "stepsTotal": 3,
+      "logSummary": "Completed all 3 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
       "id": "exec_1788373411369",
       "workflowId": "wf_lead_autopilot",
       "workflowTitle": "Lead Follow-Up Autopilot",
@@ -167,6 +180,30 @@
   "leads": [],
   "operationalEvents": [],
   "activityLogs": [
+    {
+      "id": "log_1788376125334",
+      "organizationId": "org_1788371046317",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788376104902",
+      "organizationId": "org_1788371046317",
+      "type": "lead_inbound",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business ⟷ Google Suite",
+      "title": "Live Inbound Handled: Mercy Chebet",
+      "description": "Full AI pipeline executed: WhatsApp → Google Sheets → Google Calendar/Meet → Gmail",
+      "actionTakenByOtomatizon": "Recorded lead in Sheets, generated Google Meet link (https://meet.google.com/q8x-nuqa-qxa), and sent booking response",
+      "businessResult": "KES 3,500 session scheduled & protected",
+      "entityName": "Mercy Chebet",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
     {
       "id": "log_1788373411369",
       "organizationId": "org_1788371046317",

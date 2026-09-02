@@ -25,6 +25,7 @@ import {
 import { useOtomatizonStore } from "@/lib/store";
 import { IntegrationStatus } from "@/types";
 import { ConnectAppModal } from "./ConnectAppModal";
+import { LiveIntelligenceRunnerModal } from "./LiveIntelligenceRunnerModal";
 
 interface AppsViewProps {
   onNavigateToAutomations?: () => void;
@@ -128,6 +129,7 @@ export const AppsView: React.FC<AppsViewProps> = ({ onNavigateToAutomations }) =
   const { state } = useOtomatizonStore();
   const [connectors, setConnectors] = useState<AppConnector[]>(initialConnectors);
   const [activeModalApp, setActiveModalApp] = useState<AppConnector | null>(null);
+  const [isLiveTraceOpen, setIsLiveTraceOpen] = useState<boolean>(false);
 
   const getAppIcon = (id: string) => {
     switch (id) {
@@ -206,9 +208,20 @@ export const AppsView: React.FC<AppsViewProps> = ({ onNavigateToAutomations }) =
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs font-mono text-[#75777E] bg-white px-3.5 py-2 rounded-2xl border border-[#EAE7DF] shadow-2xs self-start sm:self-auto">
-          <ShieldCheck className="w-4 h-4 text-[#15803D]" />
-          <span>AES-256 Encryption &middot; Official OAuth2</span>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => setIsLiveTraceOpen(true)}
+            className="px-4 py-2 rounded-2xl bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all flex items-center gap-2 cursor-pointer shadow-2xs hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-emerald-300" />
+            <span>Test Live AI Orchestration</span>
+          </button>
+
+          <div className="flex items-center gap-2 text-xs font-mono text-[#75777E] bg-white px-3.5 py-2 rounded-2xl border border-[#EAE7DF] shadow-2xs self-start sm:self-auto">
+            <ShieldCheck className="w-4 h-4 text-[#15803D]" />
+            <span>AES-256 Encryption &middot; Official OAuth2</span>
+          </div>
         </div>
       </div>
 
@@ -379,6 +392,14 @@ export const AppsView: React.FC<AppsViewProps> = ({ onNavigateToAutomations }) =
           organizationId={state.organization.id}
         />
       )}
+
+      {/* Live AI Orchestration Runner Trace Modal */}
+      <LiveIntelligenceRunnerModal
+        isOpen={isLiveTraceOpen}
+        onClose={() => setIsLiveTraceOpen(false)}
+        connectedEmail={connectors.find(c => c.id.startsWith("google") && c.status === "connected")?.account || "heritiermaliyabwana1@gmail.com"}
+        connectedPhone={connectors.find(c => c.id.startsWith("whatsapp") && c.status === "connected")?.account || "+254 770 979 109"}
+      />
 
     </div>
   );

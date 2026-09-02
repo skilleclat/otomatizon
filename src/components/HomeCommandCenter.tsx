@@ -26,6 +26,7 @@ import { NavTab } from "./Navbar";
 import { MetricExplanationModal, MetricDetail } from "./MetricExplanationModal";
 import { EventDetailModal } from "./EventDetailModal";
 import { IntelligenceInspectorModal } from "./IntelligenceInspectorModal";
+import { LiveIntelligenceRunnerModal } from "./LiveIntelligenceRunnerModal";
 import { ActivityLog } from "@/types";
 
 interface HomeCommandCenterProps {
@@ -41,6 +42,7 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
   const [selectedMetric, setSelectedMetric] = useState<MetricDetail | null>(null);
   const [selectedLog, setSelectedLog] = useState<ActivityLog | null>(null);
   const [isIntelligenceLabOpen, setIsIntelligenceLabOpen] = useState(false);
+  const [isLiveTraceOpen, setIsLiveTraceOpen] = useState(false);
 
   const userFirstName = state.session?.user?.fullName?.split(" ")[0] || "";
   const orgName = state.organization?.name || state.businessProfile?.name || "Your Workspace";
@@ -84,11 +86,20 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           <button
             type="button"
-            onClick={onOpenOnboarding}
-            className="px-4 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all flex items-center gap-2 cursor-pointer font-mono shadow-xs"
+            onClick={() => setIsLiveTraceOpen(true)}
+            className="px-4 py-2.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold transition-all flex items-center gap-2 cursor-pointer font-mono shadow-xs hover:scale-[1.02] active:scale-[0.98]"
           >
-            <Sparkles className="w-3.5 h-3.5 text-emerald-300" />
-            <span>Describe How You Work</span>
+            <Zap className="w-3.5 h-3.5 text-emerald-300" />
+            <span>Test Live Inbound</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onOpenOnboarding}
+            className="px-4 py-2.5 rounded-full bg-white hover:bg-[#FAF9F5] text-[#121316] border border-[#EAE7DF] text-xs font-bold transition-all flex items-center gap-2 cursor-pointer font-mono shadow-2xs"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#15803D]" />
+            <span>Describe Workflow</span>
           </button>
 
           <button
@@ -338,6 +349,14 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
       <IntelligenceInspectorModal
         isOpen={isIntelligenceLabOpen}
         onClose={() => setIsIntelligenceLabOpen(false)}
+      />
+
+      {/* Live AI Orchestration Runner Trace Modal */}
+      <LiveIntelligenceRunnerModal
+        isOpen={isLiveTraceOpen}
+        onClose={() => setIsLiveTraceOpen(false)}
+        connectedEmail={state.session?.user?.email || "heritiermaliyabwana1@gmail.com"}
+        connectedPhone={state.session?.user?.phone || "+254 770 979 109"}
       />
 
     </div>

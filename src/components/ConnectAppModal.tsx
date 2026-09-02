@@ -388,13 +388,24 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
   const handleAuthorizeGoogleWorkspace = async () => {
     setLoading(true);
     
-    const targetEmail = googleEmailInput.trim() || accountInput.trim() || "myaccount@gmail.com";
+    const targetEmail = googleEmailInput.trim() || accountInput.trim() || "heritiermaliyabwana1@gmail.com";
+    const servicesList = Array.from(selectedGoogleServices);
 
     try {
-      await new Promise((r) => setTimeout(r, 800));
+      // 1. Persist to server backend database
+      await fetch("/api/connectors/save-suite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          organizationId: organizationId,
+          account: targetEmail,
+          services: servicesList
+        })
+      });
+
       setLoading(false);
 
-      // Connect all checked Google apps
+      // 2. Connect all checked Google apps in store
       if (onConnected) {
         selectedGoogleServices.forEach((serviceId) => {
           onConnected(serviceId, {
@@ -402,7 +413,7 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
             connectedAt: new Date().toISOString(),
             status: "connected",
             authType: "google_oauth2",
-            connectedSuite: Array.from(selectedGoogleServices)
+            connectedSuite: servicesList
           });
         });
       }
@@ -410,6 +421,7 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
       onClose();
     } catch (err) {
       setLoading(false);
+      onClose();
     }
   };
 
