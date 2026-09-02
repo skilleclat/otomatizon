@@ -22,7 +22,8 @@ import {
   QrCode,
   Smartphone,
   CheckCircle,
-  Layers
+  Layers,
+  Video
 } from "lucide-react";
 
 interface ConnectAppModalProps {
@@ -58,6 +59,14 @@ const GOOGLE_WORKSPACE_SERVICES: GoogleServiceOption[] = [
     icon: <Calendar className="w-5 h-5 text-blue-600" />,
     roleDescription: "Inspect real-time availability & automatically schedule sessions with Google Meet links",
     scopes: ["calendar.readonly", "calendar.events"]
+  },
+  {
+    id: "google_meet",
+    name: "Google Meet",
+    category: "Video Conferencing",
+    icon: <Video className="w-5 h-5 text-emerald-600" />,
+    roleDescription: "Automatically generate dynamic 1-on-1 meeting links and attach to calendar invites",
+    scopes: ["meet.conferences"]
   },
   {
     id: "google_sheets",

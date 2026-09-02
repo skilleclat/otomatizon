@@ -12498,6 +12498,7 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
 
 
+
 var _lucidereact = require('lucide-react');
 
 
@@ -12533,6 +12534,14 @@ const GOOGLE_WORKSPACE_SERVICES = [
     icon: _react2.default.createElement(_lucidereact.Calendar, { className: "w-5 h-5 text-blue-600"  ,} ),
     roleDescription: "Inspect real-time availability & automatically schedule sessions with Google Meet links",
     scopes: ["calendar.readonly", "calendar.events"]
+  },
+  {
+    id: "google_meet",
+    name: "Google Meet",
+    category: "Video Conferencing",
+    icon: _react2.default.createElement(_lucidereact.Video, { className: "w-5 h-5 text-emerald-600"  ,} ),
+    roleDescription: "Automatically generate dynamic 1-on-1 meeting links and attach to calendar invites",
+    scopes: ["meet.conferences"]
   },
   {
     id: "google_sheets",
@@ -15303,6 +15312,7 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
 
 
+
 var _lucidereact = require('lucide-react');
 var _store = require('@/lib/store');
 
@@ -15339,6 +15349,16 @@ const initialConnectors = [
     name: "Google Calendar",
     category: "Scheduling & Availability",
     role: "Checks availability in real-time and books Google Meet session slots",
+    status: "disconnected",
+    account: "Not connected",
+    lastSync: "Never",
+    automationsCount: 0
+  },
+  {
+    id: "google_meet",
+    name: "Google Meet",
+    category: "Video Conferencing",
+    role: "Automatically generates dynamic 1-on-1 meeting links and attaches them to bookings",
     status: "disconnected",
     account: "Not connected",
     lastSync: "Never",
@@ -15411,6 +15431,8 @@ const initialConnectors = [
         return _react2.default.createElement(_lucidereact.MapPin, { className: "w-5 h-5 text-blue-600"  ,} );
       case "google_calendar":
         return _react2.default.createElement(_lucidereact.Calendar, { className: "w-5 h-5 text-blue-600"  ,} );
+      case "google_meet":
+        return _react2.default.createElement(_lucidereact.Video, { className: "w-5 h-5 text-emerald-600"  ,} );
       case "google_sheets":
         return _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-5 h-5 text-emerald-600"  ,} );
       case "mpesa":

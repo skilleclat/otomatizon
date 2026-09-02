@@ -19,7 +19,8 @@ import {
   CheckCircle2, 
   Lock,
   Power,
-  ChevronRight
+  ChevronRight,
+  Video
 } from "lucide-react";
 import { useOtomatizonStore } from "@/lib/store";
 import { IntegrationStatus } from "@/types";
@@ -56,6 +57,16 @@ const initialConnectors: AppConnector[] = [
     name: "Google Calendar",
     category: "Scheduling & Availability",
     role: "Checks availability in real-time and books Google Meet session slots",
+    status: "disconnected",
+    account: "Not connected",
+    lastSync: "Never",
+    automationsCount: 0
+  },
+  {
+    id: "google_meet",
+    name: "Google Meet",
+    category: "Video Conferencing",
+    role: "Automatically generates dynamic 1-on-1 meeting links and attaches them to bookings",
     status: "disconnected",
     account: "Not connected",
     lastSync: "Never",
@@ -128,6 +139,8 @@ export const AppsView: React.FC<AppsViewProps> = ({ onNavigateToAutomations }) =
         return <MapPin className="w-5 h-5 text-blue-600" />;
       case "google_calendar":
         return <Calendar className="w-5 h-5 text-blue-600" />;
+      case "google_meet":
+        return <Video className="w-5 h-5 text-emerald-600" />;
       case "google_sheets":
         return <FileSpreadsheet className="w-5 h-5 text-emerald-600" />;
       case "mpesa":
