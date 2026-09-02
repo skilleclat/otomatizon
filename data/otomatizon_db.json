@@ -6,8 +6,8 @@
       "email": "amina.odhiambo@gmail.com",
       "phone": "+254 722 111 222",
       "organizationId": "org_1788371046317",
-      "passwordHash": "2ebb28e525d34b1e66c81f814b4e0ebba95bf9b3299af73014b4a0c5fd0f94b9f34675e05235daa941a8d220bf903cd802a60172e92bce948cc0ebe0c43fae75",
-      "salt": "a3e5181c50889383ef0c3d97e38a75c9",
+      "passwordHash": "2e95fca1f12253e86605d715c49c03aa19ab2f91151929b201a201507f43ecf58c18bd279e9fc473d270cf53190b46cc6a0cdc6926d4b0835329c61be2130504",
+      "salt": "f4123e8b7d2c691d579996a639a2b65b",
       "createdAt": "2026-09-02T17:44:06.317Z"
     }
   ],
@@ -138,6 +138,19 @@
   "workflows": [],
   "executions": [
     {
+      "id": "exec_1788377197699",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 3,
+      "stepsTotal": 3,
+      "logSummary": "Completed all 3 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
       "id": "exec_1788376848119",
       "workflowId": "wf_lead_autopilot",
       "workflowTitle": "Lead Follow-Up Autopilot",
@@ -193,6 +206,16 @@
   "leads": [],
   "operationalEvents": [],
   "activityLogs": [
+    {
+      "id": "log_1788377197699",
+      "organizationId": "org_1788371046317",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
     {
       "id": "log_1788376848119",
       "organizationId": "org_1788371046317",
