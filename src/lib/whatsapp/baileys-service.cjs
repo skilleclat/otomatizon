@@ -3,6 +3,8 @@ const fs = require("fs");
 let QRCode = null;
 let makeWASocket = null;
 let useMultiFileAuthState = null;
+let makeCacheableSignalKeyStore = null;
+let fetchLatestBaileysVersion = null;
 let DisconnectReason = null;
 let pino = null;
 
@@ -17,6 +19,8 @@ function loadDependencies() {
       const baileys = require("@whiskeysockets/baileys");
       makeWASocket = baileys.default || baileys.makeWASocket || baileys;
       useMultiFileAuthState = baileys.useMultiFileAuthState;
+      makeCacheableSignalKeyStore = baileys.makeCacheableSignalKeyStore;
+      fetchLatestBaileysVersion = baileys.fetchLatestBaileysVersion;
       DisconnectReason = baileys.DisconnectReason;
       QRCode = require("qrcode");
       pino = require("pino");
@@ -48,7 +52,7 @@ function getOrCreateSessionState(organizationId) {
       currentQrRaw: null,
       connectionStatus: "disconnected", // 'disconnected' | 'connecting' | 'scan_required' | 'connected'
       connectedUser: null,
-      isInitializing: false
+      lastInitAt: 0
     });
   }
   return activeSessions.get(cleanId);
@@ -62,7 +66,8 @@ async function startWhatsAppSocket(organizationId = "default", onMessageCallback
   const session = getOrCreateSessionState(organizationId);
   const authDir = getOrgSessionPath(organizationId);
 
-  if (session.sock && session.connectionStatus === "connected") {
+  // If already connected with an active socket, return connected
+  if (session.sock && session.connectionStatus === "connected" && session.connectedUser) {
     return { 
       success: true, 
       status: "connected", 
@@ -71,28 +76,57 @@ async function startWhatsAppSocket(organizationId = "default", onMessageCallback
     };
   }
 
-  if (session.isInitializing) {
+  // If already has a valid QR code generated in the last 45s, return it immediately
+  if (session.currentQrDataUrl && session.connectionStatus === "scan_required") {
     return { 
       success: true, 
-      status: session.connectionStatus, 
-      qr: session.currentQrDataUrl,
+      status: "scan_required", 
+      qrDataUrl: session.currentQrDataUrl,
       organizationId: session.organizationId 
     };
   }
 
-  session.isInitializing = true;
+  // Prevent multiple overlapping inits within 4 seconds
+  const now = Date.now();
+  if (now - session.lastInitAt < 4000) {
+    return {
+      success: true,
+      status: session.connectionStatus,
+      qrDataUrl: session.currentQrDataUrl,
+      organizationId: session.organizationId
+    };
+  }
+
+  session.lastInitAt = now;
   session.connectionStatus = "connecting";
 
   try {
     const { state, saveCreds } = await useMultiFileAuthState(authDir);
     const logger = pino ? pino({ level: "silent" }) : undefined;
 
+    let version;
+    try {
+      if (fetchLatestBaileysVersion) {
+        const vInfo = await fetchLatestBaileysVersion();
+        version = vInfo?.version;
+      }
+    } catch (vErr) {}
+
+    const authConfig = {
+      creds: state.creds,
+      keys: makeCacheableSignalKeyStore ? makeCacheableSignalKeyStore(state.keys, logger) : state.keys
+    };
+
     const sock = makeWASocket({
-      auth: state,
+      version,
+      auth: authConfig,
       printQRInTerminal: false,
       logger: logger,
       browser: ["Otomatizon Business OS", "Chrome", "1.0.0"],
-      syncFullHistory: false
+      syncFullHistory: false,
+      connectTimeoutMs: 60000,
+      defaultQueryTimeoutMs: 60000,
+      keepAliveIntervalMs: 25000
     });
 
     session.sock = sock;
@@ -114,7 +148,7 @@ async function startWhatsAppSocket(organizationId = "default", onMessageCallback
               light: "#FFFFFF"
             }
           });
-          console.log(`[BAILEYS MULTI-TENANT] QR generated for Org: ${session.organizationId}`);
+          console.log(`[BAILEYS MULTI-TENANT] Live QR code generated for Org: ${session.organizationId}`);
         } catch (err) {
           console.error(`[BAILEYS] QR generation error for ${session.organizationId}:`, err);
         }
@@ -132,7 +166,7 @@ async function startWhatsAppSocket(organizationId = "default", onMessageCallback
           name: (sock && sock.user && sock.user.name) ? sock.user.name : "WhatsApp Business User",
           verifiedAt: new Date().toISOString()
         };
-        console.log(`[BAILEYS MULTI-TENANT] Authenticated for Org ${session.organizationId}! Phone: ${session.connectedUser.phone}`);
+        console.log(`[BAILEYS MULTI-TENANT] WhatsApp Connected for Org ${session.organizationId}! Phone: ${session.connectedUser.phone}`);
       }
 
       if (connection === "close") {
@@ -145,16 +179,14 @@ async function startWhatsAppSocket(organizationId = "default", onMessageCallback
         } else {
           session.connectionStatus = "disconnected";
           session.connectedUser = null;
-        }
-
-        session.isInitializing = false;
-
-        if (shouldReconnect) {
-          setTimeout(() => startWhatsAppSocket(organizationId, onMessageCallback), 3000);
-        } else {
+          session.currentQrDataUrl = null;
           try {
             fs.rmSync(authDir, { recursive: true, force: true });
           } catch (e) {}
+        }
+
+        if (shouldReconnect && !session.connectedUser) {
+          setTimeout(() => startWhatsAppSocket(organizationId, onMessageCallback), 3000);
         }
       }
     });
@@ -191,17 +223,15 @@ async function startWhatsAppSocket(organizationId = "default", onMessageCallback
       }
     });
 
-    session.isInitializing = false;
     return { 
       success: true, 
       status: session.connectionStatus, 
-      qr: session.currentQrDataUrl,
+      qrDataUrl: session.currentQrDataUrl,
       organizationId: session.organizationId 
     };
   } catch (error) {
     console.error(`[BAILEYS] Error initializing Org ${organizationId}:`, error);
     session.connectionStatus = "disconnected";
-    session.isInitializing = false;
     return { success: false, error: error.message };
   }
 }

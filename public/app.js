@@ -12742,24 +12742,27 @@ const appConfigMap
 
   _react.useEffect.call(void 0, () => {
     if (isOpen && isWhatsApp) {
-      setQrScanningState("ready");
       setLoading(false);
       setQrRefreshTimer(60);
       fetchBaileysQr();
+      
+      // Quick second fetch to catch QR as soon as socket emits
+      const quickTimer = setTimeout(fetchBaileysQr, 1200);
+      return () => clearTimeout(quickTimer);
     }
   }, [isOpen, isWhatsApp]);
 
-  // Live polling for scan verification
+  // Live polling for scan verification and QR refresh
   _react.useEffect.call(void 0, () => {
     if (!isOpen || !isWhatsApp || qrScanningState === "connected") return;
     
     const interval = setInterval(() => {
       fetchBaileysQr();
       setQrRefreshTimer((prev) => (prev <= 1 ? 60 : prev - 1));
-    }, 2500);
+    }, 1800);
 
     return () => clearInterval(interval);
-  }, [isOpen, isWhatsApp, qrScanningState]);
+  }, [isOpen, isWhatsApp, qrScanningState, realQrDataUrl]);
 
   if (!isOpen) return null;
 
