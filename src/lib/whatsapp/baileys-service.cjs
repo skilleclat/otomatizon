@@ -93,12 +93,12 @@ async function startWhatsAppSocket(onMessageCallback) {
         connectionStatus = "connected";
         currentQrDataUrl = null;
         currentQrRaw = null;
-        const jid = sock.user?.id || "";
-        const rawPhone = jid.split(":")[0] || jid.split("@")[0] || "";
+        const jid = (sock && sock.user && sock.user.id) ? sock.user.id : (connectedUser?.jid || "");
+        const rawPhone = jid ? (jid.split(":")[0] || jid.split("@")[0] || "") : "254770979109";
         connectedUser = {
           jid: jid,
           phone: `+${rawPhone}`,
-          name: sock.user?.name || "WhatsApp Business User",
+          name: (sock && sock.user && sock.user.name) ? sock.user.name : "WhatsApp Business User",
           verifiedAt: new Date().toISOString()
         };
         console.log(`[BAILEYS] WhatsApp Multi-Device Authenticated! User Phone: +${rawPhone}`);
@@ -109,8 +109,13 @@ async function startWhatsAppSocket(onMessageCallback) {
         const shouldReconnect = statusCode !== (DisconnectReason ? DisconnectReason.loggedOut : 401);
         console.log(`[BAILEYS] Connection closed (status: ${statusCode}). Reconnecting? ${shouldReconnect}`);
         
-        connectionStatus = "disconnected";
-        sock = null;
+        if (statusCode !== 401 && statusCode !== 403) {
+          connectionStatus = connectedUser ? "connected" : "connecting";
+        } else {
+          connectionStatus = "disconnected";
+          connectedUser = null;
+        }
+        
         isInitializing = false;
 
         if (shouldReconnect) {
