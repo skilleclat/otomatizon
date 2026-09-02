@@ -1255,46 +1255,50 @@ export function useOtomatizonStore() {
     const p = globalState.businessProfile;
     const opps = globalState.opportunities;
     const conns = globalState.integrations;
-    const topOpp = opps[0] || defaultOpportunities[0];
+    const topOpp = opps[0];
 
     return {
       generatedAt: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }),
-      businessName: p.name || "James French & Exam Tutoring",
-      businessType: p.businessType || "Private French Tutor & Exam Coach",
+      businessName: p.name || globalState.organization?.name || "Your Business",
+      businessType: p.businessType || "Service Business",
       city: p.city || "Nairobi",
       country: p.country || "Kenya",
       understood: {
-        summary: p.description || "Private DELF/DALF French lessons & exam preparation in Nairobi.",
-        customerType: p.customerType || "Individual learners, executives & university candidates",
-        primaryChannels: p.primaryChannels || ["WhatsApp", "Google Maps", "Referrals"],
-        manualFrictions: p.frictionPoints || [
-          "Unanswered WhatsApp inquiries going cold after 24 hours",
-          "Students attending lessons before completing payments",
-          "Manual entry of session attendance into Google Sheets"
+        summary: p.description || "Business workflows and customer interactions across everyday tools.",
+        customerType: p.customerType || "Direct customers & clients",
+        primaryChannels: p.customerChannels && p.customerChannels.length > 0 ? p.customerChannels : ["WhatsApp", "Google Maps", "Direct"],
+        manualFrictions: p.frictionPoints && p.frictionPoints.length > 0 ? p.frictionPoints : [
+          "Manual customer follow-ups taking hours",
+          "Unreconciled payment receipts across channels",
+          "Manual double entry into spreadsheets"
         ]
       },
-      currentWorkflow: p.workflowStages || defaultBusinessProfile.workflowStages || [],
-      toolsCurrentlyUsed: (p.toolsUsed || ["WhatsApp Business", "Google Calendar", "Gmail", "Google Sheets", "M-Pesa"]).map((tool) => {
-        const matched = conns.find((c) => c.name.toLowerCase().includes(tool.toLowerCase()));
-        return {
-          tool,
-          role: matched && matched.whatWeUseItFor ? matched.whatWeUseItFor[0] : "Primary business tool",
-          status: matched ? matched.status : "connected"
-        };
-      }),
+      currentWorkflow: p.workflowStages || [],
+      toolsCurrentlyUsed: conns.map((c) => ({
+        tool: c.name,
+        role: c.description,
+        status: c.status
+      })),
       opportunitiesDiscovered: opps,
-      recommendedFirstAutomation: {
+      recommendedFirstAutomation: topOpp ? {
         title: topOpp.title,
         reason: topOpp.problem,
         impact: topOpp.impactLevel,
-        hoursSaved: topOpp.estimatedTimeSavedHoursPerWeek,
+        hoursSaved: topOpp.estimatedTimeSavedHoursPerWeek || 0,
         requiredApps: topOpp.requiredIntegrations || ["whatsapp_business", "google_calendar"],
         suggestedWorkflowId: topOpp.suggestedWorkflowId || "wf_lead_autopilot"
+      } : {
+        title: "Connect tools to detect automations",
+        reason: "Link your WhatsApp, Google Workspace, or M-Pesa channels to discover bottlenecks.",
+        impact: "MEDIUM",
+        hoursSaved: 0,
+        requiredApps: ["whatsapp_business"],
+        suggestedWorkflowId: "wf_lead_autopilot"
       },
       requiredAppsSummary: conns.map((c) => ({
         name: c.name,
         status: c.status,
-        usedFor: c.whatWeUseItFor ? c.whatWeUseItFor.join(", ") : c.description
+        usedFor: c.description
       }))
     };
   };

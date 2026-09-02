@@ -5132,46 +5132,50 @@ async function syncWithServer() {
     const p = globalState.businessProfile;
     const opps = globalState.opportunities;
     const conns = globalState.integrations;
-    const topOpp = opps[0] || _mockdata.defaultOpportunities[0];
+    const topOpp = opps[0];
 
     return {
       generatedAt: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }),
-      businessName: p.name || "James French & Exam Tutoring",
-      businessType: p.businessType || "Private French Tutor & Exam Coach",
+      businessName: p.name || _optionalChain([globalState, 'access', _14 => _14.organization, 'optionalAccess', _15 => _15.name]) || "Your Business",
+      businessType: p.businessType || "Service Business",
       city: p.city || "Nairobi",
       country: p.country || "Kenya",
       understood: {
-        summary: p.description || "Private DELF/DALF French lessons & exam preparation in Nairobi.",
-        customerType: p.customerType || "Individual learners, executives & university candidates",
-        primaryChannels: p.primaryChannels || ["WhatsApp", "Google Maps", "Referrals"],
-        manualFrictions: p.frictionPoints || [
-          "Unanswered WhatsApp inquiries going cold after 24 hours",
-          "Students attending lessons before completing payments",
-          "Manual entry of session attendance into Google Sheets"
+        summary: p.description || "Business workflows and customer interactions across everyday tools.",
+        customerType: p.customerType || "Direct customers & clients",
+        primaryChannels: p.customerChannels && p.customerChannels.length > 0 ? p.customerChannels : ["WhatsApp", "Google Maps", "Direct"],
+        manualFrictions: p.frictionPoints && p.frictionPoints.length > 0 ? p.frictionPoints : [
+          "Manual customer follow-ups taking hours",
+          "Unreconciled payment receipts across channels",
+          "Manual double entry into spreadsheets"
         ]
       },
-      currentWorkflow: p.workflowStages || _mockdata.defaultBusinessProfile.workflowStages || [],
-      toolsCurrentlyUsed: (p.toolsUsed || ["WhatsApp Business", "Google Calendar", "Gmail", "Google Sheets", "M-Pesa"]).map((tool) => {
-        const matched = conns.find((c) => c.name.toLowerCase().includes(tool.toLowerCase()));
-        return {
-          tool,
-          role: matched && matched.whatWeUseItFor ? matched.whatWeUseItFor[0] : "Primary business tool",
-          status: matched ? matched.status : "connected"
-        };
-      }),
+      currentWorkflow: p.workflowStages || [],
+      toolsCurrentlyUsed: conns.map((c) => ({
+        tool: c.name,
+        role: c.description,
+        status: c.status
+      })),
       opportunitiesDiscovered: opps,
-      recommendedFirstAutomation: {
+      recommendedFirstAutomation: topOpp ? {
         title: topOpp.title,
         reason: topOpp.problem,
         impact: topOpp.impactLevel,
-        hoursSaved: topOpp.estimatedTimeSavedHoursPerWeek,
+        hoursSaved: topOpp.estimatedTimeSavedHoursPerWeek || 0,
         requiredApps: topOpp.requiredIntegrations || ["whatsapp_business", "google_calendar"],
         suggestedWorkflowId: topOpp.suggestedWorkflowId || "wf_lead_autopilot"
+      } : {
+        title: "Connect tools to detect automations",
+        reason: "Link your WhatsApp, Google Workspace, or M-Pesa channels to discover bottlenecks.",
+        impact: "MEDIUM",
+        hoursSaved: 0,
+        requiredApps: ["whatsapp_business"],
+        suggestedWorkflowId: "wf_lead_autopilot"
       },
       requiredAppsSummary: conns.map((c) => ({
         name: c.name,
         status: c.status,
-        usedFor: c.whatWeUseItFor ? c.whatWeUseItFor.join(", ") : c.description
+        usedFor: c.description
       }))
     };
   };
@@ -17074,7 +17078,7 @@ var _designsystem = require('@/lib/design-system');
 
   // Module: @/components/BusinessReportView
   define("@/components/BusinessReportView", function(require, exports) {
-    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }"use client";
+    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }"use client";
 
 var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
@@ -17096,15 +17100,9 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
 
 
-
-
-
 var _lucidereact = require('lucide-react');
 var _store = require('@/lib/store');
-
 var _BrandLogo = require('@/components/BrandLogo');
-
-var _AutomationPreviewModal = require('./AutomationPreviewModal');
 var _generatereportpdf = require('@/lib/pdf/generate-report-pdf');
 
 
@@ -17118,14 +17116,17 @@ var _generatereportpdf = require('@/lib/pdf/generate-report-pdf');
 }) => {
   const { state, generateBusinessReport } = _store.useOtomatizonStore.call(void 0, );
   const report = generateBusinessReport();
-  const [selectedOppForPreview, setSelectedOppForPreview] = _react.useState(null);
   const [isDownloading, setIsDownloading] = _react.useState.call(void 0, false);
   const [activeSection, setActiveSection] = _react.useState("01");
+
+  const connectedApps = state.integrations.filter((i) => i.connected);
+  const activeHoursSaved = _optionalChain([state, 'access', _ => _.metrics, 'optionalAccess', _2 => _2.hoursSaved]) || _optionalChain([state, 'access', _3 => _3.stats, 'optionalAccess', _4 => _4.hoursSaved]) || 0;
+  const activeRevenueProtected = _optionalChain([state, 'access', _5 => _5.metrics, 'optionalAccess', _6 => _6.revenueRecoveredKes]) || _optionalChain([state, 'access', _7 => _7.stats, 'optionalAccess', _8 => _8.revenueKes]) || 0;
 
   const handleDownloadPdf = () => {
     setIsDownloading(true);
     try {
-      _generatereportpdf.triggerBrowserPdfDownload.call(void 0, report, `Otomatizon_Business_Report_${(report.businessName || "Company").replace(/\s+/g, "_")}.pdf`);
+      _generatereportpdf.triggerBrowserPdfDownload.call(void 0, report, `Otomatizon_Business_Report_${(report.businessName || "Workspace").replace(/\s+/g, "_")}.pdf`);
     } catch (err) {
       if (typeof window !== "undefined") {
         window.open("/api/report/pdf", "_blank");
@@ -17135,18 +17136,13 @@ var _generatereportpdf = require('@/lib/pdf/generate-report-pdf');
     }
   };
 
-  // 10 Canonical Sections matching Executive Report Standard
   const reportSections = [
     { id: "01", label: "Executive Summary" },
     { id: "02", label: "What We Understood" },
-    { id: "03", label: "Current Workflow vs Autopilot" },
-    { id: "04", label: "Friction Points & Delays" },
-    { id: "05", label: "Top Opportunities" },
-    { id: "06", label: "Recommended Automations" },
-    { id: "07", label: "Connected Systems & Security" },
-    { id: "08", label: "Quantified Impact & ROI" },
-    { id: "09", label: "4-Phase Engineering Architecture" },
-    { id: "10", label: "Appendices & Scopes" }
+    { id: "03", label: "Connected Systems" },
+    { id: "04", label: "Discovered Opportunities" },
+    { id: "05", label: "Recommended Automations" },
+    { id: "06", label: "Impact & Security Guarantee" }
   ];
 
   const scrollToSection = (id) => {
@@ -17160,12 +17156,12 @@ var _generatereportpdf = require('@/lib/pdf/generate-report-pdf');
   return (
     _react2.default.createElement('div', { className: "max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-8 animate-fadeIn print:px-0 print:py-0"        ,}
 
-      /* 1. TOP BANNER & PRIMARY ACTION TIER */
+      /* 1. TOP BANNER & PDF ACTION */
       , _react2.default.createElement('div', { className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6"            ,}
         , _react2.default.createElement('div', { className: "space-y-2",}
           , _react2.default.createElement('div', { className: "flex items-center gap-3"  ,}
             , _react2.default.createElement(_BrandLogo.BrandLogo, { variant: "full", size: "md",} )
-            , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#15803D] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"           ,}, "EXECUTIVE AUDIT REPORT"
+            , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#15803D] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"           ,}, "BUSINESS REPORT"
 
             )
           )
@@ -17195,36 +17191,47 @@ var _generatereportpdf = require('@/lib/pdf/generate-report-pdf');
         )
       )
 
-      /* Top 4 Key Verified Metrics */
+      /* Top Verified Metrics (Live State) */
       , _react2.default.createElement('div', { className: "grid grid-cols-2 sm:grid-cols-4 gap-4"   ,}
         , _react2.default.createElement('div', { className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-xs space-y-1"      ,}
           , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#75777E] block"    ,}, "Hours Saved" )
-          , _react2.default.createElement('div', { className: "text-2xl font-bold text-[#121316] font-mono"   ,}, "16.3 h "  , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "/ wk" ))
-          , _react2.default.createElement('span', { className: "text-[11px] text-[#15803D] font-mono font-medium"   ,}, "• 100% Verified"  )
+          , _react2.default.createElement('div', { className: "text-2xl font-bold text-[#121316] font-mono"   ,}
+            , activeHoursSaved.toFixed(1), " h "  , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "/ wk" )
+          )
+          , _react2.default.createElement('span', { className: "text-[11px] text-[#15803D] font-mono font-medium"   ,}, "• Measured" )
         )
+
         , _react2.default.createElement('div', { className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-xs space-y-1"      ,}
           , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#75777E] block"    ,}, "Protected Revenue" )
-          , _react2.default.createElement('div', { className: "text-2xl font-bold text-[#15803D] font-mono"   ,}, "88,000 " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "KES / mo"  ))
-          , _react2.default.createElement('span', { className: "text-[11px] text-[#15803D] font-mono font-medium"   ,}, "• M-Pesa Receipts"  )
+          , _react2.default.createElement('div', { className: "text-2xl font-bold text-[#15803D] font-mono"   ,}
+            , activeRevenueProtected.toLocaleString(), " " , _react2.default.createElement('span', { className: "text-xs text-[#75777E] font-normal"  ,}, "KES")
+          )
+          , _react2.default.createElement('span', { className: "text-[11px] text-[#15803D] font-mono font-medium"   ,}, "• Reconciled" )
         )
+
         , _react2.default.createElement('div', { className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-xs space-y-1"      ,}
           , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#75777E] block"    ,}, "Connected Systems" )
-          , _react2.default.createElement('div', { className: "text-2xl font-bold text-[#121316] font-mono"   ,}, "6 / 6"  )
-          , _react2.default.createElement('span', { className: "text-[11px] text-[#15803D] font-mono font-medium"   ,}, "• All Operational"  )
+          , _react2.default.createElement('div', { className: "text-2xl font-bold text-[#121316] font-mono"   ,}
+            , connectedApps.length, " / "  , state.integrations.length
+          )
+          , _react2.default.createElement('span', { className: "text-[11px] text-[#75777E] font-mono font-medium"   ,}, "• Active Channels"  )
         )
+
         , _react2.default.createElement('div', { className: "p-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-xs space-y-1"      ,}
-          , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#75777E] block"    ,}, "Semantic Accuracy" )
-          , _react2.default.createElement('div', { className: "text-2xl font-bold text-[#121316] font-mono"   ,}, "98.6 %" )
-          , _react2.default.createElement('span', { className: "text-[11px] text-[#15803D] font-mono font-medium"   ,}, "• Multilingual NLP"  )
+          , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase text-[#75777E] block"    ,}, "Active Workflows" )
+          , _react2.default.createElement('div', { className: "text-2xl font-bold text-[#121316] font-mono"   ,}
+            , state.workflows.filter(w => w.active).length
+          )
+          , _react2.default.createElement('span', { className: "text-[11px] text-[#15803D] font-mono font-medium"   ,}, "• Operational" )
         )
       )
 
       /* 2. MAIN 2-COLUMN WORKBENCH */
       , _react2.default.createElement('div', { className: "grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"    ,}
 
-        /* Left Column (4 cols): 10-Section Navigation Sidebar */
+        /* Left Column (4 cols): Navigation Sidebar */
         , _react2.default.createElement('div', { className: "lg:col-span-4 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-4 sticky top-6 space-y-1 font-mono text-xs"           ,}
-          , _react2.default.createElement('div', { className: "px-3 py-2 text-[10px] uppercase tracking-wider text-[#75777E] font-bold border-b border-[#EAE7DF] mb-1"         ,}, "REPORT SECTIONS (10)"
+          , _react2.default.createElement('div', { className: "px-3 py-2 text-[10px] uppercase tracking-wider text-[#75777E] font-bold border-b border-[#EAE7DF] mb-1"         ,}, "REPORT SECTIONS"
 
           )
 
@@ -17250,332 +17257,141 @@ var _generatereportpdf = require('@/lib/pdf/generate-report-pdf');
         /* Right Column (8 cols): Document Content Canvas */
         , _react2.default.createElement('div', { className: "lg:col-span-8 space-y-6" ,}
 
-          /* CARD A: 03 CURRENT WORKFLOW (BEFORE OTOMATIZON) */
-          , _react2.default.createElement('div', { id: "section-03", className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 space-y-4"      ,}
-            , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
-              , _react2.default.createElement('span', { className: "text-xs font-mono text-[#15803D] font-bold"   ,}, "03")
-              , _react2.default.createElement('h3', { className: "text-xs font-bold uppercase tracking-wider text-[#121316]"    ,}, "OPERATIONAL COMPARISON (BEFORE vs WITH OTOMATIZON)"
+          /* SECTION 01: Executive Summary */
+          , _react2.default.createElement('div', { id: "section-01", className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-4"       ,}
+            , _react2.default.createElement('div', { className: "flex items-center justify-between border-b border-[#EAE7DF] pb-4"     ,}
+              , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
+                , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "01")
+                , _react2.default.createElement('h3', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Executive Summary" )
+              )
+              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}, "AUTHENTIC"
 
               )
             )
 
-            /* 5-Step Visual Workflow with Icons */
-            , _react2.default.createElement('div', { className: "flex flex-wrap items-center justify-between gap-2 p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]"         ,}
-              /* Step 1 */
-              , _react2.default.createElement('div', { className: "flex flex-col items-center text-center space-y-1.5 min-w-[70px]"     ,}
-                , _react2.default.createElement('div', { className: "w-10 h-10 rounded-2xl bg-white border border-[#EAE7DF] shadow-2xs flex items-center justify-center text-[#15803D]"          ,}
-                  , _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4 text-[#15803D]"  ,} )
-                )
-                , _react2.default.createElement('span', { className: "text-[11px] font-bold text-[#121316]"  ,}, "Inquiry")
-                , _react2.default.createElement('span', { className: "text-[9px] font-mono text-[#75777E]"  ,}, "WhatsApp")
+            , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] leading-relaxed"  ,}, "This executive report establishes the automation roadmap for "
+                      , _react2.default.createElement('strong', { className: "text-[#121316]",}, report.businessName), ". It identifies workflow bottlenecks across everyday communication channels, calendars, spreadsheets, and payment systems."
+            )
+          )
+
+          /* SECTION 02: What We Understood */
+          , _react2.default.createElement('div', { id: "section-02", className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-4"       ,}
+            , _react2.default.createElement('div', { className: "flex items-center justify-between border-b border-[#EAE7DF] pb-4"     ,}
+              , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
+                , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "02")
+                , _react2.default.createElement('h3', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "What We Understood"  )
               )
+              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#75777E] px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF]"        ,}, "VERIFIED PROFILE"
 
-              , _react2.default.createElement('span', { className: "text-[#75777E] font-mono text-xs"  ,}, "→")
-
-              /* Step 2 */
-              , _react2.default.createElement('div', { className: "flex flex-col items-center text-center space-y-1.5 min-w-[70px]"     ,}
-                , _react2.default.createElement('div', { className: "w-10 h-10 rounded-2xl bg-white border border-[#EAE7DF] shadow-2xs flex items-center justify-center text-[#15803D]"          ,}
-                  , _react2.default.createElement(_lucidereact.Cpu, { className: "w-4 h-4 text-[#15803D]"  ,} )
-                )
-                , _react2.default.createElement('span', { className: "text-[11px] font-bold text-[#121316]"  ,}, "Analyse NLP" )
-                , _react2.default.createElement('span', { className: "text-[9px] font-mono text-[#15803D] font-semibold"   ,}, "Automatisé")
               )
+            )
 
-              , _react2.default.createElement('span', { className: "text-[#75777E] font-mono text-xs"  ,}, "→")
-
-              /* Step 3 */
-              , _react2.default.createElement('div', { className: "flex flex-col items-center text-center space-y-1.5 min-w-[70px]"     ,}
-                , _react2.default.createElement('div', { className: "w-10 h-10 rounded-2xl bg-white border border-[#EAE7DF] shadow-2xs flex items-center justify-center text-blue-600"          ,}
-                  , _react2.default.createElement(_lucidereact.Calendar, { className: "w-4 h-4" ,} )
-                )
-                , _react2.default.createElement('span', { className: "text-[11px] font-bold text-[#121316]"  ,}, "Google Meet" )
-                , _react2.default.createElement('span', { className: "text-[9px] font-mono text-[#15803D] font-semibold"   ,}, "Synchronisé")
-              )
-
-              , _react2.default.createElement('span', { className: "text-[#75777E] font-mono text-xs"  ,}, "→")
-
-              /* Step 4 */
-              , _react2.default.createElement('div', { className: "flex flex-col items-center text-center space-y-1.5 min-w-[70px]"     ,}
-                , _react2.default.createElement('div', { className: "w-10 h-10 rounded-2xl bg-white border border-[#EAE7DF] shadow-2xs flex items-center justify-center text-emerald-700"          ,}
-                  , _react2.default.createElement(_lucidereact.CreditCard, { className: "w-4 h-4" ,} )
-                )
-                , _react2.default.createElement('span', { className: "text-[11px] font-bold text-[#121316]"  ,}, "M-Pesa STK" )
-                , _react2.default.createElement('span', { className: "text-[9px] font-mono text-[#15803D] font-semibold"   ,}, "Instantané")
-              )
-
-              , _react2.default.createElement('span', { className: "text-[#75777E] font-mono text-xs"  ,}, "→")
-
-              /* Step 5 */
-              , _react2.default.createElement('div', { className: "flex flex-col items-center text-center space-y-1.5 min-w-[70px]"     ,}
-                , _react2.default.createElement('div', { className: "w-10 h-10 rounded-2xl bg-white border border-[#EAE7DF] shadow-2xs flex items-center justify-center text-[#15803D]"          ,}
-                  , _react2.default.createElement(_lucidereact.Clock, { className: "w-4 h-4 text-[#15803D]"  ,} )
-                )
-                , _react2.default.createElement('span', { className: "text-[11px] font-bold text-[#121316]"  ,}, "Relance 24h" )
-                , _react2.default.createElement('span', { className: "text-[9px] font-mono text-[#15803D] font-semibold"   ,}, "Coupe-Circuit")
+            , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] text-xs space-y-2"      ,}
+              , _react2.default.createElement('p', { className: "text-[#121316] font-semibold" ,}, report.understood.summary)
+              , _react2.default.createElement('div', { className: "text-xs font-mono text-[#75777E] pt-1"   ,}
+                , _react2.default.createElement('span', null, "Customer Channels: "  , report.understood.primaryChannels.join(", "))
               )
             )
           )
 
-          /* CARD B: SPLIT 05 TOP OPPORTUNITIES (Left) & 08 EXPECTED IMPACT (Right) */
-          , _react2.default.createElement('div', { className: "grid grid-cols-1 md:grid-cols-12 gap-6"   ,}
-
-            /* 05 TOP OPPORTUNITIES (7 cols) */
-            , _react2.default.createElement('div', { id: "section-05", className: "md:col-span-7 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 space-y-4"       ,}
-              , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
-                , _react2.default.createElement('span', { className: "text-xs font-mono text-[#15803D] font-bold"   ,}, "05")
-                , _react2.default.createElement('h3', { className: "text-xs font-bold uppercase tracking-wider text-[#121316]"    ,}, "TOP OPPORTUNITÉS DÉCOUVERTES"
-
-                )
+          /* SECTION 03: Connected Systems */
+          , _react2.default.createElement('div', { id: "section-03", className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-4"       ,}
+            , _react2.default.createElement('div', { className: "flex items-center justify-between border-b border-[#EAE7DF] pb-4"     ,}
+              , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
+                , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "03")
+                , _react2.default.createElement('h3', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Connected Systems & Security"   )
               )
-
-              , _react2.default.createElement('div', { className: "space-y-3 font-mono text-xs"  ,}
-                /* Item 1 */
-                , _react2.default.createElement('div', { className: "p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-start gap-3"       ,}
-                  , _react2.default.createElement('div', { className: "w-7 h-7 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 flex items-center justify-center shrink-0 mt-0.5"           ,}
-                    , _react2.default.createElement(_lucidereact.AlertCircle, { className: "w-3.5 h-3.5" ,} )
-                  )
-                  , _react2.default.createElement('div', null
-                    , _react2.default.createElement('strong', { className: "text-[#121316] text-xs block"  ,}, "14 prospects sans suivi à 24 heures"      )
-                    , _react2.default.createElement('span', { className: "text-[#15803D] text-[11px]" ,}, "Impact estimé : KES 49 000 / mois"       )
-                  )
-                )
-
-                /* Item 2 */
-                , _react2.default.createElement('div', { className: "p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-start gap-3"       ,}
-                  , _react2.default.createElement('div', { className: "w-7 h-7 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center shrink-0 mt-0.5"           ,}
-                    , _react2.default.createElement(_lucidereact.Clock, { className: "w-3.5 h-3.5" ,} )
-                  )
-                  , _react2.default.createElement('div', null
-                    , _react2.default.createElement('strong', { className: "text-[#121316] text-xs block"  ,}, "Séances délivrées avant validation M-Pesa"    )
-                    , _react2.default.createElement('span', { className: "text-[#15803D] text-[11px]" ,}, "Impact estimé : KES 39 000 / mois"       )
-                  )
-                )
+              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}
+                , connectedApps.length, " OF "  , state.integrations.length, " CONNECTED"
               )
             )
 
-            /* 08 EXPECTED IMPACT (5 cols) */
-            , _react2.default.createElement('div', { id: "section-08", className: "md:col-span-5 bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 space-y-4"       ,}
-              , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
-                , _react2.default.createElement('span', { className: "text-xs font-mono text-[#15803D] font-bold"   ,}, "08")
-                , _react2.default.createElement('h3', { className: "text-xs font-bold uppercase tracking-wider text-[#121316]"    ,}, "IMPACT CHIFFRÉ"
-
+            , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono"     ,}
+              , state.integrations.map((app) => (
+                _react2.default.createElement('div', { key: app.id, className: "p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center justify-between"       ,}
+                  , _react2.default.createElement('div', null
+                    , _react2.default.createElement('div', { className: "font-bold text-[#121316]" ,}, app.name)
+                    , _react2.default.createElement('div', { className: "text-[10px] text-[#75777E]" ,}, app.description)
+                  )
+                  , _react2.default.createElement('span', { className: `text-[10px] px-2 py-0.5 rounded-full font-bold ${app.connected ? "bg-[#ECFDF5] text-[#15803D] border border-[#A7F3D0]" : "bg-white text-[#75777E] border border-[#EAE7DF]"}`,}
+                    , app.connected ? "Active" : "Disconnected"
+                  )
                 )
-              )
-
-              , _react2.default.createElement('div', { className: "space-y-3 font-mono text-xs"  ,}
-                , _react2.default.createElement('div', { className: "p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center justify-between"       ,}
-                  , _react2.default.createElement('span', { className: "text-[#75777E] text-[11px]" ,}, "Heures économisées :"  )
-                  , _react2.default.createElement('strong', { className: "text-[#15803D] text-sm" ,}, "+16.3 h / sem"   )
-                )
-
-                , _react2.default.createElement('div', { className: "p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center justify-between"       ,}
-                  , _react2.default.createElement('span', { className: "text-[#75777E] text-[11px]" ,}, "Prospects relancés :"  )
-                  , _react2.default.createElement('strong', { className: "text-[#15803D] text-sm" ,}, "+24 / mois"  )
-                )
-
-                , _react2.default.createElement('div', { className: "p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center justify-between"       ,}
-                  , _react2.default.createElement('span', { className: "text-[#75777E] text-[11px]" ,}, "Valeur totale sauvée :"   )
-                  , _react2.default.createElement('strong', { className: "text-[#15803D] text-sm" ,}, "+88 000 KES"  )
-                )
-              )
+              ))
             )
-
           )
 
-          /* DETAILED DOCUMENT SECTIONS 01 - 10 */
-          , _react2.default.createElement('div', { className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-8"       ,}
+          /* SECTION 04: Discovered Opportunities */
+          , _react2.default.createElement('div', { id: "section-04", className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-4"       ,}
+            , _react2.default.createElement('div', { className: "flex items-center justify-between border-b border-[#EAE7DF] pb-4"     ,}
+              , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
+                , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "04")
+                , _react2.default.createElement('h3', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Discovered Opportunities" )
+              )
+              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#75777E] px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF]"        ,}
+                , state.opportunities.length, " DISCOVERED"
+              )
+            )
 
-            /* 01 Executive Summary */
-            , _react2.default.createElement('div', { id: "section-01", className: "space-y-3 border-b border-[#EAE7DF] pb-6"   ,}
-              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
-                  , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "01")
-                  , _react2.default.createElement('h4', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Synthèse Exécutive" )
-                )
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}, "OBSERVED"
+            , state.opportunities.length === 0 ? (
+              _react2.default.createElement('div', { className: "p-6 text-center space-y-2 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]"      ,}
+                , _react2.default.createElement('p', { className: "text-xs text-[#75777E]" ,}, "No opportunities generated yet. Complete your business description or connect your tools to uncover repetitive bottlenecks."
 
                 )
               )
-              , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] leading-relaxed"  ,}, "Ce rapport certifié analyse la circulation de l'information entre WhatsApp, Google Workspace et les paiements M-Pesa. Il établit la feuille de route d'automatisation pour éliminer les retards manuels et protéger les revenus d'enseignement."
+            ) : (
+              _react2.default.createElement('div', { className: "space-y-3 font-mono text-xs"  ,}
+                , state.opportunities.map((opp) => (
+                  _react2.default.createElement('div', { key: opp.id, className: "p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-1"     ,}
+                    , _react2.default.createElement('strong', { className: "text-[#121316] text-xs block"  ,}, opp.title)
+                    , _react2.default.createElement('p', { className: "text-[#4A4B50] text-[11px]" ,}, opp.problem)
+                  )
+                ))
+              )
+            )
+          )
+
+          /* SECTION 05: Recommended Automations */
+          , _react2.default.createElement('div', { id: "section-05", className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-4"       ,}
+            , _react2.default.createElement('div', { className: "flex items-center justify-between border-b border-[#EAE7DF] pb-4"     ,}
+              , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
+                , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "05")
+                , _react2.default.createElement('h3', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Recommended Automations" )
+              )
+              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}, "RECOMMENDED"
 
               )
             )
 
-            /* 02 What We Understood */
-            , _react2.default.createElement('div', { id: "section-02", className: "space-y-3 border-b border-[#EAE7DF] pb-6"   ,}
-              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
-                  , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "02")
-                  , _react2.default.createElement('h4', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Ce que Nous Avons Compris"    )
-                )
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#75777E] px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF]"        ,}, "INFERRED"
-
-                )
+            , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono"            ,}
+              , _react2.default.createElement('div', { className: "space-y-0.5",}
+                , _react2.default.createElement('strong', { className: "text-[#121316] text-xs block"  ,}, report.recommendedFirstAutomation.title)
+                , _react2.default.createElement('div', { className: "text-[11px] text-[#4A4B50]" ,}, report.recommendedFirstAutomation.reason)
               )
-              , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] text-xs space-y-2"      ,}
-                , _react2.default.createElement('p', { className: "text-[#121316] font-semibold" ,}, report.understood.summary)
-                , _react2.default.createElement('div', { className: "flex flex-wrap gap-2 text-xs font-mono text-[#75777E]"     ,}
-                  , _react2.default.createElement('span', null, "Canaux : WhatsApp Business, Google Calendar, Google Sheets, Safaricom M-Pesa."         )
-                )
-              )
-            )
-
-            /* 04 Friction Points */
-            , _react2.default.createElement('div', { id: "section-04", className: "space-y-3 border-b border-[#EAE7DF] pb-6"   ,}
-              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
-                  , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "04")
-                  , _react2.default.createElement('h4', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Goulots d'Étranglement Détectés"  )
-                )
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}, "OBSERVED"
-
-                )
-              )
-              , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] leading-relaxed"  ,}, "Les demandes des élèves restent souvent sans réponse pendant les heures de cours. 14 demandes qualifiées n'avaient aucun suivi à 24 heures, entraînant une perte sèche de conversion."
-
-              )
-            )
-
-            /* 06 Recommended Automations */
-            , _react2.default.createElement('div', { id: "section-06", className: "space-y-3 border-b border-[#EAE7DF] pb-6"   ,}
-              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
-                  , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "06")
-                  , _react2.default.createElement('h4', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Automatisations Recommandées" )
-                )
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}, "RECOMMENDED"
-
-                )
-              )
-              , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-between text-xs font-mono"         ,}
-                , _react2.default.createElement('div', { className: "space-y-0.5",}
-                  , _react2.default.createElement('strong', { className: "text-[#121316] text-xs" ,}, "Pilote Automatique de Relance Lead (24h)"     )
-                  , _react2.default.createElement('div', { className: "text-[11px] text-[#4A4B50]" ,}, "WhatsApp → Google Sheets → Google Calendar → Relance Anti-Spam 24h"          )
-                )
-                , _react2.default.createElement('button', {
+              , onNavigateToAutomations && (
+                _react2.default.createElement('button', {
                   onClick: onNavigateToAutomations,
-                  className: "px-3.5 py-1.5 rounded-full bg-[#15803D] text-white font-bold text-xs hover:bg-[#166534] transition-colors cursor-pointer"         ,}
-, "Voir le Flux →"
+                  className: "px-4 py-2 rounded-full bg-[#15803D] text-white font-bold text-xs hover:bg-[#166534] transition-colors cursor-pointer shrink-0"          ,}
+, "View Automations →"
 
                 )
               )
             )
+          )
 
-            /* 07 Required Systems */
-            , _react2.default.createElement('div', { id: "section-07", className: "space-y-3 border-b border-[#EAE7DF] pb-6"   ,}
-              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
-                  , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "07")
-                  , _react2.default.createElement('h4', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Systèmes Requis & Sécurité"   )
-                )
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}, "6 CONNECTÉS"
-
-                )
-              )
-              , _react2.default.createElement('div', { className: "grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs font-mono"     ,}
-                , _react2.default.createElement('div', { className: "p-3 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center gap-2"       ,}
-                  , _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4 text-emerald-600"  ,} )
-                  , _react2.default.createElement('span', null, "WhatsApp Business" )
-                )
-                , _react2.default.createElement('div', { className: "p-3 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center gap-2"       ,}
-                  , _react2.default.createElement(_lucidereact.Calendar, { className: "w-4 h-4 text-blue-600"  ,} )
-                  , _react2.default.createElement('span', null, "Google Calendar" )
-                )
-                , _react2.default.createElement('div', { className: "p-3 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center gap-2"       ,}
-                  , _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-4 h-4 text-emerald-700"  ,} )
-                  , _react2.default.createElement('span', null, "Google Sheets" )
-                )
-                , _react2.default.createElement('div', { className: "p-3 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center gap-2"       ,}
-                  , _react2.default.createElement(_lucidereact.CreditCard, { className: "w-4 h-4 text-emerald-700"  ,} )
-                  , _react2.default.createElement('span', null, "Safaricom M-Pesa" )
-                )
-                , _react2.default.createElement('div', { className: "p-3 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center gap-2"       ,}
-                  , _react2.default.createElement(_lucidereact.Mail, { className: "w-4 h-4 text-red-600"  ,} )
-                  , _react2.default.createElement('span', null, "Gmail")
-                )
-                , _react2.default.createElement('div', { className: "p-3 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF] flex items-center gap-2"       ,}
-                  , _react2.default.createElement(_lucidereact.HardDrive, { className: "w-4 h-4 text-blue-600"  ,} )
-                  , _react2.default.createElement('span', null, "Google Drive" )
-                )
-              )
+          /* SECTION 06: Security & Privacy Guarantee */
+          , _react2.default.createElement('div', { id: "section-06", className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-3"       ,}
+            , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono border-b border-[#EAE7DF] pb-4"      ,}
+              , _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-4 h-4 text-[#15803D]"  ,} )
+              , _react2.default.createElement('h3', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Security & Data Isolation"   )
             )
+            , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50] leading-relaxed"  ,}, "All credentials and access tokens are secured using AES-256-GCM encryption. Otomatizon isolates data per organization workspace and never shares customer communication data with third parties."
 
-            /* 09 Architecture des 4 Phases */
-            , _react2.default.createElement('div', { id: "section-09", className: "space-y-3 border-b border-[#EAE7DF] pb-6"   ,}
-              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
-                  , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "09")
-                  , _react2.default.createElement('h4', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Architecture des 4 Phases Déployées"    )
-                )
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}, "100% OPÉRATIONNEL"
-
-                )
-              )
-              , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"    ,}
-                , _react2.default.createElement('div', { className: "p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-1"     ,}
-                  , _react2.default.createElement('strong', { className: "text-[#121316] font-bold block flex items-center gap-1.5"     ,}
-                    , _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} ), "Phase 1 : Connecteurs Réels & AES-256"
-
-                  )
-                  , _react2.default.createElement('p', { className: "text-[#75777E]",}, "OAuth2 Google Workspace, Webhooks Meta WhatsApp HMAC, Safaricom Daraja STK Push."          )
-                )
-                , _react2.default.createElement('div', { className: "p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-1"     ,}
-                  , _react2.default.createElement('strong', { className: "text-[#121316] font-bold block flex items-center gap-1.5"     ,}
-                    , _react2.default.createElement(_lucidereact.Cpu, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} ), "Phase 2 : Intelligence Sémantique"
-
-                  )
-                  , _react2.default.createElement('p', { className: "text-[#75777E]",}, "Parser NLP multilingue (Français, Anglais, Swahili, Sheng) & extraction d'intentions et tarifs."           )
-                )
-                , _react2.default.createElement('div', { className: "p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-1"     ,}
-                  , _react2.default.createElement('strong', { className: "text-[#121316] font-bold block flex items-center gap-1.5"     ,}
-                    , _react2.default.createElement(_lucidereact.Clock, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} ), "Phase 3 : Worker 24h & Anti-Spam"
-
-                  )
-                  , _react2.default.createElement('p', { className: "text-[#75777E]",}, "File d'attente persistante disque, coupe-circuit anti-spam et déclencheur Fast-Forward."        )
-                )
-                , _react2.default.createElement('div', { className: "p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-1"     ,}
-                  , _react2.default.createElement('strong', { className: "text-[#121316] font-bold block flex items-center gap-1.5"     ,}
-                    , _react2.default.createElement(_lucidereact.CreditCard, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} ), "Phase 4 : Production Cloud & M-Pesa"
-
-                  )
-                  , _react2.default.createElement('p', { className: "text-[#75777E]",}, "Abonnements SaaS KES, quotas mensuels dynamiques et isolation multi-tenant."        )
-                )
-              )
             )
-
-            /* 10 Appendices & Scopes */
-            , _react2.default.createElement('div', { id: "section-10", className: "space-y-3",}
-              , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                , _react2.default.createElement('div', { className: "flex items-center gap-2 font-mono"   ,}
-                  , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "10")
-                  , _react2.default.createElement('h4', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Annexes, Sécurité & Intégrité"   )
-                )
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#75777E]"  ,}, "AES-256 GCM"
-
-                )
-              )
-              , _react2.default.createElement('p', { className: "text-[11px] text-[#75777E] font-mono leading-relaxed"   ,}, "Isolation stricte des données par frontière d'organisation (`organizationId`). Tous les webhooks entrants sont signés et vérifiés par HMAC SHA-256 avec une fenêtre anti-rejeu de 15 minutes."
-
-              )
-            )
-
           )
 
         )
 
-      )
-
-      /* Opportunity Preview Modal */
-      , selectedOppForPreview && (
-        _react2.default.createElement(_AutomationPreviewModal.AutomationPreviewModal, {
-          isOpen: true,
-          opportunity: selectedOppForPreview,
-          onClose: () => setSelectedOppForPreview(null),
-          onActivate: () => {
-            setSelectedOppForPreview(null);
-            if (onNavigateToAutomations) onNavigateToAutomations();
-          },}
-        )
       )
 
     )
