@@ -28,6 +28,7 @@ lerna-debug.log*
 .env.development.local
 .env.test.local
 .env.production.local
+data/baileys_auth/
 
 # OS & Editor files
 .DS_Store
