@@ -96,6 +96,7 @@ function bundleApp() {
     { name: "@/lib/decision-engine", path: "src/lib/decision-engine/index.ts" },
     { name: "@/lib/mock-data", path: "src/lib/mock-data.ts" },
     { name: "@/lib/pdf/generate-report-pdf", path: "src/lib/pdf/generate-report-pdf.ts" },
+    { name: "@/lib/qr-generator", path: "src/lib/qr-generator.ts" },
     { name: "@/lib/ai-engine", path: "src/lib/ai-engine.ts" },
     { name: "@/lib/automation-runner", path: "src/lib/automation-runner.ts" },
     { name: "@/lib/store", path: "src/lib/store.ts" },
@@ -196,6 +197,7 @@ function bundleApp() {
     if (clean === "./components/AutomationDetailView" || clean === "./AutomationDetailView" || clean === "@/components/AutomationDetailView") clean = "@/components/AutomationDetailView";
     if (clean === "./components/JourneyBanner" || clean === "./JourneyBanner" || clean === "@/components/JourneyBanner") clean = "@/components/JourneyBanner";
     if (clean === "./pdf/generate-report-pdf" || clean === "@/lib/pdf/generate-report-pdf") clean = "@/lib/pdf/generate-report-pdf";
+    if (clean === "./qr-generator" || clean === "./lib/qr-generator" || clean === "@/lib/qr-generator") clean = "@/lib/qr-generator";
     if (clean === "./components/LandingPage") clean = "@/components/LandingPage";
     if (clean === "./components/ResultsImpactView" || clean === "./ResultsImpactView" || clean === "@/components/ResultsImpactView") clean = "@/components/ResultsImpactView";
     if (clean === "./components/HomeCommandCenter") clean = "@/components/HomeCommandCenter";

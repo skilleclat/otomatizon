@@ -502,6 +502,9 @@ video {
 .pointer-events-none {
   pointer-events: none;
 }
+.static {
+  position: static;
+}
 .fixed {
   position: fixed;
 }
@@ -755,8 +758,8 @@ video {
 .h-40 {
   height: 10rem;
 }
-.h-44 {
-  height: 11rem;
+.h-48 {
+  height: 12rem;
 }
 .h-5 {
   height: 1.25rem;
@@ -851,8 +854,8 @@ video {
 .w-40 {
   width: 10rem;
 }
-.w-44 {
-  width: 11rem;
+.w-48 {
+  width: 12rem;
 }
 .w-5 {
   width: 1.25rem;
@@ -1413,6 +1416,9 @@ video {
 .bg-\[\#002E25\] {
   --tw-bg-opacity: 1;
   background-color: rgb(0 46 37 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#002E25\]\/5 {
+  background-color: rgb(0 46 37 / 0.05);
 }
 .bg-\[\#003087\] {
   --tw-bg-opacity: 1;

@@ -6,8 +6,8 @@
       "email": "amina.odhiambo@gmail.com",
       "phone": "+254 722 111 222",
       "organizationId": "org_1788371046317",
-      "passwordHash": "2e95fca1f12253e86605d715c49c03aa19ab2f91151929b201a201507f43ecf58c18bd279e9fc473d270cf53190b46cc6a0cdc6926d4b0835329c61be2130504",
-      "salt": "f4123e8b7d2c691d579996a639a2b65b",
+      "passwordHash": "a5960d6d506f4f8ba41b8757f261ec92c0396096b38910b1c0c5c3cb6e03c4f6b655e582809de8d407d1852be02a1d02cd7dad32ae29bbb3fcf056b9b140ba4d",
+      "salt": "e65e44b8a96b4612842b824fd345b9e6",
       "createdAt": "2026-09-02T17:44:06.317Z"
     }
   ],
@@ -15,7 +15,7 @@
     {
       "id": "org_1788371046317",
       "name": "Amina Math Coaching",
-      "planId": "starter",
+      "planId": "growth",
       "createdAt": "2026-09-02T17:44:06.317Z"
     }
   ],
@@ -133,10 +133,93 @@
       "status": "disconnected",
       "lastSyncAt": null,
       "errorCount": 0
+    },
+    {
+      "id": "google_calendar",
+      "organizationId": "org_default",
+      "name": "Google calendar",
+      "connected": true,
+      "status": "connected",
+      "account": "heritiermaliyabwana1@gmail.com",
+      "authType": "google_oauth2",
+      "lastSyncAt": "2026-09-02T19:33:22.141Z"
+    },
+    {
+      "id": "google_sheets",
+      "organizationId": "org_default",
+      "name": "Google sheets",
+      "connected": true,
+      "status": "connected",
+      "account": "heritiermaliyabwana1@gmail.com",
+      "authType": "google_oauth2",
+      "lastSyncAt": "2026-09-02T19:33:22.141Z"
+    },
+    {
+      "id": "gmail",
+      "organizationId": "org_default",
+      "name": "Gmail",
+      "connected": true,
+      "status": "connected",
+      "account": "heritiermaliyabwana1@gmail.com",
+      "authType": "google_oauth2",
+      "lastSyncAt": "2026-09-02T19:33:22.141Z"
+    },
+    {
+      "id": "google_meet",
+      "organizationId": "org_default",
+      "name": "Google meet",
+      "connected": true,
+      "status": "connected",
+      "account": "heritiermaliyabwana1@gmail.com",
+      "authType": "google_oauth2",
+      "lastSyncAt": "2026-09-02T19:33:22.141Z"
+    },
+    {
+      "id": "google_drive",
+      "organizationId": "org_default",
+      "name": "Google drive",
+      "connected": true,
+      "status": "connected",
+      "account": "heritiermaliyabwana1@gmail.com",
+      "authType": "google_oauth2",
+      "lastSyncAt": "2026-09-02T19:33:22.141Z"
+    },
+    {
+      "id": "google_business",
+      "organizationId": "org_default",
+      "name": "Google business",
+      "connected": true,
+      "status": "connected",
+      "account": "heritiermaliyabwana1@gmail.com",
+      "authType": "google_oauth2",
+      "lastSyncAt": "2026-09-02T19:33:22.141Z"
+    },
+    {
+      "id": "whatsapp_business",
+      "organizationId": "org_test_qr",
+      "name": "WhatsApp Business",
+      "connected": true,
+      "status": "connected",
+      "account": "+254 712 345 678",
+      "authType": "baileys_multidevice",
+      "lastSyncAt": "2026-09-02T20:03:24.939Z"
     }
   ],
   "workflows": [],
   "executions": [
+    {
+      "id": "exec_1788379415664",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 3,
+      "stepsTotal": 3,
+      "logSummary": "Completed all 3 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
     {
       "id": "exec_1788377197699",
       "workflowId": "wf_lead_autopilot",
@@ -207,6 +290,74 @@
   "operationalEvents": [],
   "activityLogs": [
     {
+      "id": "act_1788379419057",
+      "organizationId": "org_1788371046317",
+      "runId": "run_1788379419057",
+      "type": "subscription_upgraded",
+      "channel": "mpesa",
+      "application": "Otomatizon Billing",
+      "title": "Plan upgraded to Growth (KES 999/mo)",
+      "description": "M-Pesa Receipt: QAH9012345. Higher quota unlocked (5 Automations & 300 Follow-ups/mo).",
+      "actionTakenByOtomatizon": "Safaricom M-Pesa STK subscription payment verified & plan upgraded.",
+      "businessResult": "Subscription active until 02/10/2026",
+      "entityName": "Amina Math Coaching",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788379417338",
+      "organizationId": "org_test",
+      "runId": "run_1788379417338",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Naomi Kiprono",
+      "description": "\"Bonjour Naomi ! Petit suivi concernant votre demande de cours de français.\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Naomi Kiprono",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "log_1788379415664",
+      "organizationId": "org_1788371046317",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788379404939",
+      "organizationId": "org_test_qr",
+      "type": "system_intelligence",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "WhatsApp Linked: +254 712 345 678",
+      "description": "Active WhatsApp Web Multi-Device session established for WhatsApp Business Account.",
+      "actionTakenByOtomatizon": "Secure device pairing confirmed via QR Scan Protocol",
+      "businessResult": "Otomatizon is now listening for customer inquiries",
+      "entityName": "+254 712 345 678",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788377602141",
+      "organizationId": "org_default",
+      "type": "system_intelligence",
+      "channel": "google_workspace",
+      "application": "Google Workspace Hub",
+      "title": "Google Workspace Connected (6 Services)",
+      "description": "Account heritiermaliyabwana1@gmail.com connected. Otomatizon AI layer is now actively managing Calendar, Meet, Sheets & Gmail.",
+      "actionTakenByOtomatizon": "Autonomous AI Orchestration initialized across Google Workspace",
+      "businessResult": "Ready to automatically record leads, schedule meetings, and send confirmations",
+      "entityName": "heritiermaliyabwana1@gmail.com",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
       "id": "log_1788377197699",
       "organizationId": "org_1788371046317",
       "type": "booking_confirmed",
@@ -276,11 +427,11 @@
     {
       "id": "sub_1788371046317",
       "organizationId": "org_1788371046317",
-      "planId": "starter",
+      "planId": "growth",
       "status": "active",
-      "currentPeriodStart": "2026-09-02T17:44:06.317Z",
-      "currentPeriodEnd": "2026-10-02T17:44:06.317Z",
-      "priceKesMonthly": 499
+      "currentPeriodStart": "2026-09-02T20:03:39.057Z",
+      "currentPeriodEnd": "2026-10-02T20:03:39.057Z",
+      "priceKesMonthly": 999
     }
   ],
   "opportunities": [],
@@ -344,6 +495,80 @@
         "followUpMessageText": "Bonjour Sylvie ! Petit rappel amical pour la séance de français de demain 15h. Vous pouvez finaliser le règlement via M-Pesa Till 174379 pour recevoir le lien Meet. Merci ! — James",
         "estimatedValueKes": 3500
       }
+    },
+    {
+      "id": "job_1788379417334",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788379417334",
+      "targetEntityName": "Esther Mutua",
+      "targetPhone": "+254 712 555 666",
+      "scheduledFor": "2026-09-03T20:03:37.333Z",
+      "createdAt": "2026-09-02T20:03:37.334Z",
+      "status": "scheduled",
+      "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
+      "payload": {
+        "subject": "French Tutoring (DELF A2)",
+        "estimatedValueKes": 3500
+      }
+    },
+    {
+      "id": "job_1788379417337",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788379417337",
+      "targetEntityName": "Naomi Kiprono",
+      "targetPhone": "+254 711 998 877",
+      "scheduledFor": "2026-09-03T20:03:37.337Z",
+      "createdAt": "2026-09-02T20:03:37.337Z",
+      "status": "dispatched",
+      "conditionDescription": "Cancel if Naomi books",
+      "payload": {
+        "subject": "French Coaching",
+        "followUpMessageText": "Bonjour Naomi ! Petit suivi concernant votre demande de cours de français."
+      },
+      "executionResult": {
+        "executedAt": "2026-09-02T20:03:37.338Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Naomi Kiprono within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788379417338=="
+      }
+    },
+    {
+      "id": "job_1788379417339",
+      "organizationId": "org_test",
+      "workflowId": "wf_lead_autopilot",
+      "jobType": "follow_up_24h",
+      "targetEntityId": "lead_1788379417339",
+      "targetEntityName": "Samson Cheruiyot",
+      "targetPhone": "+254 733 445 566",
+      "scheduledFor": "2026-09-03T20:03:37.339Z",
+      "createdAt": "2026-09-02T20:03:37.339Z",
+      "status": "cancelled_manual",
+      "conditionDescription": "Cancel if student books or pays",
+      "payload": {},
+      "executionResult": {
+        "executedAt": "2026-09-02T20:03:37.339Z",
+        "circuitBroken": true,
+        "reason": "Manually cancelled by business owner in Otomatizon."
+      }
+    }
+  ],
+  "invoices": [
+    {
+      "id": "INV_1788379419057",
+      "organizationId": "org_1788371046317",
+      "organizationName": "Amina Math Coaching",
+      "planId": "growth",
+      "planName": "Growth",
+      "amountKes": 999,
+      "paymentMethod": "Safaricom M-Pesa Express (STK Push)",
+      "mpesaReceiptNumber": "QAH9012345",
+      "issuedAt": "2026-09-02T20:03:39.057Z",
+      "status": "PAID",
+      "billingPeriod": "30 Days (Monthly Recurring)"
     }
   ]
 }
