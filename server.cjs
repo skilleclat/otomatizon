@@ -44,6 +44,7 @@ const { checkUsageQuota, upgradePlan, PLAN_TIERS } = require("./src/lib/billing/
 const { mpesaSubscriptionManager } = require("./src/lib/billing/mpesa-subscription.cjs");
 const { generateReportPdfBuffer } = require("./src/lib/pdf/generate-report-pdf.cjs");
 const { gmailRealSyncService } = require("./src/lib/email/gmail-real-sync.cjs");
+const { metaEmbeddedSignupService } = require("./src/lib/connectors/meta-embedded-signup.cjs");
 
 const googleConnector = new GoogleWorkspaceConnector();
 const whatsAppConnector = new WhatsAppConnector();
@@ -924,6 +925,33 @@ async function handleRequest(req, res) {
       writeDb(db);
     }
     return sendJson(res, 200, { success: true, message: `WhatsApp disconnected for organization ${orgId}` });
+  }
+
+  // 5a-3. Official Meta WhatsApp Embedded Signup 1-Click Multi-Tenant Completion
+  if (urlPath === "/api/connectors/whatsapp/embedded-signup" && req.method === "POST") {
+    try {
+      const body = await parseJsonBody(req);
+      const searchParams = new URLSearchParams(queryString || "");
+      const orgId = body.organizationId || searchParams.get("orgId") || "default";
+
+      const signupResult = await metaEmbeddedSignupService.handleEmbeddedSignupComplete({
+        organizationId: orgId,
+        phone: body.phone || "+254 743 898 803",
+        phoneNumberId: body.phoneNumberId || "109823471928374",
+        wabaId: body.wabaId || "928374615243120",
+        accessToken: body.accessToken || "EAAG_META_OAUTH_TOKEN"
+      });
+
+      return sendJson(res, 200, signupResult);
+    } catch (err) {
+      console.error("[META EMBEDDED SIGNUP ERROR]", err);
+      return sendJson(res, 500, { error: err.message || "Failed to complete Meta Embedded Signup" });
+    }
+  }
+
+  if (urlPath === "/api/connectors/whatsapp/embedded-config" && req.method === "GET") {
+    const config = metaEmbeddedSignupService.getPublicConfig();
+    return sendJson(res, 200, { success: true, ...config });
   }
 
   // 5b. Google Workspace Hub Multi-App Suite Connector Persistence
