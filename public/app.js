@@ -16023,6 +16023,7 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
 
 
+
 var _lucidereact = require('lucide-react');
 
 
@@ -16296,7 +16297,7 @@ var _lucidereact = require('lucide-react');
                 }`,}
 
                 , _react2.default.createElement('div', { className: "flex items-center gap-1.5 font-bold text-xs"    ,}
-                  , _react2.default.createElement(ShieldAlert, { className: "w-3.5 h-3.5 text-slate-600"  ,} )
+                  , _react2.default.createElement(_lucidereact.ShieldAlert, { className: "w-3.5 h-3.5 text-slate-600"  ,} )
                   , _react2.default.createElement('span', null, "Gmail Filtered" )
                 )
                 , _react2.default.createElement('span', { className: "text-[10px] text-[#75777E] leading-tight"  ,}, "Newsletter / Personal (Safe)"   )

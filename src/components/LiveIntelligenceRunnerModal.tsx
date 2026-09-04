@@ -14,6 +14,7 @@ import {
   Video, 
   ArrowRight, 
   ShieldCheck, 
+  ShieldAlert,
   ExternalLink,
   Play
 } from "lucide-react";
