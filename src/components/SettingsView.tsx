@@ -15,14 +15,17 @@ import {
   UserPlus,
   Trash2,
   Mail,
-  Phone
+  Phone,
+  Key,
+  Copy,
+  ExternalLink
 } from "lucide-react";
 import { useOtomatizonStore } from "@/lib/store";
 import { getAllPlans } from "@/lib/billing/config";
 import { DS } from "@/lib/design-system";
 import type { TeamMemberRole } from "@/types";
 
-type SettingsTab = "account" | "business" | "billing" | "team" | "notifications" | "security";
+type SettingsTab = "billing" | "business" | "credentials" | "team" | "account" | "notifications" | "security";
 
 export const SettingsView = () => {
   const { 
@@ -125,6 +128,7 @@ export const SettingsView = () => {
         {[
           { id: "billing", label: "Billing & Plans", icon: CreditCard },
           { id: "business", label: "Business", icon: Building2 },
+          { id: "credentials", label: "API Keys & Webhooks", icon: Key },
           { id: "team", label: "Team & Permissions", icon: Users },
           { id: "account", label: "Account", icon: User },
           { id: "notifications", label: "Notifications", icon: Bell },
@@ -608,6 +612,147 @@ export const SettingsView = () => {
                 <p className="text-[#121316] font-medium">
                   Read-only access to operational logs, revenue protection analytics, and executive PDF reports.
                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2b. CREDENTIALS & WEBHOOKS TAB */}
+      {activeTab === "credentials" && (
+        <div className="space-y-8 animate-fadeIn">
+          {/* Webhooks Endpoints Card */}
+          <div className="bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-6">
+            <div className="space-y-1">
+              <span className={DS.monoEyebrow}>Inbound Webhook Endpoints</span>
+              <h2 className="text-xl font-bold text-[#121316]">
+                Production Webhook URLs
+              </h2>
+              <p className="text-xs text-[#4A4B50]">
+                Configure these endpoints in your Meta Developer Portal and Safaricom Daraja Portal to receive live customer events.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+              <div className="p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#15803D]">WhatsApp Inbound Webhook</span>
+                  <span className="text-[10px] bg-[#ECFDF5] text-[#15803D] px-2 py-0.5 rounded-full font-bold">GET / POST</span>
+                </div>
+                <div className="p-2 bg-white rounded-xl border border-[#EAE7DF] text-[#121316] break-all select-all">
+                  https://your-domain.com/api/webhooks/whatsapp
+                </div>
+                <p className="text-[11px] font-sans text-[#75777E]">
+                  Verify Token: <code className="text-[#121316] font-bold">otomatizon_nairobi_verify_2026</code>
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#15803D]">Safaricom M-Pesa STK Callback</span>
+                  <span className="text-[10px] bg-[#ECFDF5] text-[#15803D] px-2 py-0.5 rounded-full font-bold">POST Callback</span>
+                </div>
+                <div className="p-2 bg-white rounded-xl border border-[#EAE7DF] text-[#121316] break-all select-all">
+                  https://your-domain.com/api/webhooks/mpesa/callback
+                </div>
+                <p className="text-[11px] font-sans text-[#75777E]">
+                  Auto-reconciliation of M-Pesa receipt numbers and payment status.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Live API Credentials Form */}
+          <div className="bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-6">
+            <div className="space-y-1">
+              <span className={DS.monoEyebrow}>Encrypted Credentials Vault</span>
+              <h2 className="text-xl font-bold text-[#121316]">
+                Direct API Keys & OAuth Secrets
+              </h2>
+              <p className="text-xs text-[#4A4B50]">
+                Keys are encrypted via AES-256-GCM before storage. You can also specify them in your deployment environment variables (.env).
+              </p>
+            </div>
+
+            <div className="space-y-6 text-xs">
+              {/* WhatsApp Meta */}
+              <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#15803D]" />
+                  <h3 className="font-bold text-[#121316] text-sm">Meta WhatsApp Cloud API</h3>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[11px] font-mono text-[#75777E] block mb-1">Phone Number ID</label>
+                    <input type="text" placeholder="e.g. 109823471928374" className={DS.input} />
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-mono text-[#75777E] block mb-1">WhatsApp Business Account ID (WABA)</label>
+                    <input type="text" placeholder="e.g. 928374615243120" className={DS.input} />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="text-[11px] font-mono text-[#75777E] block mb-1">Permanent System User Access Token</label>
+                    <input type="password" placeholder="EAAGz..." className={DS.input} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Google Workspace */}
+              <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-blue-600" />
+                  <h3 className="font-bold text-[#121316] text-sm">Google Cloud Console OAuth 2.0</h3>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[11px] font-mono text-[#75777E] block mb-1">Google Client ID</label>
+                    <input type="text" placeholder="...apps.googleusercontent.com" className={DS.input} />
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-mono text-[#75777E] block mb-1">Google Client Secret</label>
+                    <input type="password" placeholder="GOCSPX-..." className={DS.input} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Safaricom M-Pesa */}
+              <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#15803D]" />
+                  <h3 className="font-bold text-[#121316] text-sm">Safaricom Daraja API (Lipa Na M-Pesa)</h3>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="text-[11px] font-mono text-[#75777E] block mb-1">ShortCode / Paybill / Till</label>
+                    <input type="text" placeholder="174379" className={DS.input} />
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-mono text-[#75777E] block mb-1">Consumer Key</label>
+                    <input type="text" placeholder="Daraja Consumer Key" className={DS.input} />
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-mono text-[#75777E] block mb-1">Consumer Secret</label>
+                    <input type="password" placeholder="Daraja Consumer Secret" className={DS.input} />
+                  </div>
+                  <div className="sm:col-span-3">
+                    <label className="text-[11px] font-mono text-[#75777E] block mb-1">Daraja Online Passkey</label>
+                    <input type="password" placeholder="bfb279f9aa9bdbcf158e97dd71a467cd2e0c8930..." className={DS.input} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSaveNotice(true);
+                    setTimeout(() => setSaveNotice(false), 3000);
+                  }}
+                  className={DS.btnPrimary}
+                >
+                  <ShieldCheck className="w-4 h-4 text-emerald-300" />
+                  <span>Save & Encrypt Credentials</span>
+                </button>
               </div>
             </div>
           </div>

@@ -36,8 +36,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   onSuccess
 }) => {
-  const { signup, login, resetPassword } = useOtomatizonStore();
-  const [mode, setMode] = useState<"login" | "signup" | "verify_otp" | "forgot">(initialMode);
+  const { signup, login, sendPasswordResetOtp, confirmPasswordReset } = useOtomatizonStore();
+  const [mode, setMode] = useState<"login" | "signup" | "verify_otp" | "forgot" | "reset_password">(initialMode);
 
   // Form State
   const [fullName, setFullName] = useState("");
@@ -45,7 +45,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -63,7 +65,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   }, [isOpen, initialMode]);
 
   useEffect(() => {
-    if (mode !== "verify_otp") return;
+    if (mode !== "verify_otp" && mode !== "reset_password") return;
     const timer = setInterval(() => {
       setResendCountdown((prev) => {
         if (prev <= 1) {
@@ -259,18 +261,86 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  const handleForgotSubmit = (e: React.FormEvent) => {
+  const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !isValidEmail(email)) {
       setMessage({ type: "error", text: "Please provide a valid registered email address." });
       return;
     }
 
-    resetPassword(email.trim());
-    setMessage({
-      type: "success",
-      text: `Password reset link sent to ${email.trim()}. Please check your inbox.`
-    });
+    setIsLoading(true);
+    setMessage(null);
+
+    try {
+      const res = await sendPasswordResetOtp(email.trim());
+      setIsLoading(false);
+      setMode("reset_password");
+      setOtpDigits(["", "", "", "", "", ""]);
+      setResendCountdown(60);
+      setMessage({
+        type: "success",
+        text: `Security code sent to ${email.trim()}. Enter the 6-digit code below to set your new password.`
+      });
+      if (res?.demoCode) {
+        console.log(`[DEV OTOMATIZON RESET OTP] Code for ${email.trim()}: ${res.demoCode}`);
+      }
+    } catch (err: any) {
+      setIsLoading(false);
+      setMessage({ type: "error", text: err.message || "Failed to send reset code. Please try again." });
+    }
+  };
+
+  const handleResetPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const code = otpDigits.join("").trim();
+
+    if (code.length !== 6) {
+      setMessage({ type: "error", text: "Please enter all 6 digits of the security verification code." });
+      return;
+    }
+
+    if (!password || password.length < 6) {
+      setMessage({ type: "error", text: "New password must be at least 6 characters long." });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setMessage({ type: "error", text: "Passwords do not match. Please verify and try again." });
+      return;
+    }
+
+    setIsLoading(true);
+    setMessage(null);
+
+    try {
+      await confirmPasswordReset(email.trim(), code, password);
+      setMessage({ type: "success", text: "Password reset successful! Logging you into your workspace..." });
+      setTimeout(() => {
+        setIsLoading(false);
+        onSuccess();
+      }, 500);
+    } catch (err: any) {
+      setIsLoading(false);
+      setMessage({ type: "error", text: err.message || "Invalid or expired security code." });
+    }
+  };
+
+  const handleResendForgotOtp = async () => {
+    if (resendCountdown > 0) return;
+    setIsLoading(true);
+    setMessage(null);
+    try {
+      const res = await sendPasswordResetOtp(email.trim());
+      setIsLoading(false);
+      setResendCountdown(60);
+      setMessage({ type: "success", text: `New security code sent to ${email.trim()}` });
+      if (res?.demoCode) {
+        console.log(`[DEV OTOMATIZON RESET OTP RESEND] Code: ${res.demoCode}`);
+      }
+    } catch (err: any) {
+      setIsLoading(false);
+      setMessage({ type: "error", text: err.message || "Failed to resend code." });
+    }
   };
 
   return (
@@ -300,7 +370,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </div>
 
         {/* Navigation Tabs (Only in standard mode) */}
-        {mode !== "verify_otp" && mode !== "forgot" && (
+        {mode !== "verify_otp" && mode !== "forgot" && mode !== "reset_password" && (
           <div className="px-6 sm:px-7 pt-4">
             <div className="grid grid-cols-2 p-1 bg-[#FAF9F5] border border-[#EAE7DF] rounded-2xl text-xs font-mono">
               <button
@@ -348,7 +418,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* ========================================================================= */}
         {/* VIEW 1: SIGN IN / SIGN UP FORMS */}
         {/* ========================================================================= */}
-        {mode !== "verify_otp" && mode !== "forgot" && (
+        {mode !== "verify_otp" && mode !== "forgot" && mode !== "reset_password" && (
           <div className="p-6 sm:p-7 space-y-4 text-xs">
             
             {/* 1. Continue with Google Button */}
@@ -629,6 +699,161 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 Back to Sign In &rarr;
               </button>
             </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* VIEW 4: RESET PASSWORD (OTP + NEW PASSWORD) */}
+        {/* ========================================================================= */}
+        {mode === "reset_password" && (
+          <div className="p-6 sm:p-7 space-y-4 text-xs animate-fadeIn">
+            <div className="text-center space-y-1.5">
+              <div className="w-10 h-10 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-center mx-auto text-[#15803D]">
+                <KeyRound className="w-5 h-5" />
+              </div>
+              <h3 className="text-lg font-extrabold text-[#121316] tracking-tight">
+                Set New Password
+              </h3>
+              <p className="text-[#4A4B50] text-xs">
+                Enter the 6-digit security code sent to <strong className="text-[#121316]">{email}</strong> and choose your new password.
+              </p>
+            </div>
+
+            <form onSubmit={handleResetPasswordSubmit} className="space-y-4">
+              {/* 6-Digit OTP Boxes */}
+              <div>
+                <label className="text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-2 text-center">
+                  6-Digit Security Code *
+                </label>
+                <div className="flex justify-center gap-2">
+                  {otpDigits.map((digit, idx) => (
+                    <input
+                      key={idx}
+                      ref={(el) => { otpInputRefs.current[idx] = el; }}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, "");
+                        const newDigits = [...otpDigits];
+                        newDigits[idx] = val.slice(-1);
+                        setOtpDigits(newDigits);
+                        if (val && idx < 5) {
+                          otpInputRefs.current[idx + 1]?.focus();
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Backspace" && !otpDigits[idx] && idx > 0) {
+                          otpInputRefs.current[idx - 1]?.focus();
+                        }
+                      }}
+                      onPaste={(e) => {
+                        e.preventDefault();
+                        const pasteData = e.clipboardData.getData("text").replace(/[^0-9]/g, "").slice(0, 6);
+                        if (pasteData) {
+                          const newDigits = [...otpDigits];
+                          for (let i = 0; i < 6; i++) {
+                            newDigits[i] = pasteData[i] || "";
+                          }
+                          setOtpDigits(newDigits);
+                          const nextIdx = Math.min(pasteData.length, 5);
+                          otpInputRefs.current[nextIdx]?.focus();
+                        }
+                      }}
+                      className="w-10 h-12 text-center text-lg font-bold font-mono rounded-xl border border-[#EAE7DF] bg-[#FAF9F5] focus:bg-white focus:border-[#15803D] focus:ring-2 focus:ring-[#15803D]/20 outline-none transition-all"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* New Password */}
+              <div>
+                <label className="text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-1">
+                  New Password *
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Min. 6 characters"
+                    className={`${DS.input} pl-10 pr-10`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#75777E] hover:text-[#121316] cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <label className="text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-1">
+                  Confirm New Password *
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Re-type new password"
+                    className={`${DS.input} pl-10 pr-10`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#75777E] hover:text-[#121316] cursor-pointer"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-3.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  {isLoading ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <span>Save New Password & Sign In &rarr;</span>
+                  )}
+                </button>
+              </div>
+
+              {/* Resend Code & Back Buttons */}
+              <div className="flex items-center justify-between text-[11px] font-mono text-[#75777E] pt-1">
+                <button
+                  type="button"
+                  onClick={() => { setMode("forgot"); setMessage(null); }}
+                  className="text-[#75777E] hover:text-[#121316] hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  Edit email
+                </button>
+                {resendCountdown > 0 ? (
+                  <span>Resend code in {resendCountdown}s</span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleResendForgotOtp}
+                    className="text-[#15803D] font-bold hover:underline cursor-pointer"
+                  >
+                    Resend Code Now
+                  </button>
+                )}
+              </div>
+            </form>
           </div>
         )}
 

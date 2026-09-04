@@ -621,9 +621,28 @@ Les opportunités suivent un cycle de vie strict :
   * Grille de tarification Landing Page ([`LandingPage.tsx`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/components/LandingPage.tsx)) : grille responsive 4 colonnes (`Free`, `Starter`, `Growth`, `Pro`) avec bouton d'activation immédiate *« Get Started Free »*.
   * Sélecteur de forfait Paramètres ([`SettingsView.tsx`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/components/SettingsView.tsx)) : affichage des 4 forfaits avec badge *Free*, bascule instantanée et gestion fine des jauges de quotas.
   * Modal de Checkout ([`CheckoutModal.tsx`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/components/CheckoutModal.tsx)) : vue dédiée d'activation immédiate en 1 clic sans moyen de paiement requis pour le forfait gratuit.
-- **Validation Globale** :
-  * 14/14 suites de tests validées à 100% via `test-all-systems.cjs`.
+### Étape 31 : Intégrations d'Applications Réelles & Passerelles API Directes (Real Connectors & Zero Fake Data)
+- **Passerelles & Connecteurs Réels (`src/lib/connectors/`)** :
+  * **WhatsApp Business** ([`whatsapp-connector.cjs`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/lib/connectors/whatsapp-connector.cjs)) : Envoi direct via Meta Graph API (`https://graph.facebook.com/v19.0/...`) avec token permanent, gestion des webhooks avec validation HMAC SHA-256 et support multi-device QR Code.
+  * **Google Workspace Hub** ([`google-connector.cjs`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/lib/connectors/google-connector.cjs)) : Échange de jetons OAuth 2.0 (`oauth2.googleapis.com/token`), requêtes REST réelles vers Google Sheets v4 API (`sheets.googleapis.com`) et création d'événements Google Calendar v3 avec liens dynamiques Google Meet.
+  * **Safaricom Lipa Na M-Pesa** ([`mpesa-connector.cjs`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/lib/connectors/mpesa-connector.cjs)) : Génération automatique de tokens OAuth2 Daraja et appel direct vers `/mpesa/stkpush/v1/processrequest` pour initier de vrais prompts STK Push sur le combiné de l'utilisateur.
+- **Gestionnaire de Clés d'API & Webhooks de Production ([`SettingsView.tsx`](file:///c:/Users/User/Desktop/MES%20SAAS%20ESS/OTOMATIZON/src/components/SettingsView.tsx))** :
+  * Ajout de l'onglet dédié **API Keys & Webhooks** affichant les URLs de webhooks publiques pour Meta et Safaricom, ainsi que les formulaires de saisie chiffrés AES-256 pour les identifiants de production.
+- **Zéro Données Factices & Validation Globale (14 / 14 Suites Validées à 100%)** :
+  * Réalignement des 4 suites de tests d'assertion (`test-command-center.cjs`, `test-integration-hub.cjs`, `test-opportunities-engine.cjs`, `test-system-foundation.cjs`).
+  * Succès intégral de `test-all-systems.cjs` : 14/14 suites d'audit au vert sans aucune régression.
+
+### Étape 32 : Système de Récupération & Réinitialisation de Mot de Passe Sécurisé (OTP & PBKDF2/SHA-512)
+- **Architecture Serveur & Endpoints de Récupération (`server.cjs`)** :
+  * `pendingResetOtps` au niveau module pour la persistance des codes de récupération (TTL 15 minutes, blocage après 5 tentatives infructueuses).
+  * `POST /api/auth/forgot-password` : Génération d'un code OTP numérique à 6 chiffres et envoi sécurisé par e-mail (via Resend ou passerelle sécurisée).
+  * `POST /api/auth/reset-password` : Validation cryptographique du code OTP, hachage du nouveau mot de passe via **PBKDF2 avec sel unique et 10 000 itérations SHA-512**, mise à jour de la base de données et connexion automatique avec émission de jeton de session.
+- **Store & Client React (`src/lib/store.ts`, `src/components/AuthModal.tsx`)** :
+  * Méthodes `sendPasswordResetOtp(email)` et `confirmPasswordReset(email, code, newPassword)`.
+  * Vue interactive dédiée `mode === "reset_password"` avec 6 champs de saisie pour chaque chiffre du code de sécurité, support du copier-coller automatique, gestion de l'effacement arrière, champ nouveau mot de passe avec confirmation et bascule de visibilité (icône œil).
+- **Suite de Validation Dédiée (`test-password-reset.cjs` & `test-all-systems.cjs`)** :
+  * **15 / 15 Suites de Tests et Systèmes de Production Validés à 100%**.
 
 ---
 *Règle permanente : À chaque changement majeur, compiler, tester, commiter et pousser automatiquement le code (ou rappeler l'ajout du remote si non configuré).*
-*Dernière mise à jour : 1er Septembre 2026 — Forfait Gratuit (Free Tier) Implémenté & Synchronisé (14/14 Tests Validés).*
+*Dernière mise à jour : 4 Septembre 2026 — Récupération de Mot de Passe OTP + 15/15 Suites de Tests Validées à 100%.*

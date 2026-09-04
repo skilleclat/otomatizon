@@ -453,18 +453,86 @@ export function useOtomatizonStore() {
     notify();
   };
 
+  const sendPasswordResetOtp = async (email: string) => {
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send reset code.");
+      }
+
+      globalState.activityLogs.unshift({
+        id: `act_${Date.now()}`,
+        organizationId: globalState.organization.id,
+        type: "system_intelligence",
+        channel: "gmail",
+        application: "Otomatizon IAM",
+        title: `Password Reset Requested (${email})`,
+        description: `A 6-digit security code was dispatched for account recovery.`,
+        actionTakenByOtomatizon: "Encrypted OTP generated with 15-min TTL",
+        businessResult: "Account recovery challenge pending user verification",
+        entityName: email,
+        timestamp: "Just now",
+        provenance: "OBSERVED"
+      });
+      notify();
+      return data;
+    } catch (err: any) {
+      console.error("[PASSWORD RESET REQUEST ERROR]", err);
+      throw err;
+    }
+  };
+
+  const confirmPasswordReset = async (email: string, code: string, newPassword: string) => {
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code, newPassword })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to reset password.");
+      }
+
+      if (data.user && data.token) {
+        globalState.session = {
+          user: data.user,
+          token: data.token,
+          isAuthenticated: true
+        };
+        if (data.organization) globalState.organization = data.organization;
+        if (data.businessProfile) globalState.businessProfile = data.businessProfile;
+
+        globalState.activityLogs.unshift({
+          id: `act_${Date.now()}`,
+          organizationId: globalState.organization.id,
+          type: "system_intelligence",
+          channel: "gmail",
+          application: "Otomatizon IAM",
+          title: `Password Reset Successful (${email})`,
+          description: `User authenticated with updated credentials via OTP verification.`,
+          actionTakenByOtomatizon: "Credentials updated and session token minted",
+          businessResult: "Authenticated session started",
+          entityName: data.user.fullName,
+          timestamp: "Just now",
+          provenance: "OBSERVED"
+        });
+        notify();
+      }
+      return data;
+    } catch (err: any) {
+      console.error("[PASSWORD RESET CONFIRMATION ERROR]", err);
+      throw err;
+    }
+  };
+
   const resetPassword = (email: string) => {
-    globalState.activityLogs.unshift({
-      id: `act_${Date.now()}`,
-      organizationId: globalState.organization.id,
-      type: "workflow_executed",
-      title: "Password recovery link dispatched",
-      description: `Sent password reset email to ${email}.`,
-      timestamp: "Just now",
-      channel: "gmail",
-      provenance: "OBSERVED"
-    });
-    notify();
+    return sendPasswordResetOtp(email);
   };
 
   // 2. BUSINESS PROFILE & ONBOARDING PERSISTENCE
@@ -1330,6 +1398,8 @@ export function useOtomatizonStore() {
     login,
     logout,
     resetPassword,
+    sendPasswordResetOtp,
+    confirmPasswordReset,
     updateBusinessProfile,
     toggleIntegration,
     activateOpportunity,

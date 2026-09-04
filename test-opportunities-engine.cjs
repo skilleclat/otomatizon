@@ -11,13 +11,57 @@ console.log("============================================================");
 console.log("  OTOMATIZON STEP 4: INTELLIGENT OPPORTUNITIES ENGINE AUDIT");
 console.log("============================================================\n");
 
+const mockSavedState = JSON.stringify({
+  session: { user: { fullName: "James Kamau" }, token: "tok_1", isAuthenticated: true },
+  organization: { id: "org_james", name: "French Tutoring Nairobi", planId: "starter" },
+  opportunities: [
+    {
+      id: "opp_lead_leakage",
+      organizationId: "org_james",
+      title: "14 Leads Are Not Being Followed Up",
+      problem: "We detected 14 inquiries that did not receive a follow-up 24 hours after their initial message.",
+      whyItMatters: "You are losing qualified prospective students between their first inquiry and booking.",
+      recommendation: "Automatically follow up 24h after inquiry if no booking is detected on Google Calendar.",
+      impactLevel: "HIGH",
+      estimatedTimeSavedHoursPerWeek: 4.5,
+      estimatedRevenueKesPerMonth: 49000,
+      confidenceScore: 94,
+      requiredIntegrations: ["whatsapp_business", "google_sheets", "google_calendar"],
+      suggestedWorkflowId: "wf_lead_autopilot",
+      status: "detected",
+      detectedAt: new Date().toISOString(),
+      provenance: "OBSERVED"
+    },
+    {
+      id: "opp_mpesa_friction",
+      organizationId: "org_james",
+      title: "Unconfirmed Tuition Payments Before Sessions",
+      problem: "6 tutoring sessions occurred without a verified Safaricom M-Pesa receipt.",
+      whyItMatters: "Sessions take place without guaranteed settlement, causing cash flow delays.",
+      recommendation: "Automatically verify M-Pesa transaction codes before confirming each lesson.",
+      impactLevel: "HIGH",
+      estimatedTimeSavedHoursPerWeek: 3.5,
+      estimatedRevenueKesPerMonth: 45000,
+      confidenceScore: 91,
+      requiredIntegrations: ["mpesa", "google_sheets", "google_calendar"],
+      suggestedWorkflowId: "wf_mpesa_confirmation",
+      status: "detected",
+      detectedAt: new Date().toISOString(),
+      provenance: "OBSERVED"
+    }
+  ],
+  integrations: [],
+  workflows: [],
+  activityLogs: []
+});
+
 const sandbox = {
   window: {},
   console: console,
   setTimeout: setTimeout,
   clearTimeout: clearTimeout,
   localStorage: {
-    getItem: () => null,
+    getItem: (key) => key === "otomatizon_state_clean_v6" ? mockSavedState : null,
     setItem: () => {},
     removeItem: () => {}
   }

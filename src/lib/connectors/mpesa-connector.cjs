@@ -28,6 +28,27 @@ class MpesaDarajaConnector {
   }
 
   /**
+   * Fetches Daraja OAuth2 Access Token from Safaricom
+   */
+  async getOAuthToken() {
+    const auth = Buffer.from(`${this.consumerKey}:${this.consumerSecret}`).toString("base64");
+    const baseUrl = this.environment === "production" 
+      ? "https://api.safaricom.co.ke" 
+      : "https://sandbox.safaricom.co.ke";
+
+    try {
+      const response = await fetch(`${baseUrl}/oauth/v1/generate?grant_type=client_credentials`, {
+        headers: { "Authorization": `Basic ${auth}` }
+      });
+      const data = await response.json();
+      return data.access_token || null;
+    } catch (err) {
+      console.warn("[SAFARICOM DARAJA AUTH WARNING]", err);
+      return null;
+    }
+  }
+
+  /**
    * Initiates Lipa Na M-Pesa Online STK Push to customer's mobile device
    */
   async initiateStkPush(phoneNumber, amountKes, accountReference = "Otomatizon Coaching") {
@@ -40,7 +61,60 @@ class MpesaDarajaConnector {
       : formattedPhone;
 
     const timestamp = this.getTimestamp();
+    const password = this.generatePassword(timestamp);
     const checkoutRequestId = `ws_CO_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+
+    // If live credentials, call Safaricom Daraja API
+    if (this.consumerKey && !this.consumerKey.startsWith("demo_") && this.consumerSecret && !this.consumerSecret.startsWith("demo_")) {
+      const token = await this.getOAuthToken();
+      if (token) {
+        try {
+          const baseUrl = this.environment === "production" 
+            ? "https://api.safaricom.co.ke" 
+            : "https://sandbox.safaricom.co.ke";
+
+          const response = await fetch(`${baseUrl}/mpesa/stkpush/v1/processrequest`, {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              BusinessShortCode: this.businessShortCode,
+              Password: password,
+              Timestamp: timestamp,
+              TransactionType: "CustomerPayBillOnline",
+              Amount: amountKes,
+              PartyA: msisdn,
+              PartyB: this.businessShortCode,
+              PhoneNumber: msisdn,
+              CallBackURL: this.callbackUrl,
+              AccountReference: accountReference.substring(0, 12),
+              TransactionDesc: `Otomatizon Fee ${amountKes} KES`
+            })
+          });
+
+          const data = await response.json();
+          if (data.ResponseCode === "0") {
+            return {
+              success: true,
+              merchantRequestId: data.MerchantRequestID,
+              checkoutRequestId: data.CheckoutRequestID,
+              responseCode: data.ResponseCode,
+              responseDescription: data.ResponseDescription,
+              customerMessage: data.CustomerMessage || "Success. Check handset for M-Pesa PIN prompt.",
+              phoneNumber: msisdn,
+              amount: amountKes,
+              accountReference,
+              timestamp,
+              liveSafaricom: true
+            };
+          }
+        } catch (err) {
+          console.warn("[SAFARICOM STK PUSH LIVE WARNING]", err);
+        }
+      }
+    }
 
     return {
       success: true,

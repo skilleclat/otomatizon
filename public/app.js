@@ -4636,18 +4636,86 @@ async function syncWithServer() {
     notify();
   };
 
+  const sendPasswordResetOtp = async (email) => {
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send reset code.");
+      }
+
+      globalState.activityLogs.unshift({
+        id: `act_${Date.now()}`,
+        organizationId: globalState.organization.id,
+        type: "system_intelligence",
+        channel: "gmail",
+        application: "Otomatizon IAM",
+        title: `Password Reset Requested (${email})`,
+        description: `A 6-digit security code was dispatched for account recovery.`,
+        actionTakenByOtomatizon: "Encrypted OTP generated with 15-min TTL",
+        businessResult: "Account recovery challenge pending user verification",
+        entityName: email,
+        timestamp: "Just now",
+        provenance: "OBSERVED"
+      });
+      notify();
+      return data;
+    } catch (err) {
+      console.error("[PASSWORD RESET REQUEST ERROR]", err);
+      throw err;
+    }
+  };
+
+  const confirmPasswordReset = async (email, code, newPassword) => {
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code, newPassword })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to reset password.");
+      }
+
+      if (data.user && data.token) {
+        globalState.session = {
+          user: data.user,
+          token: data.token,
+          isAuthenticated: true
+        };
+        if (data.organization) globalState.organization = data.organization;
+        if (data.businessProfile) globalState.businessProfile = data.businessProfile;
+
+        globalState.activityLogs.unshift({
+          id: `act_${Date.now()}`,
+          organizationId: globalState.organization.id,
+          type: "system_intelligence",
+          channel: "gmail",
+          application: "Otomatizon IAM",
+          title: `Password Reset Successful (${email})`,
+          description: `User authenticated with updated credentials via OTP verification.`,
+          actionTakenByOtomatizon: "Credentials updated and session token minted",
+          businessResult: "Authenticated session started",
+          entityName: data.user.fullName,
+          timestamp: "Just now",
+          provenance: "OBSERVED"
+        });
+        notify();
+      }
+      return data;
+    } catch (err) {
+      console.error("[PASSWORD RESET CONFIRMATION ERROR]", err);
+      throw err;
+    }
+  };
+
   const resetPassword = (email) => {
-    globalState.activityLogs.unshift({
-      id: `act_${Date.now()}`,
-      organizationId: globalState.organization.id,
-      type: "workflow_executed",
-      title: "Password recovery link dispatched",
-      description: `Sent password reset email to ${email}.`,
-      timestamp: "Just now",
-      channel: "gmail",
-      provenance: "OBSERVED"
-    });
-    notify();
+    return sendPasswordResetOtp(email);
   };
 
   // 2. BUSINESS PROFILE & ONBOARDING PERSISTENCE
@@ -5513,6 +5581,8 @@ async function syncWithServer() {
     login,
     logout,
     resetPassword,
+    sendPasswordResetOtp,
+    confirmPasswordReset,
     updateBusinessProfile,
     toggleIntegration,
     activateOpportunity,
@@ -9186,7 +9256,7 @@ var _BrandLogo = require('@/components/BrandLogo');
   onClose,
   onSuccess
 }) => {
-  const { signup, login, resetPassword } = _store.useOtomatizonStore.call(void 0, );
+  const { signup, login, sendPasswordResetOtp, confirmPasswordReset } = _store.useOtomatizonStore.call(void 0, );
   const [mode, setMode] = _react.useState(initialMode);
 
   // Form State
@@ -9195,7 +9265,9 @@ var _BrandLogo = require('@/components/BrandLogo');
   const [email, setEmail] = _react.useState.call(void 0, "");
   const [phone, setPhone] = _react.useState.call(void 0, "");
   const [password, setPassword] = _react.useState.call(void 0, "");
+  const [confirmPassword, setConfirmPassword] = _react.useState.call(void 0, "");
   const [showPassword, setShowPassword] = _react.useState.call(void 0, false);
+  const [showConfirmPassword, setShowConfirmPassword] = _react.useState.call(void 0, false);
   const [isLoading, setIsLoading] = _react.useState.call(void 0, false);
   const [isGoogleLoading, setIsGoogleLoading] = _react.useState.call(void 0, false);
   const [message, setMessage] = _react.useState(null);
@@ -9213,7 +9285,7 @@ var _BrandLogo = require('@/components/BrandLogo');
   }, [isOpen, initialMode]);
 
   _react.useEffect.call(void 0, () => {
-    if (mode !== "verify_otp") return;
+    if (mode !== "verify_otp" && mode !== "reset_password") return;
     const timer = setInterval(() => {
       setResendCountdown((prev) => {
         if (prev <= 1) {
@@ -9409,18 +9481,86 @@ var _BrandLogo = require('@/components/BrandLogo');
     }
   };
 
-  const handleForgotSubmit = (e) => {
+  const handleForgotSubmit = async (e) => {
     e.preventDefault();
     if (!email.trim() || !isValidEmail(email)) {
       setMessage({ type: "error", text: "Please provide a valid registered email address." });
       return;
     }
 
-    resetPassword(email.trim());
-    setMessage({
-      type: "success",
-      text: `Password reset link sent to ${email.trim()}. Please check your inbox.`
-    });
+    setIsLoading(true);
+    setMessage(null);
+
+    try {
+      const res = await sendPasswordResetOtp(email.trim());
+      setIsLoading(false);
+      setMode("reset_password");
+      setOtpDigits(["", "", "", "", "", ""]);
+      setResendCountdown(60);
+      setMessage({
+        type: "success",
+        text: `Security code sent to ${email.trim()}. Enter the 6-digit code below to set your new password.`
+      });
+      if (_optionalChain([res, 'optionalAccess', _12 => _12.demoCode])) {
+        console.log(`[DEV OTOMATIZON RESET OTP] Code for ${email.trim()}: ${res.demoCode}`);
+      }
+    } catch (err) {
+      setIsLoading(false);
+      setMessage({ type: "error", text: err.message || "Failed to send reset code. Please try again." });
+    }
+  };
+
+  const handleResetPasswordSubmit = async (e) => {
+    e.preventDefault();
+    const code = otpDigits.join("").trim();
+
+    if (code.length !== 6) {
+      setMessage({ type: "error", text: "Please enter all 6 digits of the security verification code." });
+      return;
+    }
+
+    if (!password || password.length < 6) {
+      setMessage({ type: "error", text: "New password must be at least 6 characters long." });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setMessage({ type: "error", text: "Passwords do not match. Please verify and try again." });
+      return;
+    }
+
+    setIsLoading(true);
+    setMessage(null);
+
+    try {
+      await confirmPasswordReset(email.trim(), code, password);
+      setMessage({ type: "success", text: "Password reset successful! Logging you into your workspace..." });
+      setTimeout(() => {
+        setIsLoading(false);
+        onSuccess();
+      }, 500);
+    } catch (err) {
+      setIsLoading(false);
+      setMessage({ type: "error", text: err.message || "Invalid or expired security code." });
+    }
+  };
+
+  const handleResendForgotOtp = async () => {
+    if (resendCountdown > 0) return;
+    setIsLoading(true);
+    setMessage(null);
+    try {
+      const res = await sendPasswordResetOtp(email.trim());
+      setIsLoading(false);
+      setResendCountdown(60);
+      setMessage({ type: "success", text: `New security code sent to ${email.trim()}` });
+      if (_optionalChain([res, 'optionalAccess', _13 => _13.demoCode])) {
+        console.log(`[DEV OTOMATIZON RESET OTP RESEND] Code: ${res.demoCode}`);
+      }
+    } catch (err) {
+      setIsLoading(false);
+      setMessage({ type: "error", text: err.message || "Failed to resend code." });
+    }
   };
 
   return (
@@ -9450,7 +9590,7 @@ var _BrandLogo = require('@/components/BrandLogo');
         )
 
         /* Navigation Tabs (Only in standard mode) */
-        , mode !== "verify_otp" && mode !== "forgot" && (
+        , mode !== "verify_otp" && mode !== "forgot" && mode !== "reset_password" && (
           _react2.default.createElement('div', { className: "px-6 sm:px-7 pt-4"  ,}
             , _react2.default.createElement('div', { className: "grid grid-cols-2 p-1 bg-[#FAF9F5] border border-[#EAE7DF] rounded-2xl text-xs font-mono"        ,}
               , _react2.default.createElement('button', {
@@ -9498,7 +9638,7 @@ var _BrandLogo = require('@/components/BrandLogo');
         /* ========================================================================= */
         /* VIEW 1: SIGN IN / SIGN UP FORMS */
         /* ========================================================================= */
-        , mode !== "verify_otp" && mode !== "forgot" && (
+        , mode !== "verify_otp" && mode !== "forgot" && mode !== "reset_password" && (
           _react2.default.createElement('div', { className: "p-6 sm:p-7 space-y-4 text-xs"   ,}
 
             /* 1. Continue with Google Button */
@@ -9777,6 +9917,161 @@ var _BrandLogo = require('@/components/BrandLogo');
                 className: "text-xs text-[#15803D] hover:underline font-bold font-mono cursor-pointer"     ,}
 , "Back to Sign In →"
 
+              )
+            )
+          )
+        )
+
+        /* ========================================================================= */
+        /* VIEW 4: RESET PASSWORD (OTP + NEW PASSWORD) */
+        /* ========================================================================= */
+        , mode === "reset_password" && (
+          _react2.default.createElement('div', { className: "p-6 sm:p-7 space-y-4 text-xs animate-fadeIn"    ,}
+            , _react2.default.createElement('div', { className: "text-center space-y-1.5" ,}
+              , _react2.default.createElement('div', { className: "w-10 h-10 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-center mx-auto text-[#15803D]"          ,}
+                , _react2.default.createElement(_lucidereact.KeyRound, { className: "w-5 h-5" ,} )
+              )
+              , _react2.default.createElement('h3', { className: "text-lg font-extrabold text-[#121316] tracking-tight"   ,}, "Set New Password"
+
+              )
+              , _react2.default.createElement('p', { className: "text-[#4A4B50] text-xs" ,}, "Enter the 6-digit security code sent to "
+                       , _react2.default.createElement('strong', { className: "text-[#121316]",}, email), " and choose your new password."
+              )
+            )
+
+            , _react2.default.createElement('form', { onSubmit: handleResetPasswordSubmit, className: "space-y-4",}
+              /* 6-Digit OTP Boxes */
+              , _react2.default.createElement('div', null
+                , _react2.default.createElement('label', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-2 text-center"       ,}, "6-Digit Security Code *"
+
+                )
+                , _react2.default.createElement('div', { className: "flex justify-center gap-2"  ,}
+                  , otpDigits.map((digit, idx) => (
+                    _react2.default.createElement('input', {
+                      key: idx,
+                      ref: (el) => { otpInputRefs.current[idx] = el; },
+                      type: "text",
+                      inputMode: "numeric",
+                      maxLength: 1,
+                      value: digit,
+                      onChange: (e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, "");
+                        const newDigits = [...otpDigits];
+                        newDigits[idx] = val.slice(-1);
+                        setOtpDigits(newDigits);
+                        if (val && idx < 5) {
+                          _optionalChain([otpInputRefs, 'access', _14 => _14.current, 'access', _15 => _15[idx + 1], 'optionalAccess', _16 => _16.focus, 'call', _17 => _17()]);
+                        }
+                      },
+                      onKeyDown: (e) => {
+                        if (e.key === "Backspace" && !otpDigits[idx] && idx > 0) {
+                          _optionalChain([otpInputRefs, 'access', _18 => _18.current, 'access', _19 => _19[idx - 1], 'optionalAccess', _20 => _20.focus, 'call', _21 => _21()]);
+                        }
+                      },
+                      onPaste: (e) => {
+                        e.preventDefault();
+                        const pasteData = e.clipboardData.getData("text").replace(/[^0-9]/g, "").slice(0, 6);
+                        if (pasteData) {
+                          const newDigits = [...otpDigits];
+                          for (let i = 0; i < 6; i++) {
+                            newDigits[i] = pasteData[i] || "";
+                          }
+                          setOtpDigits(newDigits);
+                          const nextIdx = Math.min(pasteData.length, 5);
+                          _optionalChain([otpInputRefs, 'access', _22 => _22.current, 'access', _23 => _23[nextIdx], 'optionalAccess', _24 => _24.focus, 'call', _25 => _25()]);
+                        }
+                      },
+                      className: "w-10 h-12 text-center text-lg font-bold font-mono rounded-xl border border-[#EAE7DF] bg-[#FAF9F5] focus:bg-white focus:border-[#15803D] focus:ring-2 focus:ring-[#15803D]/20 outline-none transition-all"               ,}
+                    )
+                  ))
+                )
+              )
+
+              /* New Password */
+              , _react2.default.createElement('div', null
+                , _react2.default.createElement('label', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-1"      ,}, "New Password *"
+
+                )
+                , _react2.default.createElement('div', { className: "relative",}
+                  , _react2.default.createElement(_lucidereact.Lock, { className: "w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2"      ,} )
+                  , _react2.default.createElement('input', {
+                    type: showPassword ? "text" : "password",
+                    required: true,
+                    value: password,
+                    onChange: (e) => setPassword(e.target.value),
+                    placeholder: "Min. 6 characters"  ,
+                    className: `${_designsystem.DS.input} pl-10 pr-10`,}
+                  )
+                  , _react2.default.createElement('button', {
+                    type: "button",
+                    onClick: () => setShowPassword(!showPassword),
+                    className: "absolute right-3.5 top-1/2 -translate-y-1/2 text-[#75777E] hover:text-[#121316] cursor-pointer"      ,}
+
+                    , showPassword ? _react2.default.createElement(_lucidereact.EyeOff, { className: "w-4 h-4" ,} ) : _react2.default.createElement(_lucidereact.Eye, { className: "w-4 h-4" ,} )
+                  )
+                )
+              )
+
+              /* Confirm Password */
+              , _react2.default.createElement('div', null
+                , _react2.default.createElement('label', { className: "text-[10px] font-mono uppercase text-[#75777E] font-bold block mb-1"      ,}, "Confirm New Password *"
+
+                )
+                , _react2.default.createElement('div', { className: "relative",}
+                  , _react2.default.createElement(_lucidereact.Lock, { className: "w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2"      ,} )
+                  , _react2.default.createElement('input', {
+                    type: showConfirmPassword ? "text" : "password",
+                    required: true,
+                    value: confirmPassword,
+                    onChange: (e) => setConfirmPassword(e.target.value),
+                    placeholder: "Re-type new password"  ,
+                    className: `${_designsystem.DS.input} pl-10 pr-10`,}
+                  )
+                  , _react2.default.createElement('button', {
+                    type: "button",
+                    onClick: () => setShowConfirmPassword(!showConfirmPassword),
+                    className: "absolute right-3.5 top-1/2 -translate-y-1/2 text-[#75777E] hover:text-[#121316] cursor-pointer"      ,}
+
+                    , showConfirmPassword ? _react2.default.createElement(_lucidereact.EyeOff, { className: "w-4 h-4" ,} ) : _react2.default.createElement(_lucidereact.Eye, { className: "w-4 h-4" ,} )
+                  )
+                )
+              )
+
+              , _react2.default.createElement('div', { className: "pt-2",}
+                , _react2.default.createElement('button', {
+                  type: "submit",
+                  disabled: isLoading,
+                  className: "w-full py-3.5 rounded-full bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-bold font-mono transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"                  ,}
+
+                  , isLoading ? (
+                    _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-4 h-4 animate-spin"  ,} )
+                  ) : (
+                    _react2.default.createElement('span', null, "Save New Password & Sign In →"      )
+                  )
+                )
+              )
+
+              /* Resend Code & Back Buttons */
+              , _react2.default.createElement('div', { className: "flex items-center justify-between text-[11px] font-mono text-[#75777E] pt-1"      ,}
+                , _react2.default.createElement('button', {
+                  type: "button",
+                  onClick: () => { setMode("forgot"); setMessage(null); },
+                  className: "text-[#75777E] hover:text-[#121316] hover:underline flex items-center gap-1 cursor-pointer"      ,}
+
+                  , _react2.default.createElement(_lucidereact.RotateCcw, { className: "w-3 h-3" ,} ), "Edit email"
+
+                )
+                , resendCountdown > 0 ? (
+                  _react2.default.createElement('span', null, "Resend code in "   , resendCountdown, "s")
+                ) : (
+                  _react2.default.createElement('button', {
+                    type: "button",
+                    onClick: handleResendForgotOtp,
+                    className: "text-[#15803D] font-bold hover:underline cursor-pointer"   ,}
+, "Resend Code Now"
+
+                  )
+                )
               )
             )
           )
@@ -17389,6 +17684,9 @@ var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
 
 
+
+
+
 var _lucidereact = require('lucide-react');
 var _store = require('@/lib/store');
 var _config = require('@/lib/billing/config');
@@ -17498,6 +17796,7 @@ var _designsystem = require('@/lib/design-system');
         , [
           { id: "billing", label: "Billing & Plans", icon: _lucidereact.CreditCard },
           { id: "business", label: "Business", icon: _lucidereact.Building2 },
+          { id: "credentials", label: "API Keys & Webhooks", icon: _lucidereact.Key },
           { id: "team", label: "Team & Permissions", icon: _lucidereact.Users },
           { id: "account", label: "Account", icon: _lucidereact.User },
           { id: "notifications", label: "Notifications", icon: _lucidereact.Bell },
@@ -17980,6 +18279,147 @@ var _designsystem = require('@/lib/design-system');
                 )
                 , _react2.default.createElement('p', { className: "text-[#121316] font-medium" ,}, "Read-only access to operational logs, revenue protection analytics, and executive PDF reports."
 
+                )
+              )
+            )
+          )
+        )
+      )
+
+      /* 2b. CREDENTIALS & WEBHOOKS TAB */
+      , activeTab === "credentials" && (
+        _react2.default.createElement('div', { className: "space-y-8 animate-fadeIn" ,}
+          /* Webhooks Endpoints Card */
+          , _react2.default.createElement('div', { className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-6"       ,}
+            , _react2.default.createElement('div', { className: "space-y-1",}
+              , _react2.default.createElement('span', { className: _designsystem.DS.monoEyebrow,}, "Inbound Webhook Endpoints"  )
+              , _react2.default.createElement('h2', { className: "text-xl font-bold text-[#121316]"  ,}, "Production Webhook URLs"
+
+              )
+              , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50]" ,}, "Configure these endpoints in your Meta Developer Portal and Safaricom Daraja Portal to receive live customer events."
+
+              )
+            )
+
+            , _react2.default.createElement('div', { className: "grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono"     ,}
+              , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-2"     ,}
+                , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
+                  , _react2.default.createElement('span', { className: "font-bold text-[#15803D]" ,}, "WhatsApp Inbound Webhook"  )
+                  , _react2.default.createElement('span', { className: "text-[10px] bg-[#ECFDF5] text-[#15803D] px-2 py-0.5 rounded-full font-bold"      ,}, "GET / POST"  )
+                )
+                , _react2.default.createElement('div', { className: "p-2 bg-white rounded-xl border border-[#EAE7DF] text-[#121316] break-all select-all"       ,}, "https://your-domain.com/api/webhooks/whatsapp"
+
+                )
+                , _react2.default.createElement('p', { className: "text-[11px] font-sans text-[#75777E]"  ,}, "Verify Token: "
+                    , _react2.default.createElement('code', { className: "text-[#121316] font-bold" ,}, "otomatizon_nairobi_verify_2026")
+                )
+              )
+
+              , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-2"     ,}
+                , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
+                  , _react2.default.createElement('span', { className: "font-bold text-[#15803D]" ,}, "Safaricom M-Pesa STK Callback"   )
+                  , _react2.default.createElement('span', { className: "text-[10px] bg-[#ECFDF5] text-[#15803D] px-2 py-0.5 rounded-full font-bold"      ,}, "POST Callback" )
+                )
+                , _react2.default.createElement('div', { className: "p-2 bg-white rounded-xl border border-[#EAE7DF] text-[#121316] break-all select-all"       ,}, "https://your-domain.com/api/webhooks/mpesa/callback"
+
+                )
+                , _react2.default.createElement('p', { className: "text-[11px] font-sans text-[#75777E]"  ,}, "Auto-reconciliation of M-Pesa receipt numbers and payment status."
+
+                )
+              )
+            )
+          )
+
+          /* Live API Credentials Form */
+          , _react2.default.createElement('div', { className: "bg-white rounded-3xl border border-[#EAE7DF] shadow-sm p-6 sm:p-8 space-y-6"       ,}
+            , _react2.default.createElement('div', { className: "space-y-1",}
+              , _react2.default.createElement('span', { className: _designsystem.DS.monoEyebrow,}, "Encrypted Credentials Vault"  )
+              , _react2.default.createElement('h2', { className: "text-xl font-bold text-[#121316]"  ,}, "Direct API Keys & OAuth Secrets"
+
+              )
+              , _react2.default.createElement('p', { className: "text-xs text-[#4A4B50]" ,}, "Keys are encrypted via AES-256-GCM before storage. You can also specify them in your deployment environment variables (.env)."
+
+              )
+            )
+
+            , _react2.default.createElement('div', { className: "space-y-6 text-xs" ,}
+              /* WhatsApp Meta */
+              , _react2.default.createElement('div', { className: "p-5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-4"     ,}
+                , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+                  , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-[#15803D]"   ,} )
+                  , _react2.default.createElement('h3', { className: "font-bold text-[#121316] text-sm"  ,}, "Meta WhatsApp Cloud API"   )
+                )
+                , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-4"   ,}
+                  , _react2.default.createElement('div', null
+                    , _react2.default.createElement('label', { className: "text-[11px] font-mono text-[#75777E] block mb-1"    ,}, "Phone Number ID"  )
+                    , _react2.default.createElement('input', { type: "text", placeholder: "e.g. 109823471928374" , className: _designsystem.DS.input,} )
+                  )
+                  , _react2.default.createElement('div', null
+                    , _react2.default.createElement('label', { className: "text-[11px] font-mono text-[#75777E] block mb-1"    ,}, "WhatsApp Business Account ID (WABA)"    )
+                    , _react2.default.createElement('input', { type: "text", placeholder: "e.g. 928374615243120" , className: _designsystem.DS.input,} )
+                  )
+                  , _react2.default.createElement('div', { className: "sm:col-span-2",}
+                    , _react2.default.createElement('label', { className: "text-[11px] font-mono text-[#75777E] block mb-1"    ,}, "Permanent System User Access Token"    )
+                    , _react2.default.createElement('input', { type: "password", placeholder: "EAAGz...", className: _designsystem.DS.input,} )
+                  )
+                )
+              )
+
+              /* Google Workspace */
+              , _react2.default.createElement('div', { className: "p-5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-4"     ,}
+                , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+                  , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-blue-600"   ,} )
+                  , _react2.default.createElement('h3', { className: "font-bold text-[#121316] text-sm"  ,}, "Google Cloud Console OAuth 2.0"    )
+                )
+                , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-4"   ,}
+                  , _react2.default.createElement('div', null
+                    , _react2.default.createElement('label', { className: "text-[11px] font-mono text-[#75777E] block mb-1"    ,}, "Google Client ID"  )
+                    , _react2.default.createElement('input', { type: "text", placeholder: "...apps.googleusercontent.com", className: _designsystem.DS.input,} )
+                  )
+                  , _react2.default.createElement('div', null
+                    , _react2.default.createElement('label', { className: "text-[11px] font-mono text-[#75777E] block mb-1"    ,}, "Google Client Secret"  )
+                    , _react2.default.createElement('input', { type: "password", placeholder: "GOCSPX-...", className: _designsystem.DS.input,} )
+                  )
+                )
+              )
+
+              /* Safaricom M-Pesa */
+              , _react2.default.createElement('div', { className: "p-5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-4"     ,}
+                , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+                  , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-[#15803D]"   ,} )
+                  , _react2.default.createElement('h3', { className: "font-bold text-[#121316] text-sm"  ,}, "Safaricom Daraja API (Lipa Na M-Pesa)"     )
+                )
+                , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-3 gap-4"   ,}
+                  , _react2.default.createElement('div', null
+                    , _react2.default.createElement('label', { className: "text-[11px] font-mono text-[#75777E] block mb-1"    ,}, "ShortCode / Paybill / Till"    )
+                    , _react2.default.createElement('input', { type: "text", placeholder: "174379", className: _designsystem.DS.input,} )
+                  )
+                  , _react2.default.createElement('div', null
+                    , _react2.default.createElement('label', { className: "text-[11px] font-mono text-[#75777E] block mb-1"    ,}, "Consumer Key" )
+                    , _react2.default.createElement('input', { type: "text", placeholder: "Daraja Consumer Key"  , className: _designsystem.DS.input,} )
+                  )
+                  , _react2.default.createElement('div', null
+                    , _react2.default.createElement('label', { className: "text-[11px] font-mono text-[#75777E] block mb-1"    ,}, "Consumer Secret" )
+                    , _react2.default.createElement('input', { type: "password", placeholder: "Daraja Consumer Secret"  , className: _designsystem.DS.input,} )
+                  )
+                  , _react2.default.createElement('div', { className: "sm:col-span-3",}
+                    , _react2.default.createElement('label', { className: "text-[11px] font-mono text-[#75777E] block mb-1"    ,}, "Daraja Online Passkey"  )
+                    , _react2.default.createElement('input', { type: "password", placeholder: "bfb279f9aa9bdbcf158e97dd71a467cd2e0c8930...", className: _designsystem.DS.input,} )
+                  )
+                )
+              )
+
+              , _react2.default.createElement('div', { className: "flex justify-end pt-2"  ,}
+                , _react2.default.createElement('button', {
+                  type: "button",
+                  onClick: () => {
+                    setSaveNotice(true);
+                    setTimeout(() => setSaveNotice(false), 3000);
+                  },
+                  className: _designsystem.DS.btnPrimary,}
+
+                  , _react2.default.createElement(_lucidereact.ShieldCheck, { className: "w-4 h-4 text-emerald-300"  ,} )
+                  , _react2.default.createElement('span', null, "Save & Encrypt Credentials"   )
                 )
               )
             )

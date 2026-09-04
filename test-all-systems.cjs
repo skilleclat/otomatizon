@@ -34,8 +34,15 @@ async function ensureServerRunning() {
   console.log('⚙️ Starting local Otomatizon backend server on port 3001...');
   const serverProcess = spawn('node', ['server.cjs'], {
     cwd: __dirname,
-    stdio: 'ignore',
+    stdio: 'pipe',
     detached: false
+  });
+
+  serverProcess.stdout.on('data', d => {
+    // console.log(`[SERVER]: ${d.toString()}`);
+  });
+  serverProcess.stderr.on('data', d => {
+    console.error(`[SERVER ERR]: ${d.toString()}`);
   });
 
   // Wait up to 10 seconds for server to be responsive
@@ -52,6 +59,7 @@ async function ensureServerRunning() {
 
 const testFiles = [
   'test-completeness-audit.cjs',
+  'test-password-reset.cjs',
   'test-system-foundation.cjs',
   'test-command-center.cjs',
   'test-operating-system-scenario.cjs',

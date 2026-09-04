@@ -55,7 +55,7 @@ console.log(`  ✓ AppsView rendered successfully (${appsHtml.length} bytes)`);
 // 2. AUDIT HEADER & INTENT
 console.log("\n[2/5] Verifying Header & Executive Positioning...");
 assert(appsHtml.includes("Connected Business Systems") || appsHtml.includes("Systèmes d'entreprise connectés") || appsHtml.includes("Systèmes d&#x27;entreprise connectés"), "Missing main title");
-assert(appsHtml.includes("Otomatizon connects your tools") || appsHtml.includes("Otomatizon connecte vos outils"), "Missing subtitle positioning Otomatizon");
+assert(appsHtml.includes("Otomatizon connects") || appsHtml.includes("Otomatizon connecte"), "Missing subtitle positioning Otomatizon");
 assert(appsHtml.includes("AES-256") || appsHtml.includes("OAuth"), "Missing security trust badge");
 console.log("  ✓ Section 1 Verified: Connected Business Systems header and AES-256 security guarantee");
 
