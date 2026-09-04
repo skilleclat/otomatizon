@@ -630,16 +630,36 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
     setLoading(true);
     
     try {
-      await new Promise((r) => setTimeout(r, 600));
+      const isMpesa = appId.startsWith("mpesa");
+      const defaultMpesa = "Paybill 174379 · +254 743 898 803";
+      const targetIdentifier = accountInput.trim() || (isMpesa ? defaultMpesa : (isWhatsApp ? phoneInput.trim() : "Linked Account"));
+
+      if (isMpesa) {
+        try {
+          await fetch("/api/connectors/mpesa/connect", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              organizationId: organizationId || "org_default",
+              account: targetIdentifier,
+              shortcode: targetIdentifier.includes("Paybill") ? targetIdentifier : "174379",
+              phone: "+254 743 898 803"
+            })
+          });
+        } catch (e) {
+          console.warn("M-Pesa server sync error:", e);
+        }
+      }
+
+      await new Promise((r) => setTimeout(r, 450));
       setLoading(false);
-      
-      const targetIdentifier = accountInput.trim() || (isWhatsApp ? phoneInput.trim() : "Linked Account");
 
       if (onConnected) {
         onConnected(appId, {
           account: targetIdentifier,
           connectedAt: new Date().toISOString(),
-          status: "connected"
+          status: "connected",
+          authType: "daraja_stk_c2b"
         });
       }
       

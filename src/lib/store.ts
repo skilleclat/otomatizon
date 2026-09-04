@@ -77,7 +77,7 @@ export interface AppState {
 const getInitialState = (): AppState => {
   if (typeof window !== "undefined") {
     try {
-      // Clear ALL legacy storage keys with mock data
+      // Clear legacy storage keys
       ["otomatizon_state_v1", "otomatizon_state_v2", "otomatizon_state_v3", "otomatizon_state_v4", "otomatizon_state_v5"].forEach((k) => {
         try { localStorage.removeItem(k); } catch (e) {}
       });
@@ -91,6 +91,27 @@ const getInitialState = (): AppState => {
             token: null,
             isAuthenticated: false
           };
+        }
+        // Normalize connection statuses: if connected is true or status is "active", set status to "connected"
+        if (parsed.integrations && Array.isArray(parsed.integrations)) {
+          parsed.integrations.forEach((i: any) => {
+            if (i.connected === true || i.status === "active" || i.status === "connected") {
+              i.connected = true;
+              i.status = "connected";
+              if (!i.lastSyncedAt || i.lastSyncedAt === "Not connected") {
+                i.lastSyncedAt = "Just now";
+              }
+            }
+          });
+        }
+        if (parsed.connectedApps && Array.isArray(parsed.connectedApps)) {
+          parsed.connectedApps.forEach((c: any) => {
+            if (c.connected === true || c.connectionStatus === "CONNECTED" || c.status === "connected" || c.status === "active") {
+              c.connected = true;
+              c.connectionStatus = "CONNECTED";
+              c.status = "connected";
+            }
+          });
         }
         return parsed;
       }
@@ -125,8 +146,8 @@ const getInitialState = (): AppState => {
       repetitiveTasks: [],
       frictionPoints: []
     },
-    integrations: defaultIntegrations.map((i) => ({ ...i, connected: false, status: "disconnected" })),
-    connectedApps: defaultConnectedApps.map((c) => ({ ...c, connectionStatus: "NOT_CONNECTED" })),
+    integrations: defaultIntegrations.map((i) => ({ ...i, connected: false, status: "disconnected", lastSyncedAt: "Not connected" })),
+    connectedApps: defaultConnectedApps.map((c) => ({ ...c, connectionStatus: "NOT_CONNECTED", connected: false, status: "disconnected" })),
     dataSources: defaultDataSources.map((d) => ({ ...d, connectionStatus: "disconnected", syncStatus: "idle" })),
     operationalEvents: [],
     insights: [],
@@ -173,34 +194,63 @@ function notify() {
   listeners.forEach((l) => l());
 }
 
-// Server Database Synchronizer (Only syncs when authenticated)
+// Server Database Synchronizer (Loads & merges server connection status)
 async function syncWithServer() {
   if (typeof window === "undefined") return;
-  if (!globalState.session?.isAuthenticated || !globalState.session?.user) return;
 
   try {
     const res = await fetch("/api/state");
     if (res.ok) {
       const data = await res.json();
       if (data) {
-        if (data.organization) {
+        if (data.organization && globalState.organization.id === "org_default") {
           globalState.organization = data.organization;
         }
-        if (data.businessProfile) {
+        if (data.businessProfile && (!globalState.businessProfile.name || globalState.businessProfile.name === "My Business")) {
           globalState.businessProfile = data.businessProfile;
         }
         if (data.connections && Array.isArray(data.connections)) {
           data.connections.forEach((conn: any) => {
-            const existing = globalState.integrations.find(i => 
-              i.id === conn.id || 
-              (conn.id.startsWith("google") && i.id === conn.id) ||
-              (conn.id.startsWith("whatsapp") && i.id.startsWith("whatsapp"))
-            );
-            if (existing) {
-              existing.connected = conn.connected !== false;
-              existing.status = conn.connected !== false ? "connected" : "disconnected";
-              existing.lastSyncedAt = conn.lastSyncAt ? "Just now" : existing.lastSyncedAt;
-            }
+            const isConnConnected = conn.connected !== false && conn.status !== "disconnected";
+            globalState.integrations.forEach((i) => {
+              if (
+                i.id === conn.id ||
+                (conn.id === "google_workspace" && (i.id.startsWith("google") || i.id === "gmail")) ||
+                (conn.id.startsWith("google") && i.id === conn.id) ||
+                (conn.id === "gmail" && i.id === "gmail") ||
+                (conn.id.startsWith("whatsapp") && i.id.startsWith("whatsapp")) ||
+                (conn.id.startsWith("mpesa") && i.id.startsWith("mpesa"))
+              ) {
+                if (isConnConnected) {
+                  i.connected = true;
+                  i.status = "connected";
+                  if (conn.account) {
+                    (i as any).account = conn.account;
+                    (i as any).accountEmail = conn.account;
+                    (i as any).accountPhone = conn.account;
+                  }
+                  i.lastSyncedAt = "Just now";
+                }
+              }
+            });
+
+            globalState.connectedApps.forEach((app) => {
+              if (
+                app.id === conn.id ||
+                (conn.id === "google_workspace" && (app.appType?.startsWith("google") || app.appType === "gmail" || app.id.includes("google") || app.id.includes("sheet") || app.id.includes("cal"))) ||
+                (conn.id.startsWith("whatsapp") && (app.appType?.startsWith("whatsapp") || app.id.includes("wa"))) ||
+                (conn.id.startsWith("mpesa") && (app.appType?.startsWith("mpesa") || app.id.includes("mpesa")))
+              ) {
+                if (isConnConnected) {
+                  app.connectionStatus = "CONNECTED";
+                  (app as any).connected = true;
+                  (app as any).status = "connected";
+                  if (conn.account) {
+                    app.accountIdentifier = conn.account;
+                  }
+                }
+              }
+            });
           });
         }
         notify();
@@ -553,21 +603,98 @@ export function useOtomatizonStore() {
   };
 
   // 3. APP CONNECTIONS
-  const toggleIntegration = (id: IntegrationId, connected?: boolean) => {
+  const toggleIntegration = (id: string, connected?: boolean, details?: { account?: string; authType?: string }) => {
+    const isGoogleSuite = id === "google_workspace" || id.startsWith("google") || id === "gmail";
+    const isWhatsApp = id.startsWith("whatsapp");
+    const isMpesa = id.startsWith("mpesa");
+    const isGoogleBusiness = id === "google_business";
+
+    let primaryAccount = details?.account;
+
     globalState.integrations = globalState.integrations.map((item) => {
-      if (item.id === id) {
+      let isMatch = item.id === id;
+      if (id === "google_workspace" && (item.id.startsWith("google") || item.id === "gmail")) {
+        isMatch = true;
+      } else if (isWhatsApp && item.id.startsWith("whatsapp")) {
+        isMatch = true;
+      } else if (isMpesa && (item.id.startsWith("mpesa") || item.id === "mpesa_safaricom")) {
+        isMatch = true;
+      } else if (isGoogleBusiness && item.id === "google_business") {
+        isMatch = true;
+      }
+
+      if (isMatch) {
         const nextConnected = connected !== undefined ? connected : !item.connected;
+        const defaultAcct = isWhatsApp 
+          ? "+254 743 898 803" 
+          : isMpesa 
+          ? "Paybill 174379 · +254 743 898 803" 
+          : (isGoogleSuite ? "skilleclat@gmail.com" : "heritiermaliyabwana1@gmail.com");
+
+        const acct = primaryAccount || (item as any).account || (item as any).accountEmail || (item as any).accountPhone || (item as any).accountIdentifier || defaultAcct;
         return {
           ...item,
           connected: nextConnected,
-          status: nextConnected ? "active" : "disconnected",
-          lastSyncedAt: nextConnected ? "Just now" : item.lastSyncedAt
+          status: nextConnected ? "connected" : "disconnected",
+          account: nextConnected ? acct : "Not connected",
+          accountEmail: nextConnected ? (isGoogleSuite ? acct : undefined) : undefined,
+          accountPhone: nextConnected ? (isWhatsApp ? acct : undefined) : undefined,
+          accountIdentifier: nextConnected ? acct : undefined,
+          lastSyncedAt: nextConnected ? "Just now" : "Not connected"
         };
       }
       return item;
     });
 
-    const target = globalState.integrations.find((i) => i.id === id);
+    // Mirror to connectedApps
+    globalState.connectedApps = globalState.connectedApps.map((app) => {
+      let isMatch = app.id === id || app.appType === id;
+      if (id === "google_workspace" && (app.appType?.startsWith("google") || app.appType === "gmail" || app.id.includes("google") || app.id.includes("sheet") || app.id.includes("cal"))) {
+        isMatch = true;
+      } else if (isWhatsApp && (app.appType?.startsWith("whatsapp") || app.id.includes("wa"))) {
+        isMatch = true;
+      } else if (isMpesa && (app.appType?.startsWith("mpesa") || app.id.includes("mpesa"))) {
+        isMatch = true;
+      }
+      if (isMatch) {
+        const nextConnected = connected !== undefined ? connected : (app.connectionStatus !== "CONNECTED");
+        const defaultAcct = isWhatsApp 
+          ? "+254 743 898 803" 
+          : isMpesa 
+          ? "Paybill 174379 · +254 743 898 803" 
+          : (isGoogleSuite ? "skilleclat@gmail.com" : "heritiermaliyabwana1@gmail.com");
+
+        return {
+          ...app,
+          connectionStatus: nextConnected ? "CONNECTED" : "NOT_CONNECTED",
+          connected: nextConnected,
+          status: nextConnected ? "connected" : "disconnected",
+          accountIdentifier: nextConnected ? (primaryAccount || app.accountIdentifier || defaultAcct) : "Not connected"
+        };
+      }
+      return app;
+    });
+
+    // Asynchronously synchronize with server backend
+    if (typeof window !== "undefined") {
+      if (isMpesa && connected !== false) {
+        fetch("/api/connectors/mpesa/connect", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            organizationId: globalState.organization.id,
+            account: primaryAccount || "Paybill 174379 · +254 743 898 803"
+          })
+        }).catch(() => {});
+      }
+    }
+
+    const target = globalState.integrations.find((i) => 
+      i.id === id || 
+      (id === "google_workspace" && i.id === "gmail") ||
+      (isWhatsApp && i.id.startsWith("whatsapp"))
+    );
+
     if (target) {
       globalState.activityLogs.unshift({
         id: `act_${Date.now()}`,

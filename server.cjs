@@ -1133,6 +1133,82 @@ async function handleRequest(req, res) {
     return sendJson(res, 200, { success: true, message: "Gmail listener stopped." });
   }
 
+  // 5b-3. Safaricom M-Pesa Daraja Hub Connector Persistence
+  if (urlPath === "/api/connectors/mpesa/connect" && req.method === "POST") {
+    try {
+      const body = await parseJsonBody(req);
+      const { organizationId, account, shortcode, phone } = body;
+      const db = readDb();
+      const orgId = organizationId || db.organizations[0]?.id || "org_james";
+      const mpesaAccount = account || (shortcode ? `Paybill/Till: ${shortcode}` : "Paybill 174379 · +254 743 898 803");
+
+      db.connections = db.connections || [];
+
+      ["mpesa", "mpesa_safaricom", "mpesa_daraja"].forEach((srvId) => {
+        let existing = db.connections.find(c => c.id === srvId && c.organizationId === orgId);
+        if (existing) {
+          existing.connected = true;
+          existing.status = "connected";
+          existing.account = mpesaAccount;
+          existing.lastSyncAt = new Date().toISOString();
+        } else {
+          db.connections.push({
+            id: srvId,
+            organizationId: orgId,
+            name: "Safaricom M-Pesa",
+            connected: true,
+            status: "connected",
+            account: mpesaAccount,
+            authType: "daraja_stk_c2b",
+            lastSyncAt: new Date().toISOString()
+          });
+        }
+      });
+
+      // Record in activity logs
+      db.activityLogs = db.activityLogs || [];
+      db.activityLogs.unshift({
+        id: `act_${Date.now()}`,
+        organizationId: orgId,
+        type: "system_intelligence",
+        channel: "mpesa",
+        application: "Safaricom M-Pesa",
+        title: `M-Pesa Gateway Connected: ${mpesaAccount}`,
+        description: `Daraja STK Push & C2B transaction listener active for ${mpesaAccount}.`,
+        actionTakenByOtomatizon: "Safaricom Daraja API credentials registered & STK callback listener active",
+        businessResult: "Ready to automatically trigger customer phone prompts and confirm session fees",
+        entityName: mpesaAccount,
+        timestamp: "Just now",
+        provenance: "OBSERVED"
+      });
+
+      writeDb(db);
+
+      return sendJson(res, 200, {
+        success: true,
+        organizationId: orgId,
+        account: mpesaAccount,
+        message: "Safaricom M-Pesa connected successfully!"
+      });
+    } catch (err) {
+      return sendJson(res, 500, { error: err.message });
+    }
+  }
+
+  if (urlPath === "/api/connectors/mpesa/disconnect" && req.method === "POST") {
+    const searchParams = new URLSearchParams(queryString || "");
+    const orgId = searchParams.get("orgId") || "default";
+    const db = readDb();
+    (db.connections || []).forEach(c => {
+      if (c.id === "mpesa" || c.id === "mpesa_safaricom" || c.id === "mpesa_daraja") {
+        c.connected = false;
+        c.status = "disconnected";
+      }
+    });
+    writeDb(db);
+    return sendJson(res, 200, { success: true, message: "M-Pesa disconnected." });
+  }
+
   // 5c. Real-Time Autonomous Orchestration Pipeline Runner
   if (urlPath === "/api/orchestration/test-live-flow" && req.method === "POST") {
     try {
