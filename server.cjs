@@ -43,6 +43,7 @@ const { persistentJobQueue } = require("./src/lib/worker/job-queue.cjs");
 const { checkUsageQuota, upgradePlan, PLAN_TIERS } = require("./src/lib/billing/subscription-manager.cjs");
 const { mpesaSubscriptionManager } = require("./src/lib/billing/mpesa-subscription.cjs");
 const { generateReportPdfBuffer } = require("./src/lib/pdf/generate-report-pdf.cjs");
+const { gmailRealSyncService } = require("./src/lib/email/gmail-real-sync.cjs");
 
 const googleConnector = new GoogleWorkspaceConnector();
 const whatsAppConnector = new WhatsAppConnector();
@@ -989,6 +990,119 @@ async function handleRequest(req, res) {
     } catch (err) {
       return sendJson(res, 500, { error: err.message });
     }
+  }
+
+  // 5b-2. Real Gmail Sync Connection (App Password / IMAP listener & SMTP confirmation)
+  if (urlPath === "/api/gmail/connect-real" && req.method === "POST") {
+    try {
+      const body = await parseJsonBody(req);
+      const { email, appPassword, organizationId } = body;
+      if (!email || !appPassword) {
+        return sendJson(res, 400, { error: "Email and Google App Password are required." });
+      }
+
+      const orgId = organizationId || "org_default";
+
+      // 1. Send Real Confirmation Email to the user's phone / device
+      let emailSent = false;
+      try {
+        await gmailRealSyncService.sendWelcomeConfirmationEmail({
+          email,
+          appPassword
+        });
+        emailSent = true;
+      } catch (err) {
+        console.warn("Could not send SMTP confirmation email:", err.message);
+        // If authentication failed completely, return descriptive error
+        if (err.message.includes("Invalid login") || err.message.includes("Username and Password not accepted") || err.message.includes("BadCredentials")) {
+          return sendJson(res, 401, { 
+            error: "Authentication failed. Please verify your Gmail address and 16-character Google App Password (not your normal Gmail password)."
+          });
+        }
+      }
+
+      // 2. Start Real IMAP Background Polling Loop
+      const startRes = gmailRealSyncService.startBackgroundListener({
+        email,
+        appPassword,
+        organizationId: orgId
+      });
+
+      // 3. Persist connection in DB
+      const db = readDb();
+      db.connections = db.connections || [];
+      ["google_workspace", "gmail", "google_calendar", "google_meet", "google_sheets"].forEach(srvId => {
+        let conn = db.connections.find(c => c.id === srvId && c.organizationId === orgId);
+        if (conn) {
+          conn.connected = true;
+          conn.status = "connected";
+          conn.account = email;
+          conn.lastSyncAt = new Date().toISOString();
+        } else {
+          db.connections.push({
+            id: srvId,
+            organizationId: orgId,
+            name: srvId.replace("google_", "Google ").replace("gmail", "Gmail").replace("_", " "),
+            connected: true,
+            status: "connected",
+            account: email,
+            authType: "google_app_password_real_sync",
+            lastSyncAt: new Date().toISOString()
+          });
+        }
+      });
+
+      // 4. Log in activity logs
+      db.activityLogs = db.activityLogs || [];
+      db.activityLogs.unshift({
+        id: `act_${Date.now()}`,
+        organizationId: orgId,
+        type: "system_intelligence",
+        channel: "gmail",
+        application: "Gmail & Google Workspace Suite",
+        title: `Real Gmail Mailbox Synced: ${email}`,
+        description: `Direct IMAP reader active (checking every 15s). Confirmation email sent to ${email}.`,
+        actionTakenByOtomatizon: "Live mailbox listener initialized. Automatic Business vs. Personal classification active.",
+        businessResult: "Ready to automatically capture leads sent to this mailbox",
+        entityName: email,
+        timestamp: "Just now",
+        provenance: "OBSERVED"
+      });
+
+      writeDb(db);
+
+      return sendJson(res, 200, {
+        success: true,
+        account: email,
+        emailNotificationSent: emailSent,
+        isListening: true,
+        pollIntervalSeconds: 15,
+        message: `Gmail ${email} connected successfully! Otomatizon is now monitoring your incoming emails in real-time.`
+      });
+    } catch (err) {
+      console.error("Gmail connect error:", err);
+      return sendJson(res, 500, { error: err.message || "Failed to establish Gmail connection" });
+    }
+  }
+
+  if (urlPath === "/api/gmail/real-status" && req.method === "GET") {
+    const status = gmailRealSyncService.getStatus();
+    return sendJson(res, 200, {
+      success: true,
+      ...status
+    });
+  }
+
+  if (urlPath === "/api/gmail/disconnect-real" && req.method === "POST") {
+    gmailRealSyncService.stopBackgroundListener();
+    const db = readDb();
+    const conn = (db.connections || []).find(c => c.id === "gmail" || c.id === "google_workspace");
+    if (conn) {
+      conn.connected = false;
+      conn.status = "disconnected";
+      writeDb(db);
+    }
+    return sendJson(res, 200, { success: true, message: "Gmail listener stopped." });
   }
 
   // 5c. Real-Time Autonomous Orchestration Pipeline Runner

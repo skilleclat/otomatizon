@@ -282,6 +282,9 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
     new Set(["google_calendar", "google_sheets", "gmail"])
   );
   const [googleEmailInput, setGoogleEmailInput] = useState("");
+  const [appPasswordInput, setAppPasswordInput] = useState("");
+  const [syncFeedback, setSyncFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [showAppPasswordGuide, setShowAppPasswordGuide] = useState(false);
 
   const isWhatsApp = appId === "whatsapp_business" || appId === "whatsapp";
 
@@ -501,41 +504,77 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
   // Connect Google Workspace with all selected services
   const handleAuthorizeGoogleWorkspace = async () => {
     setLoading(true);
+    setSyncFeedback(null);
     
     const targetEmail = googleEmailInput.trim() || accountInput.trim() || "heritiermaliyabwana1@gmail.com";
     const servicesList = Array.from(selectedGoogleServices);
 
     try {
-      // 1. Persist to server backend database
-      await fetch("/api/connectors/save-suite", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          organizationId: organizationId,
-          account: targetEmail,
-          services: servicesList
-        })
-      });
+      if (appPasswordInput.trim()) {
+        // Real Live Sync via Google App Password
+        const realRes = await fetch("/api/gmail/connect-real", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            organizationId: organizationId,
+            email: targetEmail,
+            appPassword: appPasswordInput.trim()
+          })
+        });
+
+        const realData = await realRes.json();
+        if (!realRes.ok) {
+          setLoading(false);
+          setSyncFeedback({
+            type: "error",
+            message: realData.error || "Could not verify Gmail connection. Check your 16-character App Password."
+          });
+          return;
+        }
+
+        setSyncFeedback({
+          type: "success",
+          message: realData.emailNotificationSent 
+            ? `✅ Real sync active! Confirmation email sent to ${targetEmail}. Background listener checking every 15s.`
+            : `✅ Real sync active! Otomatizon is now reading incoming emails every 15s in the background.`
+        });
+      } else {
+        // Standard OAuth2 Save
+        await fetch("/api/connectors/save-suite", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            organizationId: organizationId,
+            account: targetEmail,
+            services: servicesList
+          })
+        });
+      }
 
       setLoading(false);
 
-      // 2. Connect all checked Google apps in store
+      // Connect all checked Google apps in store
       if (onConnected) {
         selectedGoogleServices.forEach((serviceId) => {
           onConnected(serviceId, {
             account: targetEmail,
             connectedAt: new Date().toISOString(),
             status: "connected",
-            authType: "google_oauth2",
+            authType: appPasswordInput.trim() ? "google_app_password_real_sync" : "google_oauth2",
             connectedSuite: servicesList
           });
         });
       }
 
-      onClose();
-    } catch (err) {
+      setTimeout(() => {
+        onClose();
+      }, 1400);
+    } catch (err: any) {
       setLoading(false);
-      onClose();
+      setSyncFeedback({
+        type: "error",
+        message: err.message || "Connection error"
+      });
     }
   };
 
@@ -681,7 +720,7 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
                   </button>
                 </div>
 
-                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
                   {GOOGLE_WORKSPACE_SERVICES.map((srv) => {
                     const isChecked = selectedGoogleServices.has(srv.id);
 
@@ -723,10 +762,67 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
                 </div>
               </div>
 
+              {/* 3. Real Live Inbox Polling & SMTP Confirmation (Optional App Password) */}
+              <div className="p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse" />
+                    <span className="text-xs font-bold text-[#121316]">
+                      Real-Time Live Mailbox Sync &amp; Device Notification
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowAppPasswordGuide(!showAppPasswordGuide)}
+                    className="text-[10px] font-mono text-[#15803D] underline cursor-pointer"
+                  >
+                    {showAppPasswordGuide ? "Hide Guide" : "How to generate App Password?"}
+                  </button>
+                </div>
+
+                <p className="text-[11px] text-[#75777E] leading-relaxed">
+                  Enter your 16-character <strong>Google App Password</strong> to enable Otomatizon to send a confirmation email directly to your device and listen for live client emails every 15s.
+                </p>
+
+                {showAppPasswordGuide && (
+                  <div className="p-3 bg-white border border-[#EAE7DF] rounded-xl text-[11px] text-[#4A4B50] space-y-1.5 font-mono animate-fadeIn">
+                    <p className="font-bold text-[#121316]">Comment obtenir votre mot de passe d&rsquo;application Google :</p>
+                    <ol className="list-decimal pl-4 space-y-0.5 text-[10px]">
+                      <li>Allez sur votre <strong>Compte Google</strong> &gt; <strong>Sécurité</strong>.</li>
+                      <li>Sous &ldquo;Connexion à Google&rdquo;, activez la <strong>Validation en 2 étapes</strong>.</li>
+                      <li>Cliquez sur <strong>Mots de passe des applications</strong> (ou recherchez &ldquo;App Passwords&rdquo;).</li>
+                      <li>Nommez l&rsquo;application <strong>Otomatizon</strong> et copiez le code à 16 lettres généré.</li>
+                    </ol>
+                  </div>
+                )}
+
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="password"
+                    value={appPasswordInput}
+                    onChange={(e) => setAppPasswordInput(e.target.value)}
+                    placeholder="16-character Google App Password (e.g. abcd efgh ijkl mnop)"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-[#EAE7DF] text-xs font-mono focus:border-[#15803D] focus:outline-none transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Feedback alert if any */}
+              {syncFeedback && (
+                <div className={`p-3 rounded-xl border text-xs font-mono ${
+                  syncFeedback.type === "success" 
+                    ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#15803D]" 
+                    : "bg-red-50 border-red-200 text-red-600"
+                }`}>
+                  {syncFeedback.message}
+                </div>
+              )}
+
               {/* Security Guarantee */}
               <div className="flex items-center gap-2 text-[11px] text-[#75777E] font-mono pt-1">
                 <Lock className="w-3.5 h-3.5 text-[#15803D]" />
-                <span>Google OAuth 2.0 &middot; Official Google API Authorization</span>
+                <span>Encrypted AES-256 Storage &middot; Google OAuth 2.0 &amp; TLS IMAP</span>
               </div>
 
               {/* Action Button */}
@@ -748,7 +844,7 @@ export const ConnectAppModal: React.FC<ConnectAppModalProps> = ({
                     <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                   ) : (
                     <>
-                      <span>Authorize {selectedGoogleServices.size} Google Services</span>
+                      <span>{appPasswordInput.trim() ? "Connect & Start Live Sync" : `Authorize ${selectedGoogleServices.size} Google Services`}</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </>
                   )}

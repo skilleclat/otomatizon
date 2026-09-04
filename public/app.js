@@ -13357,6 +13357,9 @@ const appConfigMap
     new Set(["google_calendar", "google_sheets", "gmail"])
   );
   const [googleEmailInput, setGoogleEmailInput] = _react.useState.call(void 0, "");
+  const [appPasswordInput, setAppPasswordInput] = _react.useState.call(void 0, "");
+  const [syncFeedback, setSyncFeedback] = _react.useState(null);
+  const [showAppPasswordGuide, setShowAppPasswordGuide] = _react.useState.call(void 0, false);
 
   const isWhatsApp = appId === "whatsapp_business" || appId === "whatsapp";
 
@@ -13576,41 +13579,77 @@ const appConfigMap
   // Connect Google Workspace with all selected services
   const handleAuthorizeGoogleWorkspace = async () => {
     setLoading(true);
+    setSyncFeedback(null);
     
     const targetEmail = googleEmailInput.trim() || accountInput.trim() || "heritiermaliyabwana1@gmail.com";
     const servicesList = Array.from(selectedGoogleServices);
 
     try {
-      // 1. Persist to server backend database
-      await fetch("/api/connectors/save-suite", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          organizationId: organizationId,
-          account: targetEmail,
-          services: servicesList
-        })
-      });
+      if (appPasswordInput.trim()) {
+        // Real Live Sync via Google App Password
+        const realRes = await fetch("/api/gmail/connect-real", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            organizationId: organizationId,
+            email: targetEmail,
+            appPassword: appPasswordInput.trim()
+          })
+        });
+
+        const realData = await realRes.json();
+        if (!realRes.ok) {
+          setLoading(false);
+          setSyncFeedback({
+            type: "error",
+            message: realData.error || "Could not verify Gmail connection. Check your 16-character App Password."
+          });
+          return;
+        }
+
+        setSyncFeedback({
+          type: "success",
+          message: realData.emailNotificationSent 
+            ? `✅ Real sync active! Confirmation email sent to ${targetEmail}. Background listener checking every 15s.`
+            : `✅ Real sync active! Otomatizon is now reading incoming emails every 15s in the background.`
+        });
+      } else {
+        // Standard OAuth2 Save
+        await fetch("/api/connectors/save-suite", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            organizationId: organizationId,
+            account: targetEmail,
+            services: servicesList
+          })
+        });
+      }
 
       setLoading(false);
 
-      // 2. Connect all checked Google apps in store
+      // Connect all checked Google apps in store
       if (onConnected) {
         selectedGoogleServices.forEach((serviceId) => {
           onConnected(serviceId, {
             account: targetEmail,
             connectedAt: new Date().toISOString(),
             status: "connected",
-            authType: "google_oauth2",
+            authType: appPasswordInput.trim() ? "google_app_password_real_sync" : "google_oauth2",
             connectedSuite: servicesList
           });
         });
       }
 
-      onClose();
+      setTimeout(() => {
+        onClose();
+      }, 1400);
     } catch (err) {
       setLoading(false);
-      onClose();
+      setSyncFeedback({
+        type: "error",
+        message: err.message || "Connection error"
+      });
     }
   };
 
@@ -13756,7 +13795,7 @@ const appConfigMap
                   )
                 )
 
-                , _react2.default.createElement('div', { className: "space-y-2 max-h-64 overflow-y-auto pr-1"   ,}
+                , _react2.default.createElement('div', { className: "space-y-2 max-h-52 overflow-y-auto pr-1"   ,}
                   , GOOGLE_WORKSPACE_SERVICES.map((srv) => {
                     const isChecked = selectedGoogleServices.has(srv.id);
 
@@ -13798,10 +13837,67 @@ const appConfigMap
                 )
               )
 
+              /* 3. Real Live Inbox Polling & SMTP Confirmation (Optional App Password) */
+              , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] space-y-2.5"     ,}
+                , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
+                  , _react2.default.createElement('div', { className: "flex items-center gap-2"  ,}
+                    , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-[#15803D] animate-pulse"    ,} )
+                    , _react2.default.createElement('span', { className: "text-xs font-bold text-[#121316]"  ,}, "Real-Time Live Mailbox Sync & Device Notification"
+
+                    )
+                  )
+                  , _react2.default.createElement('button', {
+                    type: "button",
+                    onClick: () => setShowAppPasswordGuide(!showAppPasswordGuide),
+                    className: "text-[10px] font-mono text-[#15803D] underline cursor-pointer"    ,}
+
+                    , showAppPasswordGuide ? "Hide Guide" : "How to generate App Password?"
+                  )
+                )
+
+                , _react2.default.createElement('p', { className: "text-[11px] text-[#75777E] leading-relaxed"  ,}, "Enter your 16-character "
+                     , _react2.default.createElement('strong', null, "Google App Password"  ), " to enable Otomatizon to send a confirmation email directly to your device and listen for live client emails every 15s."
+                )
+
+                , showAppPasswordGuide && (
+                  _react2.default.createElement('div', { className: "p-3 bg-white border border-[#EAE7DF] rounded-xl text-[11px] text-[#4A4B50] space-y-1.5 font-mono animate-fadeIn"         ,}
+                    , _react2.default.createElement('p', { className: "font-bold text-[#121316]" ,}, "Comment obtenir votre mot de passe d’application Google :"        )
+                    , _react2.default.createElement('ol', { className: "list-decimal pl-4 space-y-0.5 text-[10px]"   ,}
+                      , _react2.default.createElement('li', null, "Allez sur votre "   , _react2.default.createElement('strong', null, "Compte Google" ), " > "  , _react2.default.createElement('strong', null, "Sécurité"), ".")
+                      , _react2.default.createElement('li', null, "Sous “Connexion à Google”, activez la "      , _react2.default.createElement('strong', null, "Validation en 2 étapes"   ), ".")
+                      , _react2.default.createElement('li', null, "Cliquez sur "  , _react2.default.createElement('strong', null, "Mots de passe des applications"    ), " (ou recherchez “App Passwords”)."    )
+                      , _react2.default.createElement('li', null, "Nommez l’application "  , _react2.default.createElement('strong', null, "Otomatizon"), " et copiez le code à 16 lettres généré."        )
+                    )
+                  )
+                )
+
+                , _react2.default.createElement('div', { className: "relative",}
+                  , _react2.default.createElement(_lucidereact.Lock, { className: "w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2"      ,} )
+                  , _react2.default.createElement('input', {
+                    type: "password",
+                    value: appPasswordInput,
+                    onChange: (e) => setAppPasswordInput(e.target.value),
+                    placeholder: "16-character Google App Password (e.g. abcd efgh ijkl mnop)"        ,
+                    className: "w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-[#EAE7DF] text-xs font-mono focus:border-[#15803D] focus:outline-none transition-all"            ,}
+                  )
+                )
+              )
+
+              /* Feedback alert if any */
+              , syncFeedback && (
+                _react2.default.createElement('div', { className: `p-3 rounded-xl border text-xs font-mono ${
+                  syncFeedback.type === "success" 
+                    ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#15803D]" 
+                    : "bg-red-50 border-red-200 text-red-600"
+                }`,}
+                  , syncFeedback.message
+                )
+              )
+
               /* Security Guarantee */
               , _react2.default.createElement('div', { className: "flex items-center gap-2 text-[11px] text-[#75777E] font-mono pt-1"      ,}
                 , _react2.default.createElement(_lucidereact.Lock, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
-                , _react2.default.createElement('span', null, "Google OAuth 2.0 · Official Google API Authorization"       )
+                , _react2.default.createElement('span', null, "Encrypted AES-256 Storage · Google OAuth 2.0 & TLS IMAP"         )
               )
 
               /* Action Button */
@@ -13823,7 +13919,7 @@ const appConfigMap
                     _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3.5 h-3.5 animate-spin"  ,} )
                   ) : (
                     _react2.default.createElement(_react2.default.Fragment, null
-                      , _react2.default.createElement('span', null, "Authorize " , selectedGoogleServices.size, " Google Services"  )
+                      , _react2.default.createElement('span', null, appPasswordInput.trim() ? "Connect & Start Live Sync" : `Authorize ${selectedGoogleServices.size} Google Services`)
                       , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5" ,} )
                     )
                   )
