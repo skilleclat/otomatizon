@@ -13073,7 +13073,7 @@ var _lucidereact = require('lucide-react');
 
   // Module: @/components/ConnectAppModal
   define("@/components/ConnectAppModal", function(require, exports) {
-    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }"use client";
+    "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }"use client";
 
 var _react = require('react'); var _react2 = _interopRequireDefault(_react);
 
@@ -13940,7 +13940,7 @@ const appConfigMap
 
             )
           ) : isWhatsApp ? (
-            /* SECTION 2: WHATSAPP BUSINESS MULTI-DEVICE CONNECTOR (OPTION B & OPTION A) */
+            /* SECTION 2: WHATSAPP BUSINESS VERIFIED PRODUCTION CONNECTOR */
             _react2.default.createElement('div', { className: "space-y-4",}
 
               /* Method Switcher Tabs */
@@ -13955,169 +13955,130 @@ const appConfigMap
                   }`,}
 
                   , _react2.default.createElement(_lucidereact.Smartphone, { className: "w-3.5 h-3.5 text-emerald-700"  ,} )
-                  , _react2.default.createElement('span', null, "Option B : Code à 8 Chiffres"      )
+                  , _react2.default.createElement('span', null, "Liaison Numéro Direct"  )
                 )
 
                 , _react2.default.createElement('button', {
                   type: "button",
-                  onClick: () => {
-                    setWhatsappMode("qr");
-                    if (!realQrDataUrl) createFreshQr();
-                  },
+                  onClick: () => setWhatsappMode("qr"),
                   className: `py-2 px-3 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                     whatsappMode === "qr"
                       ? "bg-white text-[#121316] shadow-xs border border-[#EAE7DF]"
                       : "text-[#75777E] hover:text-[#121316]"
                   }`,}
 
-                  , _react2.default.createElement(_lucidereact.QrCode, { className: "w-3.5 h-3.5 text-emerald-700"  ,} )
-                  , _react2.default.createElement('span', null, "Option A : Scan QR Code"     )
+                  , _react2.default.createElement(_lucidereact.Zap, { className: "w-3.5 h-3.5 text-emerald-700"  ,} )
+                  , _react2.default.createElement('span', null, "Meta Cloud API & Webhook"    )
                 )
               )
 
-              /* OPTION B: 8-DIGIT PHONE PAIRING CODE */
+              /* TAB 1: DIRECT PHONE NUMBER BINDING */
               , whatsappMode === "phone" ? (
                 _react2.default.createElement('div', { className: "space-y-4 animate-fadeIn" ,}
 
-                  /* Phone Input Box & Request Button */
+                  /* Phone Input Box */
                   , _react2.default.createElement('div', { className: "space-y-1.5 font-mono" ,}
                     , _react2.default.createElement('label', { className: "text-xs font-bold text-[#121316] flex items-center justify-between"     ,}
                       , _react2.default.createElement('span', null, "Votre Numéro WhatsApp Business *"    )
-                      , _react2.default.createElement('span', { className: "text-[10px] text-emerald-700 font-normal"  ,}, "Avec indicatif pays"  )
+                      , _react2.default.createElement('span', { className: "text-[10px] text-emerald-700 font-normal"  ,}, "Avec indicatif international"  )
                     )
-                    , _react2.default.createElement('div', { className: "flex gap-2" ,}
-                      , _react2.default.createElement('div', { className: "relative flex-1" ,}
-                        , _react2.default.createElement(_lucidereact.Smartphone, { className: "w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2"      ,} )
-                        , _react2.default.createElement('input', {
-                          type: "tel",
-                          required: true,
-                          value: phoneInput,
-                          onChange: (e) => setPhoneInput(e.target.value),
-                          placeholder: "+254 743 898 803"   ,
-                          className: "w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF] text-xs font-mono focus:bg-white focus:border-[#15803D] focus:outline-none transition-all"             ,}
-                        )
-                      )
-
-                      , _react2.default.createElement('button', {
-                        type: "button",
-                        onClick: handleRequestPairingCode,
-                        disabled: pairingCodeLoading,
-                        className: "px-4 py-2.5 rounded-xl bg-[#002E25] hover:bg-[#15803D] text-white text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer shrink-0 shadow-2xs disabled:opacity-50"                ,}
-
-                        , pairingCodeLoading ? (
-                          _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3.5 h-3.5 animate-spin"  ,} )
-                        ) : (
-                          _react2.default.createElement(_lucidereact.Zap, { className: "w-3.5 h-3.5" ,} )
-                        )
-                        , _react2.default.createElement('span', null, "Request Pairing Code"  )
+                    , _react2.default.createElement('div', { className: "relative",}
+                      , _react2.default.createElement(_lucidereact.Smartphone, { className: "w-4 h-4 text-[#75777E] absolute left-3.5 top-1/2 -translate-y-1/2"      ,} )
+                      , _react2.default.createElement('input', {
+                        type: "tel",
+                        required: true,
+                        value: phoneInput || "+254 743 898 803",
+                        onChange: (e) => setPhoneInput(e.target.value),
+                        placeholder: "+254 743 898 803"   ,
+                        className: "w-full pl-10 pr-4 py-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] text-xs font-mono focus:bg-white focus:border-[#15803D] focus:outline-none transition-all"             ,}
                       )
                     )
                   )
 
-                  /* 8-Digit Pairing Code Display Box */
-                  , _react2.default.createElement('div', { className: "p-4 rounded-2xl bg-[#ECFDF5]/60 border border-[#A7F3D0] space-y-3"     ,}
-                    , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
-                      , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#15803D] font-bold flex items-center gap-1.5"        ,}
-                        , _react2.default.createElement('span', { className: "w-2 h-2 rounded-full bg-[#15803D] animate-pulse"    ,} ), "Code d’Association WhatsApp Actif"
+                  /* Permissions Cards */
+                  , _react2.default.createElement('div', { className: "space-y-2.5",}
+                    , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block"      ,}, "Ce que fait Otomatizon sur ce numéro :"
 
-                      )
-                      , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#75777E]"  ,}, "Valide 3 minutes"  )
                     )
 
-                    , _react2.default.createElement('div', { className: "flex items-center justify-between p-3 bg-white border border-[#A7F3D0] rounded-xl"       ,}
-                      , _react2.default.createElement('div', { className: "font-mono text-xl sm:text-2xl font-extrabold tracking-widest text-[#002E25]"     ,}
-                        , activePairingCode || "OTOM-2026"
-                      )
+                    , _react2.default.createElement('div', { className: "space-y-2",}
+                      , _react2.default.createElement('div', { className: "flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]"       ,}
+                        , _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4 text-emerald-700 shrink-0 mt-0.5"    ,} )
+                        , _react2.default.createElement('div', { className: "space-y-0.5",}
+                          , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316]"  ,}, "Capture et Analyse des Demandes Entrantes"     )
+                          , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E]" ,}, "Intercepte les messages de vos clients et extrait les besoins (tarifs, horaires, réservation)."
 
-                      , _react2.default.createElement('button', {
-                        type: "button",
-                        onClick: () => {
-                          _optionalChain([navigator, 'access', _ => _.clipboard, 'optionalAccess', _2 => _2.writeText, 'call', _3 => _3(activePairingCode.replace("-", ""))]);
-                          setCodeCopied(true);
-                          setTimeout(() => setCodeCopied(false), 2000);
-                        },
-                        className: "px-3 py-1.5 rounded-lg bg-[#FAF9F5] border border-[#EAE7DF] hover:border-[#15803D] text-[11px] font-mono font-bold text-[#121316] flex items-center gap-1.5 transition-all cursor-pointer"               ,}
-
-                        , codeCopied ? (
-                          _react2.default.createElement(_react2.default.Fragment, null
-                            , _react2.default.createElement(_lucidereact.Check, { className: "w-3 h-3 text-[#15803D]"  ,} )
-                            , _react2.default.createElement('span', { className: "text-[#15803D]",}, "Copié !" )
-                          )
-                        ) : (
-                          _react2.default.createElement(_react2.default.Fragment, null
-                            , _react2.default.createElement(_lucidereact.Copy, { className: "w-3 h-3 text-[#75777E]"  ,} )
-                            , _react2.default.createElement('span', null, "Copier")
                           )
                         )
                       )
-                    )
 
-                    /* Step-by-Step Mobile Instructions */
-                    , _react2.default.createElement('div', { className: "p-3 bg-white/80 border border-[#A7F3D0]/60 rounded-xl text-[11px] text-[#4A4B50] space-y-1 font-mono"        ,}
-                      , _react2.default.createElement('p', { className: "font-bold text-[#121316]" ,}, "Comment saisir le code sur votre téléphone :"       )
-                      , _react2.default.createElement('ol', { className: "list-decimal pl-4 space-y-0.5 text-[10px] leading-relaxed text-[#4A4B50]"     ,}
-                        , _react2.default.createElement('li', null, "Ouvrez " , _react2.default.createElement('strong', null, "WhatsApp"), " > "  , _react2.default.createElement('strong', null, "Appareils connectés" ), " " , _react2.default.createElement('em', null, "(Linked devices)" ), ".")
-                        , _react2.default.createElement('li', null, "Appuyez sur "  , _react2.default.createElement('strong', null, "Connecter un appareil"  ), " > "  , _react2.default.createElement('strong', null, "Associer avec un numéro de téléphone"     ), " " , _react2.default.createElement('em', null, "(Link with phone number)"   ), ".")
-                        , _react2.default.createElement('li', null, "Entrez le code "   , _react2.default.createElement('strong', { className: "text-[#002E25]",}, activePairingCode || "OTOM-2026"), " ci-dessus sur votre combiné."    )
+                      , _react2.default.createElement('div', { className: "flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]"       ,}
+                        , _react2.default.createElement(_lucidereact.FileSpreadsheet, { className: "w-4 h-4 text-emerald-700 shrink-0 mt-0.5"    ,} )
+                        , _react2.default.createElement('div', { className: "space-y-0.5",}
+                          , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316]"  ,}, "Synchronisation Google Sheets & Calendar"    )
+                          , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E]" ,}, "Inscrit les coordonnées du prospect dans votre registre et réserve les créneaux disponibles."
+
+                          )
+                        )
+                      )
+
+                      , _react2.default.createElement('div', { className: "flex items-start gap-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF]"       ,}
+                        , _react2.default.createElement(_lucidereact.Zap, { className: "w-4 h-4 text-emerald-700 shrink-0 mt-0.5"    ,} )
+                        , _react2.default.createElement('div', { className: "space-y-0.5",}
+                          , _react2.default.createElement('div', { className: "text-xs font-bold text-[#121316]"  ,}, "Relances 24h & Envoi de Brochures"     )
+                          , _react2.default.createElement('div', { className: "text-[11px] text-[#75777E]" ,}, "Génère et transmet vos tarifs et relance automatiquement les prospects non convertis."
+
+                          )
+                        )
                       )
                     )
                   )
 
                 )
               ) : (
-                /* OPTION A: QR CODE SCAN */
-                _react2.default.createElement('div', { className: "space-y-4 animate-fadeIn" ,}
-                  , _react2.default.createElement('div', { className: "p-5 rounded-2xl bg-[#FAF9F5] border border-[#EAE7DF] flex flex-col items-center text-center space-y-3"         ,}
-                    , _react2.default.createElement('div', { className: "p-3 bg-white rounded-2xl border border-[#EAE7DF] shadow-sm relative"      ,}
-                      , realQrDataUrl ? (
-                        _react2.default.createElement('img', { 
-                          src: realQrDataUrl, 
-                          alt: "WhatsApp Pairing QR Code"   , 
-                          className: "w-48 h-48 object-contain rounded-lg"   ,}
-                        )
-                      ) : (
-                        _react2.default.createElement('div', { className: "w-48 h-48 flex items-center justify-center bg-[#FAF9F5] rounded-lg"      ,}
-                          , _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-6 h-6 animate-spin text-[#15803D]"   ,} )
-                        )
-                      )
+                /* TAB 2: META CLOUD API & WEBHOOK (PRODUCTION VERCEL) */
+                _react2.default.createElement('div', { className: "space-y-3.5 animate-fadeIn font-mono"  ,}
+                  , _react2.default.createElement('div', { className: "p-3.5 bg-[#FAF9F5] border border-[#EAE7DF] rounded-2xl space-y-2 text-xs"      ,}
+                    , _react2.default.createElement('div', { className: "flex items-center justify-between"  ,}
+                      , _react2.default.createElement('span', { className: "font-bold text-[#121316]" ,}, "Meta WhatsApp Webhook URL (Vercel)"    )
+                      , _react2.default.createElement('span', { className: "text-[10px] text-[#15803D] uppercase font-bold"   ,}, "Live")
                     )
+                    , _react2.default.createElement('div', { className: "p-2 bg-white border border-[#EAE7DF] rounded-xl text-[11px] text-[#4A4B50] break-all select-all"        ,}, "https://otomatizon.com/api/webhooks/whatsapp"
 
-                    , _react2.default.createElement('p', { className: "text-[11px] font-mono text-[#75777E]"  ,}, "Scannez ce QR Code depuis WhatsApp > "
-                             , _react2.default.createElement('strong', null, "Appareils connectés" ), " > "  , _react2.default.createElement('strong', null, "Connecter un appareil"  ), "."
                     )
-                  )
-                )
-              )
-
-              /* Permissions Summary Cards */
-              , _react2.default.createElement('div', { className: "space-y-2",}
-                , _react2.default.createElement('span', { className: "text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block"      ,}, "Permissions gérées par Otomatizon"
-
-                )
-
-                , _react2.default.createElement('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-2"   ,}
-                  , _react2.default.createElement('div', { className: "flex items-start gap-2.5 p-2.5 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF]"       ,}
-                    , _react2.default.createElement(_lucidereact.MessageSquare, { className: "w-4 h-4 text-emerald-700 shrink-0 mt-0.5"    ,} )
-                    , _react2.default.createElement('div', { className: "space-y-0.5",}
-                      , _react2.default.createElement('div', { className: "text-[11px] font-bold text-[#121316]"  ,}, "Détection des Leads"  )
-                      , _react2.default.createElement('div', { className: "text-[10px] text-[#75777E]" ,}, "Écoute et capture des demandes entrantes."     )
+                    , _react2.default.createElement('div', { className: "text-[10px] text-[#75777E]" ,}, "Verify Token : "
+                         , _react2.default.createElement('strong', { className: "text-[#121316]",}, "otomatizon_webhook_secret_2026")
                     )
                   )
 
-                  , _react2.default.createElement('div', { className: "flex items-start gap-2.5 p-2.5 rounded-xl bg-[#FAF9F5] border border-[#EAE7DF]"       ,}
-                    , _react2.default.createElement(_lucidereact.Zap, { className: "w-4 h-4 text-emerald-700 shrink-0 mt-0.5"    ,} )
-                    , _react2.default.createElement('div', { className: "space-y-0.5",}
-                      , _react2.default.createElement('div', { className: "text-[11px] font-bold text-[#121316]"  ,}, "Relances 24h & Brochures"   )
-                      , _react2.default.createElement('div', { className: "text-[10px] text-[#75777E]" ,}, "Envoi automatique des devis et rappels."     )
+                  , _react2.default.createElement('div', { className: "space-y-1.5",}
+                    , _react2.default.createElement('label', { className: "text-xs font-bold text-[#121316] block"   ,}, "WhatsApp Business Phone Number ID"
+
+                    )
+                    , _react2.default.createElement('input', {
+                      type: "text",
+                      placeholder: "e.g. 104829102938471" ,
+                      className: "w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#EAE7DF] text-xs font-mono focus:border-[#15803D] focus:outline-none"          ,}
+                    )
+                  )
+
+                  , _react2.default.createElement('div', { className: "space-y-1.5",}
+                    , _react2.default.createElement('label', { className: "text-xs font-bold text-[#121316] block"   ,}, "Meta System Access Token"
+
+                    )
+                    , _react2.default.createElement('input', {
+                      type: "password",
+                      placeholder: "EAAG... (Meta Cloud API Token)"    ,
+                      className: "w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#EAE7DF] text-xs font-mono focus:border-[#15803D] focus:outline-none"          ,}
                     )
                   )
                 )
               )
 
               /* Security Guarantee */
-              , _react2.default.createElement('div', { className: "flex items-center gap-2 text-[11px] text-[#75777E] font-mono"     ,}
+              , _react2.default.createElement('div', { className: "flex items-center gap-2 text-[11px] text-[#75777E] font-mono pt-1"      ,}
                 , _react2.default.createElement(_lucidereact.Lock, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
-                , _react2.default.createElement('span', null, "Protocole Officiel WhatsApp Multi-Device · Chiffrement de bout en bout"         )
+                , _react2.default.createElement('span', null, "Meta WhatsApp Business · Chiffrement 256-Bit de bout en bout"         )
               )
 
               /* Action Buttons */
@@ -14139,7 +14100,7 @@ const appConfigMap
                     _react2.default.createElement(_lucidereact.RefreshCw, { className: "w-3.5 h-3.5 animate-spin"  ,} )
                   ) : (
                     _react2.default.createElement(_react2.default.Fragment, null
-                      , _react2.default.createElement('span', null, "Authorize & Link WhatsApp"   )
+                      , _react2.default.createElement('span', null, "Authorize & Connect WhatsApp"   )
                       , _react2.default.createElement(_lucidereact.ArrowRight, { className: "w-3.5 h-3.5" ,} )
                     )
                   )
