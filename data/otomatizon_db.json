@@ -16,8 +16,8 @@
       "email": "amina.odhiambo@gmail.com",
       "phone": "+254 722 111 222",
       "organizationId": "org_1788371046317",
-      "passwordHash": "0b6a68d01b920bb7d9daa26c8589d0c0c6db978b983e12c5536ec7b407bcca618ca1b42e9ce1e3384f44775f1fa5eb47d5e70262c062c61eab5e778876e067e0",
-      "salt": "438db7067d1d77ac2a46dacaed24cc4d",
+      "passwordHash": "ccbcafab9703d51afd24041cbdba3ce4b68c895cdca8251c6dc68669635a64907c209c71c6811ffe11a85e5a7216e1034365aeac48a63151b4c589351e32797c",
+      "salt": "eeedda38f61e828be7ffd9b2f4c8d4a7",
       "createdAt": "2026-09-02T17:44:06.317Z"
     },
     {
@@ -79,6 +79,16 @@
       "passwordHash": "835e36e0683efb757ab97ba6d33b3a3e7ebcdc7a3e512981d55b5085ff00b400d9c59229f651dbe344724437e6455ceddb86d8783bdb32b30ae576579fcf48ed",
       "salt": "358cffbbbcaa37fbef604f981013e3c4",
       "createdAt": "2026-09-04T12:07:41.104Z"
+    },
+    {
+      "id": "user_1788524178338",
+      "fullName": "Recovery_test_1788524178215",
+      "email": "recovery_test_1788524178215@gmail.com",
+      "phone": "+254 700 000 000",
+      "organizationId": "org_1788524178338",
+      "passwordHash": "42356bf06ebd9979e8b4dbd806749b3067ddfed72946a46c51f03ecf8253304c7e9bbc563f9b5241d7c4a1e9442bffc517d0b0fdfcc667d251fb4e19c42c7077",
+      "salt": "da651721567adbb9908eeda5fd33804c",
+      "createdAt": "2026-09-04T12:16:18.338Z"
     }
   ],
   "organizations": [
@@ -129,6 +139,12 @@
       "name": "Recovery_test_1788523660978's Workspace",
       "planId": "growth",
       "createdAt": "2026-09-04T12:07:41.104Z"
+    },
+    {
+      "id": "org_1788524178338",
+      "name": "Recovery_test_1788524178215's Workspace",
+      "planId": "growth",
+      "createdAt": "2026-09-04T12:16:18.338Z"
     }
   ],
   "businessProfiles": [
@@ -312,6 +328,28 @@
         "M-Pesa"
       ],
       "biggestRepetitiveTask": "Client follow-ups and booking"
+    },
+    {
+      "id": "bp_user_1788524178338",
+      "organizationId": "org_1788524178338",
+      "name": "Recovery_test_1788524178215's Workspace",
+      "businessName": "Recovery_test_1788524178215's Workspace",
+      "businessType": "Service Business",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "WhatsApp",
+        "Google",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Client follow-ups and booking"
     }
   ],
   "connections": [
@@ -473,6 +511,19 @@
   ],
   "workflows": [],
   "executions": [
+    {
+      "id": "exec_1788524177922",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 3,
+      "stepsTotal": 3,
+      "logSummary": "Completed all 3 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
     {
       "id": "exec_1788523660684",
       "workflowId": "wf_lead_autopilot",
@@ -761,12 +812,26 @@
     }
   ],
   "leads": [],
-  "operationalEvents": [],
+  "operationalEvents": [
+    {
+      "id": "evt_1788523665356",
+      "businessId": "prof_james_01",
+      "sourceAppId": "whatsapp_business",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "customer_inquiry_received",
+      "title": "Inquiry from Prospective Client",
+      "description": "Inbound customer action processed by Otomatizon Intelligence.",
+      "entityName": "Prospective Client",
+      "payload": {},
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    }
+  ],
   "activityLogs": [
     {
-      "id": "act_1788523668076",
+      "id": "act_1788524186477",
       "organizationId": "org_skilleclat_01",
-      "runId": "run_1788523668076",
+      "runId": "run_1788524186477",
       "type": "subscription_upgraded",
       "channel": "mpesa",
       "application": "Otomatizon Billing",
@@ -779,9 +844,9 @@
       "provenance": "OBSERVED"
     },
     {
-      "id": "act_1788523664507",
+      "id": "act_1788524181802",
       "organizationId": "org_test",
-      "runId": "run_1788523664507",
+      "runId": "run_1788524181802",
       "type": "lead_follow_up",
       "channel": "whatsapp",
       "application": "WhatsApp Business",
@@ -792,6 +857,30 @@
       "entityName": "Naomi Kiprono",
       "timestamp": "Just now",
       "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788524178339",
+      "organizationId": "org_1788524178338",
+      "type": "security_event",
+      "channel": "security",
+      "application": "Otomatizon IAM",
+      "title": "Password Successfully Reset",
+      "description": "Password updated with PBKDF2/SHA-512 cryptographic encryption for recovery_test_1788524178215@gmail.com.",
+      "actionTakenByOtomatizon": "Secure OTP verified & credential vault updated",
+      "businessResult": "Account access restored",
+      "entityName": "Recovery_test_1788524178215",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "log_1788524177922",
+      "organizationId": "org_skilleclat_01",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
     },
     {
       "id": "act_1788523661104",
@@ -1669,8 +1758,8 @@
       "planId": "growth",
       "status": "active",
       "priceKesMonthly": 999,
-      "currentPeriodStart": "2026-09-04T12:07:48.075Z",
-      "currentPeriodEnd": "2026-10-04T12:07:48.075Z"
+      "currentPeriodStart": "2026-09-04T12:16:26.475Z",
+      "currentPeriodEnd": "2026-10-04T12:16:26.477Z"
     }
   ],
   "opportunities": [],
@@ -2703,15 +2792,15 @@
       }
     },
     {
-      "id": "job_1788523664489",
+      "id": "job_1788524181779",
       "organizationId": "org_test",
       "workflowId": "wf_lead_autopilot",
       "jobType": "follow_up_24h",
-      "targetEntityId": "lead_1788523664489",
+      "targetEntityId": "lead_1788524181779",
       "targetEntityName": "Esther Mutua",
       "targetPhone": "+254 712 555 666",
-      "scheduledFor": "2026-09-05T12:07:44.488Z",
-      "createdAt": "2026-09-04T12:07:44.489Z",
+      "scheduledFor": "2026-09-05T12:16:21.775Z",
+      "createdAt": "2026-09-04T12:16:21.779Z",
       "status": "scheduled",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
@@ -2720,15 +2809,15 @@
       }
     },
     {
-      "id": "job_1788523664497",
+      "id": "job_1788524181796",
       "organizationId": "org_test",
       "workflowId": "wf_lead_autopilot",
       "jobType": "follow_up_24h",
-      "targetEntityId": "lead_1788523664497",
+      "targetEntityId": "lead_1788524181796",
       "targetEntityName": "Naomi Kiprono",
       "targetPhone": "+254 711 998 877",
-      "scheduledFor": "2026-09-05T12:07:44.497Z",
-      "createdAt": "2026-09-04T12:07:44.497Z",
+      "scheduledFor": "2026-09-05T12:16:21.796Z",
+      "createdAt": "2026-09-04T12:16:21.796Z",
       "status": "dispatched",
       "conditionDescription": "Cancel if Naomi books",
       "payload": {
@@ -2736,27 +2825,27 @@
         "followUpMessageText": "Bonjour Naomi ! Petit suivi concernant votre demande de cours de français."
       },
       "executionResult": {
-        "executedAt": "2026-09-04T12:07:44.507Z",
+        "executedAt": "2026-09-04T12:16:21.802Z",
         "circuitBroken": false,
         "reason": "No lesson booking or payment detected for Naomi Kiprono within 24 hours. Automated follow-up required.",
-        "messageId": "wamid.HBgL1788523664507=="
+        "messageId": "wamid.HBgL1788524181802=="
       }
     },
     {
-      "id": "job_1788523664514",
+      "id": "job_1788524181807",
       "organizationId": "org_test",
       "workflowId": "wf_lead_autopilot",
       "jobType": "follow_up_24h",
-      "targetEntityId": "lead_1788523664514",
+      "targetEntityId": "lead_1788524181807",
       "targetEntityName": "Samson Cheruiyot",
       "targetPhone": "+254 733 445 566",
-      "scheduledFor": "2026-09-05T12:07:44.514Z",
-      "createdAt": "2026-09-04T12:07:44.514Z",
+      "scheduledFor": "2026-09-05T12:16:21.807Z",
+      "createdAt": "2026-09-04T12:16:21.807Z",
       "status": "cancelled_manual",
       "conditionDescription": "Cancel if student books or pays",
       "payload": {},
       "executionResult": {
-        "executedAt": "2026-09-04T12:07:44.528Z",
+        "executedAt": "2026-09-04T12:16:21.824Z",
         "circuitBroken": true,
         "reason": "Manually cancelled by business owner in Otomatizon."
       }
@@ -2764,7 +2853,7 @@
   ],
   "invoices": [
     {
-      "id": "INV_1788523668075",
+      "id": "INV_1788524186477",
       "organizationId": "org_skilleclat_01",
       "organizationName": "Skilleclat Workspace",
       "planId": "growth",
@@ -2772,7 +2861,7 @@
       "amountKes": 999,
       "paymentMethod": "Safaricom M-Pesa Express (STK Push)",
       "mpesaReceiptNumber": "QAH9012345",
-      "issuedAt": "2026-09-04T12:07:48.076Z",
+      "issuedAt": "2026-09-04T12:16:26.477Z",
       "status": "PAID",
       "billingPeriod": "30 Days (Monthly Recurring)"
     },
@@ -2983,6 +3072,19 @@
       "issuedAt": "2026-09-02T20:03:39.057Z",
       "status": "PAID",
       "billingPeriod": "30 Days (Monthly Recurring)"
+    }
+  ],
+  "insights": [
+    {
+      "id": "ins_1788523665356",
+      "businessId": "prof_james_01",
+      "eventId": "evt_1788523665356",
+      "type": "friction_detected",
+      "title": "Intelligence evaluation for Prospective Client",
+      "description": "Evaluated customer_inquiry_received from whatsapp_business.",
+      "confidenceScore": 96,
+      "provenance": "SIMULATED",
+      "createdAt": "2026-09-04T12:07:45.356Z"
     }
   ]
 }

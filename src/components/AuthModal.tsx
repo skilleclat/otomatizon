@@ -779,7 +779,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     }}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-[11px] font-mono font-medium text-emerald-800 transition-all cursor-pointer shadow-xs active:scale-95"
                   >
-                    <Key className="w-3.5 h-3.5 text-emerald-600" />
+                    <KeyRound className="w-3.5 h-3.5 text-emerald-600" />
                     <span>Security Code: <strong className="font-bold tracking-widest text-emerald-950 underline">{demoResetCode || "849201"}</strong> &bull; Click to Auto-fill</span>
                   </button>
                 </div>

@@ -9999,7 +9999,7 @@ var _BrandLogo = require('@/components/BrandLogo');
                     },
                     className: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-[11px] font-mono font-medium text-emerald-800 transition-all cursor-pointer shadow-xs active:scale-95"                 ,}
 
-                    , _react2.default.createElement(Key, { className: "w-3.5 h-3.5 text-emerald-600"  ,} )
+                    , _react2.default.createElement(_lucidereact.KeyRound, { className: "w-3.5 h-3.5 text-emerald-600"  ,} )
                     , _react2.default.createElement('span', null, "Security Code: "  , _react2.default.createElement('strong', { className: "font-bold tracking-widest text-emerald-950 underline"   ,}, demoResetCode || "849201"), " • Click to Auto-fill"    )
                   )
                 )
