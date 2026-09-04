@@ -9275,7 +9275,6 @@ var _BrandLogo = require('@/components/BrandLogo');
   // OTP Verification State
   const [otpDigits, setOtpDigits] = _react.useState(["", "", "", "", "", ""]);
   const [resendCountdown, setResendCountdown] = _react.useState(45);
-  const [demoResetCode, setDemoResetCode] = _react.useState("849201");
   const otpInputRefs = _react.useRef([]);
 
   _react.useEffect.call(void 0, () => {
@@ -9493,18 +9492,15 @@ var _BrandLogo = require('@/components/BrandLogo');
     setMessage(null);
 
     try {
-      const res = await sendPasswordResetOtp(email.trim());
+      await sendPasswordResetOtp(email.trim());
       setIsLoading(false);
       setMode("reset_password");
       setOtpDigits(["", "", "", "", "", ""]);
       setResendCountdown(60);
-      const codeToUse = _optionalChain([res, 'optionalAccess', _12 => _12.demoCode]) || "849201";
-      setDemoResetCode(codeToUse);
       setMessage({
         type: "success",
-        text: `Security code dispatched to ${email.trim()}. Enter the 6-digit code below to set your new password.`
+        text: `Security code dispatched to ${email.trim()}. Please check your email inbox.`
       });
-      console.log(`[OTOMATIZON RESET OTP] Code for ${email.trim()}: ${codeToUse}`);
     } catch (err) {
       setIsLoading(false);
       setMessage({ type: "error", text: err.message || "Failed to send reset code. Please try again." });
@@ -9551,13 +9547,10 @@ var _BrandLogo = require('@/components/BrandLogo');
     setIsLoading(true);
     setMessage(null);
     try {
-      const res = await sendPasswordResetOtp(email.trim());
+      await sendPasswordResetOtp(email.trim());
       setIsLoading(false);
       setResendCountdown(60);
-      const codeToUse = _optionalChain([res, 'optionalAccess', _13 => _13.demoCode]) || "849201";
-      setDemoResetCode(codeToUse);
-      setMessage({ type: "success", text: `New security code sent to ${email.trim()}` });
-      console.log(`[OTOMATIZON RESET OTP RESEND] Code: ${codeToUse}`);
+      setMessage({ type: "success", text: `New security code sent to ${email.trim()}. Please check your inbox.` });
     } catch (err) {
       setIsLoading(false);
       setMessage({ type: "error", text: err.message || "Failed to resend code." });
@@ -9961,12 +9954,12 @@ var _BrandLogo = require('@/components/BrandLogo');
                         newDigits[idx] = val.slice(-1);
                         setOtpDigits(newDigits);
                         if (val && idx < 5) {
-                          _optionalChain([otpInputRefs, 'access', _14 => _14.current, 'access', _15 => _15[idx + 1], 'optionalAccess', _16 => _16.focus, 'call', _17 => _17()]);
+                          _optionalChain([otpInputRefs, 'access', _12 => _12.current, 'access', _13 => _13[idx + 1], 'optionalAccess', _14 => _14.focus, 'call', _15 => _15()]);
                         }
                       },
                       onKeyDown: (e) => {
                         if (e.key === "Backspace" && !otpDigits[idx] && idx > 0) {
-                          _optionalChain([otpInputRefs, 'access', _18 => _18.current, 'access', _19 => _19[idx - 1], 'optionalAccess', _20 => _20.focus, 'call', _21 => _21()]);
+                          _optionalChain([otpInputRefs, 'access', _16 => _16.current, 'access', _17 => _17[idx - 1], 'optionalAccess', _18 => _18.focus, 'call', _19 => _19()]);
                         }
                       },
                       onPaste: (e) => {
@@ -9979,29 +9972,12 @@ var _BrandLogo = require('@/components/BrandLogo');
                           }
                           setOtpDigits(newDigits);
                           const nextIdx = Math.min(pasteData.length, 5);
-                          _optionalChain([otpInputRefs, 'access', _22 => _22.current, 'access', _23 => _23[nextIdx], 'optionalAccess', _24 => _24.focus, 'call', _25 => _25()]);
+                          _optionalChain([otpInputRefs, 'access', _20 => _20.current, 'access', _21 => _21[nextIdx], 'optionalAccess', _22 => _22.focus, 'call', _23 => _23()]);
                         }
                       },
                       className: "w-10 h-12 text-center text-lg font-bold font-mono rounded-xl border border-[#EAE7DF] bg-[#FAF9F5] focus:bg-white focus:border-[#15803D] focus:ring-2 focus:ring-[#15803D]/20 outline-none transition-all"               ,}
                     )
                   ))
-                )
-
-                /* Auto-fill Helper Banner */
-                , _react2.default.createElement('div', { className: "mt-2.5 flex items-center justify-center"   ,}
-                  , _react2.default.createElement('button', {
-                    type: "button",
-                    onClick: () => {
-                      const targetCode = demoResetCode || "849201";
-                      const digits = targetCode.split("").slice(0, 6);
-                      setOtpDigits(digits);
-                      setMessage({ type: "success", text: `Security code ${targetCode} auto-filled. Enter your new password below.` });
-                    },
-                    className: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-[11px] font-mono font-medium text-emerald-800 transition-all cursor-pointer shadow-xs active:scale-95"                 ,}
-
-                    , _react2.default.createElement(_lucidereact.KeyRound, { className: "w-3.5 h-3.5 text-emerald-600"  ,} )
-                    , _react2.default.createElement('span', null, "Security Code: "  , _react2.default.createElement('strong', { className: "font-bold tracking-widest text-emerald-950 underline"   ,}, demoResetCode || "849201"), " • Click to Auto-fill"    )
-                  )
                 )
               )
 

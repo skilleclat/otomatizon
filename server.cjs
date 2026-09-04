@@ -618,8 +618,7 @@ async function handleRequest(req, res) {
 
       return sendJson(res, 200, {
         success: true,
-        message: `A 6-digit recovery code has been sent to ${email}`,
-        demoCode: code
+        message: `A 6-digit recovery code has been sent to ${email}`
       });
     } catch (err) {
       console.error("Forgot password error:", err);
