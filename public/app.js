@@ -4366,14 +4366,25 @@ async function syncWithServer() {
     if (res.ok) {
       const data = await res.json();
       if (data) {
-        if (data.organization && globalState.organization.id === data.organization.id) {
+        if (data.organization) {
           globalState.organization = data.organization;
         }
-        if (data.businessProfile && globalState.businessProfile.organizationId === data.businessProfile.organizationId) {
+        if (data.businessProfile) {
           globalState.businessProfile = data.businessProfile;
         }
-        if (data.connections && data.connections.length > 0 && globalState.integrations.length === 0) {
-          globalState.integrations = data.connections;
+        if (data.connections && Array.isArray(data.connections)) {
+          data.connections.forEach((conn) => {
+            const existing = globalState.integrations.find(i => 
+              i.id === conn.id || 
+              (conn.id.startsWith("google") && i.id === conn.id) ||
+              (conn.id.startsWith("whatsapp") && i.id.startsWith("whatsapp"))
+            );
+            if (existing) {
+              existing.connected = conn.connected !== false;
+              existing.status = conn.connected !== false ? "connected" : "disconnected";
+              existing.lastSyncedAt = conn.lastSyncAt ? "Just now" : existing.lastSyncedAt;
+            }
+          });
         }
         notify();
       }
@@ -16746,10 +16757,74 @@ const initialConnectors = [
 ];
 
  const AppsView = ({ onNavigateToAutomations }) => {
-  const { state } = _store.useOtomatizonStore.call(void 0, );
+  const { state, toggleIntegration } = _store.useOtomatizonStore.call(void 0, );
   const [connectors, setConnectors] = _react.useState(initialConnectors);
   const [activeModalApp, setActiveModalApp] = _react.useState(null);
   const [isLiveTraceOpen, setIsLiveTraceOpen] = _react.useState(false);
+
+  // Synchronize connectors with store & server database
+  _react2.default.useEffect(() => {
+    const syncFromIntegrations = () => {
+      setConnectors(prev => prev.map(c => {
+        let isConnected = false;
+        let accountStr = c.account;
+        let lastSyncStr = c.lastSync;
+
+        if (c.id === "google_workspace") {
+          const gConn = state.integrations.find(i => i.id.startsWith("google") || i.id === "gmail");
+          if (gConn && gConn.connected) {
+            isConnected = true;
+            accountStr = gConn.account || "skilleclat@gmail.com";
+            lastSyncStr = gConn.lastSyncedAt || "Just now";
+          }
+        } else {
+          const matched = state.integrations.find(i => 
+            i.id === c.id || 
+            (c.id === "whatsapp_business" && (i.id.startsWith("whatsapp") || i.id === "whatsapp_business"))
+          );
+          if (matched && matched.connected) {
+            isConnected = true;
+            accountStr = matched.account || "+254 743 898 803";
+            lastSyncStr = matched.lastSyncedAt || "Just now";
+          }
+        }
+
+        return isConnected ? {
+          ...c,
+          status: "connected" ,
+          account: accountStr !== "Not connected" ? accountStr : (c.id === "google_workspace" ? "skilleclat@gmail.com" : "+254 743 898 803"),
+          lastSync: lastSyncStr !== "Never" ? lastSyncStr : "Just now"
+        } : c;
+      }));
+    };
+
+    syncFromIntegrations();
+
+    // Query server state for live verification
+    fetch("/api/state")
+      .then(r => r.json())
+      .then(data => {
+        if (data && data.connections && Array.isArray(data.connections)) {
+          setConnectors(prev => prev.map(c => {
+            const sc = data.connections.find((item) => 
+              item.id === c.id || 
+              (c.id === "google_workspace" && (item.id.startsWith("google") || item.id === "gmail")) ||
+              (c.id === "whatsapp_business" && item.id.startsWith("whatsapp"))
+            );
+            if (sc && sc.connected !== false) {
+              return {
+                ...c,
+                status: "connected" ,
+                account: sc.account || c.account,
+                lastSync: sc.lastSyncAt ? "Just now" : c.lastSync
+              };
+            }
+            return c;
+          }));
+        }
+      })
+      .catch(() => {});
+  }, [state.integrations]);
 
   // Sub-services of Google Workspace
   const googleWorkspaceSubServices = [
@@ -16791,6 +16866,9 @@ const initialConnectors = [
           ? { ...c, status: "disconnected" , account: "Not connected", lastSync: "Disconnected" }
           : c
       ));
+      if (typeof toggleIntegration === "function") {
+        toggleIntegration(connector.id , false);
+      }
     } else {
       setActiveModalApp(connector);
     }
@@ -16807,6 +16885,9 @@ const initialConnectors = [
           }
         : c
     ));
+    if (typeof toggleIntegration === "function") {
+      toggleIntegration(appId , true);
+    }
     setActiveModalApp(null);
   };
 

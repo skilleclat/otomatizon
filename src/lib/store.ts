@@ -183,14 +183,25 @@ async function syncWithServer() {
     if (res.ok) {
       const data = await res.json();
       if (data) {
-        if (data.organization && globalState.organization.id === data.organization.id) {
+        if (data.organization) {
           globalState.organization = data.organization;
         }
-        if (data.businessProfile && globalState.businessProfile.organizationId === data.businessProfile.organizationId) {
+        if (data.businessProfile) {
           globalState.businessProfile = data.businessProfile;
         }
-        if (data.connections && data.connections.length > 0 && globalState.integrations.length === 0) {
-          globalState.integrations = data.connections;
+        if (data.connections && Array.isArray(data.connections)) {
+          data.connections.forEach((conn: any) => {
+            const existing = globalState.integrations.find(i => 
+              i.id === conn.id || 
+              (conn.id.startsWith("google") && i.id === conn.id) ||
+              (conn.id.startsWith("whatsapp") && i.id.startsWith("whatsapp"))
+            );
+            if (existing) {
+              existing.connected = conn.connected !== false;
+              existing.status = conn.connected !== false ? "connected" : "disconnected";
+              existing.lastSyncedAt = conn.lastSyncAt ? "Just now" : existing.lastSyncedAt;
+            }
+          });
         }
         notify();
       }

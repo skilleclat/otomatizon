@@ -87,10 +87,74 @@ const initialConnectors: AppConnector[] = [
 ];
 
 export const AppsView: React.FC<AppsViewProps> = ({ onNavigateToAutomations }) => {
-  const { state } = useOtomatizonStore();
+  const { state, toggleIntegration } = useOtomatizonStore();
   const [connectors, setConnectors] = useState<AppConnector[]>(initialConnectors);
   const [activeModalApp, setActiveModalApp] = useState<AppConnector | null>(null);
   const [isLiveTraceOpen, setIsLiveTraceOpen] = useState<boolean>(false);
+
+  // Synchronize connectors with store & server database
+  React.useEffect(() => {
+    const syncFromIntegrations = () => {
+      setConnectors(prev => prev.map(c => {
+        let isConnected = false;
+        let accountStr = c.account;
+        let lastSyncStr = c.lastSync;
+
+        if (c.id === "google_workspace") {
+          const gConn = state.integrations.find(i => i.id.startsWith("google") || i.id === "gmail");
+          if (gConn && gConn.connected) {
+            isConnected = true;
+            accountStr = gConn.account || "skilleclat@gmail.com";
+            lastSyncStr = gConn.lastSyncedAt || "Just now";
+          }
+        } else {
+          const matched = state.integrations.find(i => 
+            i.id === c.id || 
+            (c.id === "whatsapp_business" && (i.id.startsWith("whatsapp") || i.id === "whatsapp_business"))
+          );
+          if (matched && matched.connected) {
+            isConnected = true;
+            accountStr = matched.account || "+254 743 898 803";
+            lastSyncStr = matched.lastSyncedAt || "Just now";
+          }
+        }
+
+        return isConnected ? {
+          ...c,
+          status: "connected" as IntegrationStatus,
+          account: accountStr !== "Not connected" ? accountStr : (c.id === "google_workspace" ? "skilleclat@gmail.com" : "+254 743 898 803"),
+          lastSync: lastSyncStr !== "Never" ? lastSyncStr : "Just now"
+        } : c;
+      }));
+    };
+
+    syncFromIntegrations();
+
+    // Query server state for live verification
+    fetch("/api/state")
+      .then(r => r.json())
+      .then(data => {
+        if (data && data.connections && Array.isArray(data.connections)) {
+          setConnectors(prev => prev.map(c => {
+            const sc = data.connections.find((item: any) => 
+              item.id === c.id || 
+              (c.id === "google_workspace" && (item.id.startsWith("google") || item.id === "gmail")) ||
+              (c.id === "whatsapp_business" && item.id.startsWith("whatsapp"))
+            );
+            if (sc && sc.connected !== false) {
+              return {
+                ...c,
+                status: "connected" as IntegrationStatus,
+                account: sc.account || c.account,
+                lastSync: sc.lastSyncAt ? "Just now" : c.lastSync
+              };
+            }
+            return c;
+          }));
+        }
+      })
+      .catch(() => {});
+  }, [state.integrations]);
 
   // Sub-services of Google Workspace
   const googleWorkspaceSubServices = [
@@ -132,6 +196,9 @@ export const AppsView: React.FC<AppsViewProps> = ({ onNavigateToAutomations }) =
           ? { ...c, status: "disconnected" as IntegrationStatus, account: "Not connected", lastSync: "Disconnected" }
           : c
       ));
+      if (typeof toggleIntegration === "function") {
+        toggleIntegration(connector.id as any, false);
+      }
     } else {
       setActiveModalApp(connector);
     }
@@ -148,6 +215,9 @@ export const AppsView: React.FC<AppsViewProps> = ({ onNavigateToAutomations }) =
           }
         : c
     ));
+    if (typeof toggleIntegration === "function") {
+      toggleIntegration(appId as any, true);
+    }
     setActiveModalApp(null);
   };
 
