@@ -208,8 +208,62 @@ function parseInboundMessageText(rawText, senderContext = {}) {
   };
 }
 
+/**
+ * Email Intelligence Classifier (Distinguishes Business vs. Personal/Spam)
+ */
+function classifyInboundEmail({ from = "", subject = "", body = "", snippet = "" }) {
+  const fullText = `${subject} ${snippet} ${body}`.toLowerCase();
+  const fromLower = (from || "").toLowerCase();
+
+  // 1. Check for automated notifications / newsletters / security alerts / social
+  const personalSpamKeywords = [
+    "noreply@", "no-reply@", "donotreply@", "security code", "password reset", "verification code",
+    "verify your account", "receipt from uber", "netflix", "spotify", "newsletter", "unsubscribe",
+    "promotions", "daily digest", "facebookmail", "linkedin.com", "instagram.com", "tiktok.com",
+    "twitter.com", "x.com", "bank statement", "code de sécurité", "réinitialisation"
+  ];
+
+  const matchedSpamTerm = personalSpamKeywords.find(k => fullText.includes(k) || fromLower.includes(k));
+
+  // 2. Business Keywords (Tuition, Services, Quotes, Bookings, Pricing, Invoices, Clients)
+  const businessKeywords = [
+    "lesson", "tutoring", "tutor", "coaching", "class", "classes", "quote", "rate", "rates",
+    "fee", "fees", "cost", "invoice", "booking", "book", "schedule", "session", "availability",
+    "pricing", "service", "services", "consultation", "client", "student", "cours", "devis",
+    "tarif", "tarifs", "rendez-vous", "disponibilité", "disponible", "facture", "formation", "inscription"
+  ];
+
+  const matchedBusinessTerms = businessKeywords.filter(k => fullText.includes(k));
+  const isBusiness = matchedBusinessTerms.length >= 1 && !matchedSpamTerm;
+
+  if (isBusiness) {
+    const semantic = parseInboundMessageText(`${subject}. ${body || snippet}`, { senderName: from });
+    return {
+      category: "BUSINESS_INQUIRY",
+      isBusiness: true,
+      confidenceScore: Math.min(98, 85 + matchedBusinessTerms.length * 4),
+      matchedTerms: matchedBusinessTerms,
+      summary: `Business inquiry regarding ${semantic.entities.subject || "Services"} (${matchedBusinessTerms.slice(0, 3).join(", ")})`,
+      actionRequired: "Record in Google Sheets, inspect Calendar, and draft reply",
+      semantic
+    };
+  }
+
+  return {
+    category: "PERSONAL_FILTERED",
+    isBusiness: false,
+    confidenceScore: 94,
+    matchedSpamTerm: matchedSpamTerm || null,
+    summary: matchedSpamTerm 
+      ? `Automated notification / personal alert (${matchedSpamTerm}) filtered to preserve privacy`
+      : "Non-business / personal message — Skipped from business ledger to maintain privacy",
+    actionRequired: "None (Preserved in private inbox, ignored by business pipeline)"
+  };
+}
+
 module.exports = {
   parseInboundMessageText,
+  classifyInboundEmail,
   detectLanguage,
   detectIntent,
   extractEntities

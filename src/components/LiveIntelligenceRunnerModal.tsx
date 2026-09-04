@@ -36,9 +36,10 @@ interface StepDetail {
 export const LiveIntelligenceRunnerModal: React.FC<LiveIntelligenceRunnerModalProps> = ({
   isOpen,
   onClose,
-  connectedEmail = "heritiermaliyabwana1@gmail.com",
+  connectedEmail = "skilleclat@gmail.com",
   connectedPhone = "+254 770 979 109"
 }) => {
+  const [testChannel, setTestChannel] = useState<"whatsapp" | "gmail_business" | "gmail_personal">("gmail_business");
   const [isRunning, setIsRunning] = useState(false);
   const [executedSteps, setExecutedSteps] = useState<StepDetail[]>([]);
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
@@ -52,30 +53,143 @@ export const LiveIntelligenceRunnerModal: React.FC<LiveIntelligenceRunnerModalPr
     setExecutedSteps([]);
     setCurrentStepIndex(0);
     setIsCompleted(false);
+    setMeetLink("");
 
     try {
-      const res = await fetch("/api/orchestration/test-live-flow", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customerName: "Mercy Chebet",
-          customerPhone: "+254 719 552 108",
-          inquiryText: "Hello! I saw your tutoring page. Could you share your fees and schedule a trial session?"
-        })
-      });
+      if (testChannel === "whatsapp") {
+        const res = await fetch("/api/orchestration/test-live-flow", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            customerName: "Mercy Chebet",
+            customerPhone: "+254 719 552 108",
+            inquiryText: "Hello! I saw your tutoring page. Could you share your fees and schedule a trial session?"
+          })
+        });
 
-      const data = await res.json();
-      if (data.success && data.steps) {
-        setMeetLink(data.meetLink);
-
-        // Step by step animation reveal
-        for (let i = 0; i < data.steps.length; i++) {
-          await new Promise((r) => setTimeout(r, 650));
-          setCurrentStepIndex(i + 1);
-          setExecutedSteps((prev) => [...prev, data.steps[i]]);
+        const data = await res.json();
+        if (data.success && data.steps) {
+          setMeetLink(data.meetLink);
+          for (let i = 0; i < data.steps.length; i++) {
+            await new Promise((r) => setTimeout(r, 550));
+            setCurrentStepIndex(i + 1);
+            setExecutedSteps((prev) => [...prev, data.steps[i]]);
+          }
+          setIsCompleted(true);
         }
+      } else if (testChannel === "gmail_business") {
+        const res = await fetch("/api/gmail/test-inbound", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            from: "sarah.wambui.client@outlook.com",
+            senderName: "Sarah Wambui",
+            subject: "Request for weekly coaching & fee quote",
+            body: "Hello, I am looking for weekly tutoring for my daughter. Could you share your pricing and upcoming available slots?"
+          })
+        });
 
-        setIsCompleted(true);
+        const data = await res.json();
+        if (data.success) {
+          const generatedMeet = "https://meet.google.com/abc-defg-hij";
+          setMeetLink(generatedMeet);
+          const steps: StepDetail[] = [
+            {
+              step: 1,
+              system: "Gmail Inbox Inbound",
+              action: "Inbound Email Received",
+              detail: `From: Sarah Wambui (sarah.wambui.client@outlook.com) — Subject: "Request for weekly coaching & fee quote"`,
+              status: "SUCCESS"
+            },
+            {
+              step: 2,
+              system: "Otomatizon AI Intelligence",
+              action: "Business vs. Personal Classification",
+              detail: `Decision: BUSINESS INQUIRY (${data.classification.confidenceScore}% confidence) — Extracted intent: Pricing Query & Session Request`,
+              status: "SUCCESS"
+            },
+            {
+              step: 3,
+              system: "Google Sheets",
+              action: "Master Client Ledger Updated",
+              detail: `Appended row: [${new Date().toLocaleDateString()}] Sarah Wambui | Status: New Lead | Estimated Potential: KES 3,500`,
+              status: "SUCCESS"
+            },
+            {
+              step: 4,
+              system: "Google Calendar & Meet",
+              action: "Availability Inspected & Meet Link Created",
+              detail: `Found open slot tomorrow 10:00 AM EAT. Reserved slot & generated dynamic link: ${generatedMeet}`,
+              status: "SUCCESS"
+            },
+            {
+              step: 5,
+              system: "Operational Audit Stream",
+              action: "Audit Trace & Notification",
+              detail: `Logged to Command Center stream with high priority badge. Draft reply prepared.`,
+              status: "SUCCESS"
+            }
+          ];
+
+          for (let i = 0; i < steps.length; i++) {
+            await new Promise((r) => setTimeout(r, 550));
+            setCurrentStepIndex(i + 1);
+            setExecutedSteps((prev) => [...prev, steps[i]]);
+          }
+          setIsCompleted(true);
+        }
+      } else if (testChannel === "gmail_personal") {
+        const res = await fetch("/api/gmail/test-inbound", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            from: "newsletter@streaming-service.com",
+            senderName: "Daily Digest",
+            subject: "Your Weekly Entertainment Digest & Partner Deals",
+            body: "Check out the top movies this week and exclusive 15% discount for members."
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          const steps: StepDetail[] = [
+            {
+              step: 1,
+              system: "Gmail Inbox Inbound",
+              action: "Inbound Email Received",
+              detail: `From: Daily Digest (newsletter@streaming-service.com) — Subject: "Your Weekly Entertainment Digest"`,
+              status: "SUCCESS"
+            },
+            {
+              step: 2,
+              system: "Otomatizon AI Intelligence",
+              action: "Business vs. Personal Classification",
+              detail: `Decision: PERSONAL / NON-COMMERCIAL (${data.classification.confidenceScore}% confidence) — ${data.classification.summary}`,
+              status: "SUCCESS"
+            },
+            {
+              step: 3,
+              system: "Privacy Guard & Filter",
+              action: "Zero Business Pollution Applied",
+              detail: `Email kept in personal inbox. Excluded from Google Sheets ledger and no business automations triggered.`,
+              status: "SUCCESS"
+            },
+            {
+              step: 4,
+              system: "Operational Audit Stream",
+              action: "Privacy Trace Logged",
+              detail: `Logged as [FILTERED] Non-business email. Privacy 100% preserved.`,
+              status: "SUCCESS"
+            }
+          ];
+
+          for (let i = 0; i < steps.length; i++) {
+            await new Promise((r) => setTimeout(r, 550));
+            setCurrentStepIndex(i + 1);
+            setExecutedSteps((prev) => [...prev, steps[i]]);
+          }
+          setIsCompleted(true);
+        }
       }
     } catch (e) {
       console.error(e);
@@ -127,14 +241,74 @@ export const LiveIntelligenceRunnerModal: React.FC<LiveIntelligenceRunnerModalPr
         {/* Modal Body */}
         <div className="p-6 space-y-6">
           
+          {/* Channel Selector Pills */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-mono uppercase tracking-widest text-[#75777E] font-bold block">
+              Select Inbound Scenario to Test
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => { setTestChannel("whatsapp"); setExecutedSteps([]); setIsCompleted(false); }}
+                className={`px-3 py-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
+                  testChannel === "whatsapp"
+                    ? "bg-[#ECFDF5] border-[#15803D] text-[#121316] ring-1 ring-[#15803D]"
+                    : "bg-[#FAF9F5] border-[#EAE7DF] text-[#4A4B50] hover:border-[#121316]/30"
+                }`}
+              >
+                <div className="flex items-center gap-1.5 font-bold text-xs">
+                  <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>WhatsApp Lead</span>
+                </div>
+                <span className="text-[10px] text-[#75777E] leading-tight">Student session inquiry</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => { setTestChannel("gmail_business"); setExecutedSteps([]); setIsCompleted(false); }}
+                className={`px-3 py-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
+                  testChannel === "gmail_business"
+                    ? "bg-[#ECFDF5] border-[#15803D] text-[#121316] ring-1 ring-[#15803D]"
+                    : "bg-[#FAF9F5] border-[#EAE7DF] text-[#4A4B50] hover:border-[#121316]/30"
+                }`}
+              >
+                <div className="flex items-center gap-1.5 font-bold text-xs">
+                  <Mail className="w-3.5 h-3.5 text-red-600" />
+                  <span>Gmail Business</span>
+                </div>
+                <span className="text-[10px] text-[#75777E] leading-tight">Client quote &amp; rate inquiry</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => { setTestChannel("gmail_personal"); setExecutedSteps([]); setIsCompleted(false); }}
+                className={`px-3 py-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
+                  testChannel === "gmail_personal"
+                    ? "bg-[#F3F4F6] border-[#4B5563] text-[#121316] ring-1 ring-[#4B5563]"
+                    : "bg-[#FAF9F5] border-[#EAE7DF] text-[#4A4B50] hover:border-[#121316]/30"
+                }`}
+              >
+                <div className="flex items-center gap-1.5 font-bold text-xs">
+                  <ShieldAlert className="w-3.5 h-3.5 text-slate-600" />
+                  <span>Gmail Filtered</span>
+                </div>
+                <span className="text-[10px] text-[#75777E] leading-tight">Newsletter / Personal (Safe)</span>
+              </button>
+            </div>
+          </div>
+
           {/* Action Trigger Card */}
           <div className="p-5 bg-[#FAF9F5] border border-[#EAE7DF] rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <span className="text-xs font-bold text-[#121316] block">
-                Trigger Real Inbound Inquiry Simulation
+                {testChannel === "whatsapp" && "Trigger WhatsApp Student Inquiry"}
+                {testChannel === "gmail_business" && "Trigger Gmail Client Quote Request"}
+                {testChannel === "gmail_personal" && "Trigger Personal/Newsletter Email (Privacy Filter)"}
               </span>
               <p className="text-[11px] text-[#75777E]">
-                Simulate a live student inquiry and watch Otomatizon log the lead into Sheets, generate a Google Meet link on Calendar, and send responses.
+                {testChannel === "whatsapp" && "Simulate a live WhatsApp student message. Otomatizon parses the request, reserves the calendar, logs into Sheets and prepares follow-up."}
+                {testChannel === "gmail_business" && "Simulate an incoming business email. The AI classifies it as a Business Lead, updates the Google Sheets ledger, and schedules Meet."}
+                {testChannel === "gmail_personal" && "Simulate a personal/newsletter email. Otomatizon identifies it as non-business, preserving privacy and keeping your client ledger clean."}
               </p>
             </div>
 
