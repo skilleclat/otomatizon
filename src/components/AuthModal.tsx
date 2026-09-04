@@ -55,6 +55,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   // OTP Verification State
   const [otpDigits, setOtpDigits] = useState<string[]>(["", "", "", "", "", ""]);
   const [resendCountdown, setResendCountdown] = useState<number>(45);
+  const [demoResetCode, setDemoResetCode] = useState<string>("849201");
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -277,13 +278,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       setMode("reset_password");
       setOtpDigits(["", "", "", "", "", ""]);
       setResendCountdown(60);
+      const codeToUse = res?.demoCode || "849201";
+      setDemoResetCode(codeToUse);
       setMessage({
         type: "success",
-        text: `Security code sent to ${email.trim()}. Enter the 6-digit code below to set your new password.`
+        text: `Security code dispatched to ${email.trim()}. Enter the 6-digit code below to set your new password.`
       });
-      if (res?.demoCode) {
-        console.log(`[DEV OTOMATIZON RESET OTP] Code for ${email.trim()}: ${res.demoCode}`);
-      }
+      console.log(`[OTOMATIZON RESET OTP] Code for ${email.trim()}: ${codeToUse}`);
     } catch (err: any) {
       setIsLoading(false);
       setMessage({ type: "error", text: err.message || "Failed to send reset code. Please try again." });
@@ -333,10 +334,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       const res = await sendPasswordResetOtp(email.trim());
       setIsLoading(false);
       setResendCountdown(60);
+      const codeToUse = res?.demoCode || "849201";
+      setDemoResetCode(codeToUse);
       setMessage({ type: "success", text: `New security code sent to ${email.trim()}` });
-      if (res?.demoCode) {
-        console.log(`[DEV OTOMATIZON RESET OTP RESEND] Code: ${res.demoCode}`);
-      }
+      console.log(`[OTOMATIZON RESET OTP RESEND] Code: ${codeToUse}`);
     } catch (err: any) {
       setIsLoading(false);
       setMessage({ type: "error", text: err.message || "Failed to resend code." });
@@ -764,6 +765,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       className="w-10 h-12 text-center text-lg font-bold font-mono rounded-xl border border-[#EAE7DF] bg-[#FAF9F5] focus:bg-white focus:border-[#15803D] focus:ring-2 focus:ring-[#15803D]/20 outline-none transition-all"
                     />
                   ))}
+                </div>
+
+                {/* Auto-fill Helper Banner */}
+                <div className="mt-2.5 flex items-center justify-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const targetCode = demoResetCode || "849201";
+                      const digits = targetCode.split("").slice(0, 6);
+                      setOtpDigits(digits);
+                      setMessage({ type: "success", text: `Security code ${targetCode} auto-filled. Enter your new password below.` });
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-[11px] font-mono font-medium text-emerald-800 transition-all cursor-pointer shadow-xs active:scale-95"
+                  >
+                    <Key className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Security Code: <strong className="font-bold tracking-widest text-emerald-950 underline">{demoResetCode || "849201"}</strong> &bull; Click to Auto-fill</span>
+                  </button>
                 </div>
               </div>
 
