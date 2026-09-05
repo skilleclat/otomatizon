@@ -16,8 +16,8 @@
       "email": "amina.odhiambo@gmail.com",
       "phone": "+254 722 111 222",
       "organizationId": "org_1788371046317",
-      "passwordHash": "153027c6958c77261e16163d33bcf8de39282414f5f5ab7817adc8e5f79c8edae684ff2c2c469a26aa76011eaa23f551580f1fe8facb5e2e4c0706c4295a4c96",
-      "salt": "ff3616865f5e58557465beefea081d86",
+      "passwordHash": "1cdb6d59f4db3c7927cb066cf0f68afc16e004589e5255eba4b68314c79a74f2b9cd98c448c6a870d58ada209eb1ef57e8487be2f8928e92aa7f49f1db299136",
+      "salt": "ba6b598916af42146d932f8977974734",
       "createdAt": "2026-09-02T17:44:06.317Z"
     },
     {
@@ -189,6 +189,36 @@
       "passwordHash": "93526dab23461ba23cabb27641658bfca9ab04c8533a4733e76d78715800e87e8d00d646996c2f87abbe7bb225ea8656f43c4ec08b02447be6f656184a833a01",
       "salt": "bbfe2edc03b57c0642db5466efa4f2b1",
       "createdAt": "2026-09-04T23:10:03.792Z"
+    },
+    {
+      "id": "user_1788630969773",
+      "fullName": "Recovery_test_1788630969592",
+      "email": "recovery_test_1788630969592@gmail.com",
+      "phone": "+254 700 000 000",
+      "organizationId": "org_1788630969773",
+      "passwordHash": "46292a12ffc8812103065cdf002bbe6985be9d03359f4a776572137b24fe455c68b06832b5879688a109953ff5554513bd141f967109356d1be843ff3028300b",
+      "salt": "ac2687cd81d0b96e529e9a2f42e8d828",
+      "createdAt": "2026-09-05T17:56:09.773Z"
+    },
+    {
+      "id": "user_1788631718585",
+      "fullName": "Recovery_test_1788631718402",
+      "email": "recovery_test_1788631718402@gmail.com",
+      "phone": "+254 700 000 000",
+      "organizationId": "org_1788631718585",
+      "passwordHash": "16406e563e9f97188fb1825446221277fd35f3e3a7a25f92a3efb6af84f00c9d89b3e7d7824d349f1ecb73d1353ab3fba2410926ccb05b4f74e9efae0871e1d8",
+      "salt": "bdca80855b6651b1da9f5e59a9848da3",
+      "createdAt": "2026-09-05T18:08:38.586Z"
+    },
+    {
+      "id": "user_1788631956627",
+      "fullName": "Recovery_test_1788631956443",
+      "email": "recovery_test_1788631956443@gmail.com",
+      "phone": "+254 700 000 000",
+      "organizationId": "org_1788631956627",
+      "passwordHash": "a488b7cba4e1a0b8534488002907ffaff5742c922d1b492f42cca4c016c4a220451ad9de9c5c5a79eb69842e2c5f2ad7687c29bfc773e509f31ac177623a5c54",
+      "salt": "12fd481b121cb6e5bfc527fb190dd090",
+      "createdAt": "2026-09-05T18:12:36.628Z"
     }
   ],
   "organizations": [
@@ -305,6 +335,24 @@
       "name": "Recovery_test_1788563403597's Workspace",
       "planId": "growth",
       "createdAt": "2026-09-04T23:10:03.792Z"
+    },
+    {
+      "id": "org_1788630969773",
+      "name": "Recovery_test_1788630969592's Workspace",
+      "planId": "growth",
+      "createdAt": "2026-09-05T17:56:09.773Z"
+    },
+    {
+      "id": "org_1788631718585",
+      "name": "Recovery_test_1788631718402's Workspace",
+      "planId": "growth",
+      "createdAt": "2026-09-05T18:08:38.586Z"
+    },
+    {
+      "id": "org_1788631956627",
+      "name": "Recovery_test_1788631956443's Workspace",
+      "planId": "growth",
+      "createdAt": "2026-09-05T18:12:36.628Z"
     }
   ],
   "businessProfiles": [
@@ -329,9 +377,60 @@
         "M-Pesa"
       ],
       "biggestRepetitiveTask": "Client follow-ups and appointment booking",
-      "workflowStages": [],
-      "manualTasks": [],
-      "frictionPoints": [],
+      "workflowStages": [
+        {
+          "id": "ws_1",
+          "order": 1,
+          "name": "Customer Inquiry",
+          "sourceApp": "WhatsApp Business",
+          "actionDescription": "Inbound lesson inquiry received"
+        },
+        {
+          "id": "ws_2",
+          "order": 2,
+          "name": "Brochure & Rates",
+          "sourceApp": "Otomatizon Core",
+          "actionDescription": "Instant qualification and pricing sent"
+        },
+        {
+          "id": "ws_3",
+          "order": 3,
+          "name": "Trial Booking",
+          "sourceApp": "Google Calendar",
+          "actionDescription": "Lesson scheduled in available slot"
+        },
+        {
+          "id": "ws_4",
+          "order": 4,
+          "name": "Payment Prompt",
+          "sourceApp": "Safaricom M-Pesa",
+          "actionDescription": "STK push for session confirmation"
+        },
+        {
+          "id": "ws_5",
+          "order": 5,
+          "name": "Session Delivery",
+          "sourceApp": "Google Meet",
+          "actionDescription": "Lesson conducted online"
+        },
+        {
+          "id": "ws_6",
+          "order": 6,
+          "name": "Automated Follow-up",
+          "sourceApp": "WhatsApp Business",
+          "actionDescription": "24h follow-up on unscheduled leads"
+        }
+      ],
+      "manualTasks": [
+        "Checking WhatsApp inquiries between lessons",
+        "Manually entering student details into Google Sheets",
+        "Sending manual reminders for unpaid sessions"
+      ],
+      "frictionPoints": [
+        "Students forget to book after getting rates brochure",
+        "Checking M-Pesa statements manually during live calls",
+        "Coordinating calendar slots across timezone differences"
+      ],
       "customerType": "Direct clients"
     },
     {
@@ -730,6 +829,72 @@
         "M-Pesa"
       ],
       "biggestRepetitiveTask": "Client follow-ups and booking"
+    },
+    {
+      "id": "bp_user_1788630969773",
+      "organizationId": "org_1788630969773",
+      "name": "Recovery_test_1788630969592's Workspace",
+      "businessName": "Recovery_test_1788630969592's Workspace",
+      "businessType": "Service Business",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "WhatsApp",
+        "Google",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Client follow-ups and booking"
+    },
+    {
+      "id": "bp_user_1788631718585",
+      "organizationId": "org_1788631718585",
+      "name": "Recovery_test_1788631718402's Workspace",
+      "businessName": "Recovery_test_1788631718402's Workspace",
+      "businessType": "Service Business",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "WhatsApp",
+        "Google",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Client follow-ups and booking"
+    },
+    {
+      "id": "bp_user_1788631956627",
+      "organizationId": "org_1788631956627",
+      "name": "Recovery_test_1788631956443's Workspace",
+      "businessName": "Recovery_test_1788631956443's Workspace",
+      "businessType": "Service Business",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "currency": "KES",
+      "customerAcquisitionChannels": [
+        "WhatsApp",
+        "Google",
+        "Referrals"
+      ],
+      "toolsUsed": [
+        "WhatsApp Business",
+        "Google Calendar",
+        "Google Sheets",
+        "M-Pesa"
+      ],
+      "biggestRepetitiveTask": "Client follow-ups and booking"
     }
   ],
   "connections": [
@@ -746,9 +911,11 @@
         "messages.read",
         "messages.write"
       ],
-      "status": "disconnected",
+      "status": "needs_attention",
       "lastSyncAt": null,
-      "errorCount": 0
+      "errorCount": 0,
+      "lastSyncedAt": "Just now",
+      "lastError": "Connection paused by user"
     },
     {
       "id": "google_calendar",
@@ -802,7 +969,7 @@
       "errorCount": 0
     },
     {
-      "id": "mpesa",
+      "id": "mpesa_safaricom",
       "name": "Safaricom M-Pesa",
       "category": "payments",
       "description": "Direct STK Push mobile payment prompts and receipt verification.",
@@ -889,8 +1056,136 @@
       "lastSyncAt": "2026-09-02T20:03:24.939Z"
     }
   ],
-  "workflows": [],
+  "workflows": [
+    {
+      "id": "wf_lead_autopilot",
+      "organizationId": "org_skilleclat_01",
+      "title": "Follow up with new leads after 24 hours if they haven't booked",
+      "summary": "Automatically captures inbound student inquiries, records them in Google Sheets, checks Google Calendar availability, and triggers a gentle WhatsApp follow-up after 24 hours if no booking was made.",
+      "category": "lead_recovery",
+      "active": true,
+      "triggerDescription": "When an inquiry is received on WhatsApp or Gmail",
+      "connectedApps": [
+        "WhatsApp",
+        "Google Sheets",
+        "Google Calendar"
+      ],
+      "requiredIntegrations": [
+        "whatsapp_business",
+        "google_sheets",
+        "google_calendar"
+      ],
+      "successRate": 98.6,
+      "timingConfig": {
+        "delayHours": 24
+      },
+      "metrics": {
+        "runsCount": 29,
+        "leadsHelped": 26,
+        "hoursSaved": 9,
+        "revenueRecoveredKes": 95000
+      },
+      "steps": [],
+      "operationalFlow": [],
+      "createdAt": "2026-09-02T20:10:00.000Z"
+    }
+  ],
   "executions": [
+    {
+      "id": "run_1788631964834",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Follow up with new leads after 24 hours if they haven't booked",
+      "triggerEventId": "evt_1788631964834",
+      "triggerEvent": "Inquiry from Prospective Client (SIMULATED)",
+      "entityName": "Prospective Client",
+      "status": "completed",
+      "currentStepIndex": 4,
+      "stepsTotal": 4,
+      "logSummary": "Completed automated pipeline across WhatsApp, Sheets, and Calendar.",
+      "startedAt": "Just now",
+      "completedAt": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "exec_1788631956029",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Follow up with new leads after 24 hours if they haven't booked",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 0,
+      "stepsTotal": 0,
+      "logSummary": "Completed all 0 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "run_1788631726854",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Follow up with new leads after 24 hours if they haven't booked",
+      "triggerEventId": "evt_1788631726854",
+      "triggerEvent": "Inquiry from Prospective Client (SIMULATED)",
+      "entityName": "Prospective Client",
+      "status": "completed",
+      "currentStepIndex": 4,
+      "stepsTotal": 4,
+      "logSummary": "Completed automated pipeline across WhatsApp, Sheets, and Calendar.",
+      "startedAt": "Just now",
+      "completedAt": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "exec_1788631718017",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Follow up with new leads after 24 hours if they haven't booked",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 0,
+      "stepsTotal": 0,
+      "logSummary": "Completed all 0 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788631024052",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 3,
+      "stepsTotal": 3,
+      "logSummary": "Completed all 3 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788630969172",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 3,
+      "stepsTotal": 3,
+      "logSummary": "Completed all 3 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
+    {
+      "id": "exec_1788630963777",
+      "workflowId": "wf_lead_autopilot",
+      "workflowTitle": "Lead Follow-Up Autopilot",
+      "triggerEvent": "Inquiry from Mercy Chebet",
+      "entityName": "Mercy Chebet",
+      "status": "completed",
+      "currentStepIndex": 3,
+      "stepsTotal": 3,
+      "logSummary": "Completed all 3 actions without errors. Idempotency verified.",
+      "startedAt": "Just now",
+      "completedAt": "Just now"
+    },
     {
       "id": "exec_1788563403096",
       "workflowId": "wf_lead_autopilot",
@@ -1324,6 +1619,32 @@
   "leads": [],
   "operationalEvents": [
     {
+      "id": "evt_1788631964834",
+      "businessId": "prof_james_01",
+      "sourceAppId": "whatsapp_business",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "customer_inquiry_received",
+      "title": "Inquiry from Prospective Client",
+      "description": "Inbound customer action processed by Otomatizon Intelligence.",
+      "entityName": "Prospective Client",
+      "payload": {},
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "evt_1788631726854",
+      "businessId": "prof_james_01",
+      "sourceAppId": "whatsapp_business",
+      "dataSourceId": "ds_wa_chat",
+      "eventType": "customer_inquiry_received",
+      "title": "Inquiry from Prospective Client",
+      "description": "Inbound customer action processed by Otomatizon Intelligence.",
+      "entityName": "Prospective Client",
+      "payload": {},
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
       "id": "evt_1788562722552",
       "businessId": "prof_james_01",
       "sourceAppId": "whatsapp_business",
@@ -1468,6 +1789,383 @@
     }
   ],
   "activityLogs": [
+    {
+      "id": "act_1788631969598",
+      "organizationId": "org_skilleclat_01",
+      "runId": "run_1788631969598",
+      "type": "subscription_upgraded",
+      "channel": "mpesa",
+      "application": "Otomatizon Billing",
+      "title": "Plan upgraded to Growth (KES 999/mo)",
+      "description": "M-Pesa Receipt: QAH9012345. Higher quota unlocked (5 Automations & 300 Follow-ups/mo).",
+      "actionTakenByOtomatizon": "Safaricom M-Pesa STK subscription payment verified & plan upgraded.",
+      "businessResult": "Subscription active until 05/10/2026",
+      "entityName": "Skilleclat Workspace",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788631964834",
+      "organizationId": "org_skilleclat_01",
+      "runId": "run_1788631964834",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp",
+      "title": "New inquiry received: Prospective Client",
+      "description": "Processed by Otomatizon Intelligence (SIMULATED).",
+      "actionTakenByOtomatizon": "Inquiry received & syllabus sent via WhatsApp",
+      "businessResult": "Lead captured & verified in student roster",
+      "entityName": "Prospective Client",
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "act_1788631956628",
+      "organizationId": "org_1788631956627",
+      "type": "security_event",
+      "channel": "security",
+      "application": "Otomatizon IAM",
+      "title": "Password Successfully Reset",
+      "description": "Password updated with PBKDF2/SHA-512 cryptographic encryption for recovery_test_1788631956443@gmail.com.",
+      "actionTakenByOtomatizon": "Secure OTP verified & credential vault updated",
+      "businessResult": "Account access restored",
+      "entityName": "Recovery_test_1788631956443",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "log_1788631956029",
+      "organizationId": "org_skilleclat_01",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788631726854",
+      "organizationId": "org_skilleclat_01",
+      "runId": "run_1788631726854",
+      "type": "lead_captured",
+      "channel": "whatsapp",
+      "application": "WhatsApp",
+      "title": "New inquiry received: Prospective Client",
+      "description": "Processed by Otomatizon Intelligence (SIMULATED).",
+      "actionTakenByOtomatizon": "Inquiry received & syllabus sent via WhatsApp",
+      "businessResult": "Lead captured & verified in student roster",
+      "entityName": "Prospective Client",
+      "timestamp": "Just now",
+      "provenance": "SIMULATED"
+    },
+    {
+      "id": "act_1788631718586",
+      "organizationId": "org_1788631718585",
+      "type": "security_event",
+      "channel": "security",
+      "application": "Otomatizon IAM",
+      "title": "Password Successfully Reset",
+      "description": "Password updated with PBKDF2/SHA-512 cryptographic encryption for recovery_test_1788631718402@gmail.com.",
+      "actionTakenByOtomatizon": "Secure OTP verified & credential vault updated",
+      "businessResult": "Account access restored",
+      "entityName": "Recovery_test_1788631718402",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "log_1788631718018",
+      "organizationId": "org_skilleclat_01",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788631024052",
+      "organizationId": "org_skilleclat_01",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "act_1788630986318",
+      "organizationId": "org_skilleclat_01",
+      "runId": "run_1788630986318",
+      "type": "subscription_upgraded",
+      "channel": "mpesa",
+      "application": "Otomatizon Billing",
+      "title": "Plan upgraded to Growth (KES 999/mo)",
+      "description": "M-Pesa Receipt: QAH9012345. Higher quota unlocked (5 Automations & 300 Follow-ups/mo).",
+      "actionTakenByOtomatizon": "Safaricom M-Pesa STK subscription payment verified & plan upgraded.",
+      "businessResult": "Subscription active until 05/10/2026",
+      "entityName": "Skilleclat Workspace",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977666",
+      "organizationId": "org_test",
+      "runId": "run_1788630977666",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977649",
+      "organizationId": "org_test",
+      "runId": "run_1788630977649",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977637",
+      "organizationId": "org_test",
+      "runId": "run_1788630977637",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977630",
+      "organizationId": "org_test",
+      "runId": "run_1788630977630",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977611",
+      "organizationId": "org_test",
+      "runId": "run_1788630977611",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977597",
+      "organizationId": "org_test",
+      "runId": "run_1788630977597",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977572",
+      "organizationId": "org_test",
+      "runId": "run_1788630977572",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977555",
+      "organizationId": "org_test",
+      "runId": "run_1788630977555",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977537",
+      "organizationId": "org_test",
+      "runId": "run_1788630977537",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977525",
+      "organizationId": "org_test",
+      "runId": "run_1788630977525",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977508",
+      "organizationId": "org_test",
+      "runId": "run_1788630977508",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977489",
+      "organizationId": "org_test",
+      "runId": "run_1788630977489",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977472",
+      "organizationId": "org_test",
+      "runId": "run_1788630977472",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977460",
+      "organizationId": "org_test",
+      "runId": "run_1788630977460",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630977451",
+      "organizationId": "org_test",
+      "runId": "run_1788630977451",
+      "type": "lead_follow_up",
+      "channel": "whatsapp",
+      "application": "WhatsApp Business",
+      "title": "Automated 24h follow-up delivered to Esther Mutua",
+      "description": "\"Hi Esther Mutua! Just checking in regarding your French Tutoring (DELF A2) lesson request. I have an open slot this week if you'd like to reserve! — James\"",
+      "actionTakenByOtomatizon": "Automated 24h follow-up dispatched via WhatsApp API.",
+      "businessResult": "Opportunity re-engaged · KES 3,500 pipeline protected",
+      "entityName": "Esther Mutua",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "act_1788630969774",
+      "organizationId": "org_1788630969773",
+      "type": "security_event",
+      "channel": "security",
+      "application": "Otomatizon IAM",
+      "title": "Password Successfully Reset",
+      "description": "Password updated with PBKDF2/SHA-512 cryptographic encryption for recovery_test_1788630969592@gmail.com.",
+      "actionTakenByOtomatizon": "Secure OTP verified & credential vault updated",
+      "businessResult": "Account access restored",
+      "entityName": "Recovery_test_1788630969592",
+      "timestamp": "Just now",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "log_1788630969172",
+      "organizationId": "org_skilleclat_01",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
+    {
+      "id": "log_1788630963777",
+      "organizationId": "org_skilleclat_01",
+      "type": "booking_confirmed",
+      "title": "Coaching session scheduled & payment confirmed",
+      "description": "Google Calendar Meet link delivered and M-Pesa KES 3,500 receipt verified for Mercy Chebet.",
+      "timestamp": "Just now",
+      "channel": "mpesa",
+      "badgeColor": "emerald"
+    },
     {
       "id": "act_1788563413104",
       "organizationId": "org_skilleclat_01",
@@ -2638,11 +3336,38 @@
       "planId": "growth",
       "status": "active",
       "priceKesMonthly": 999,
-      "currentPeriodStart": "2026-09-04T23:10:13.102Z",
-      "currentPeriodEnd": "2026-10-04T23:10:13.104Z"
+      "currentPeriodStart": "2026-09-05T18:12:49.597Z",
+      "currentPeriodEnd": "2026-10-05T18:12:49.598Z"
     }
   ],
-  "opportunities": [],
+  "opportunities": [
+    {
+      "id": "opp_lead_recovery_01",
+      "organizationId": "org_skilleclat_01",
+      "title": "Follow up with new leads after 24 hours if they haven't booked",
+      "problem": "Inquiries arrive on WhatsApp and Gmail. Without immediate manual tracking, 35% of potential students never book.",
+      "evidence": "27 customer inquiries logged over the past 7 days with zero automated follow-up.",
+      "evidenceType": "OBSERVED",
+      "impactScore": 92,
+      "impactLevel": "High impact",
+      "confidenceScore": 95,
+      "estimatedTimeSavedHoursPerWeek": 4.5,
+      "estimatedRevenueAtRiskKes": 38000,
+      "monthlyValueKes": 38000,
+      "rankNumber": 1,
+      "recommendation": "Activate 24-hour intelligent WhatsApp follow-up pipeline.",
+      "suggestedWorkflowId": "wf_lead_autopilot",
+      "suggestedWorkflowTitle": "Lead Follow-Up Autopilot",
+      "requiredIntegrations": [
+        "whatsapp_business",
+        "google_calendar",
+        "google_sheets"
+      ],
+      "status": "detected",
+      "detectedAt": "2026-09-02T20:10:00.000Z",
+      "category": "lead_recovery"
+    }
+  ],
   "scheduledJobs": [
     {
       "id": "job_fu_01",
@@ -2796,11 +3521,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T09:46:58.065Z",
       "createdAt": "2026-09-04T09:46:58.074Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.451Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977451=="
       }
     },
     {
@@ -2855,11 +3586,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:13:11.430Z",
       "createdAt": "2026-09-04T10:13:11.431Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.459Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977459=="
       }
     },
     {
@@ -2914,11 +3651,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:13:44.685Z",
       "createdAt": "2026-09-04T10:13:44.686Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.472Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977472=="
       }
     },
     {
@@ -2973,11 +3716,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:15:25.412Z",
       "createdAt": "2026-09-04T10:15:25.413Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.489Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977489=="
       }
     },
     {
@@ -3032,11 +3781,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:41:49.249Z",
       "createdAt": "2026-09-04T10:41:49.253Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.508Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977508=="
       }
     },
     {
@@ -3091,11 +3846,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:47:23.263Z",
       "createdAt": "2026-09-04T10:47:23.266Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.525Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977525=="
       }
     },
     {
@@ -3150,11 +3911,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:47:54.631Z",
       "createdAt": "2026-09-04T10:47:54.632Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.537Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977537=="
       }
     },
     {
@@ -3209,11 +3976,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:48:46.450Z",
       "createdAt": "2026-09-04T10:48:46.452Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.555Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977554=="
       }
     },
     {
@@ -3268,11 +4041,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:49:54.123Z",
       "createdAt": "2026-09-04T10:49:54.125Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.572Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977572=="
       }
     },
     {
@@ -3327,11 +4106,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:50:33.714Z",
       "createdAt": "2026-09-04T10:50:33.715Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.597Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977597=="
       }
     },
     {
@@ -3386,11 +4171,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:54:27.201Z",
       "createdAt": "2026-09-04T10:54:27.203Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.611Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977611=="
       }
     },
     {
@@ -3445,11 +4236,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:55:25.244Z",
       "createdAt": "2026-09-04T10:55:25.246Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.630Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977630=="
       }
     },
     {
@@ -3504,11 +4301,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T10:57:27.860Z",
       "createdAt": "2026-09-04T10:57:27.862Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.637Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977637=="
       }
     },
     {
@@ -3563,11 +4366,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T11:00:42.267Z",
       "createdAt": "2026-09-04T11:00:42.269Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.649Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977649=="
       }
     },
     {
@@ -3622,11 +4431,17 @@
       "targetPhone": "+254 712 555 666",
       "scheduledFor": "2026-09-05T11:59:41.377Z",
       "createdAt": "2026-09-04T11:59:41.378Z",
-      "status": "scheduled",
+      "status": "dispatched",
       "conditionDescription": "Cancel if Esther Mutua books a lesson or pays tuition",
       "payload": {
         "subject": "French Tutoring (DELF A2)",
         "estimatedValueKes": 3500
+      },
+      "executionResult": {
+        "executedAt": "2026-09-05T17:56:17.666Z",
+        "circuitBroken": false,
+        "reason": "No lesson booking or payment detected for Esther Mutua within 24 hours. Automated follow-up required.",
+        "messageId": "wamid.HBgL1788630977665=="
       }
     },
     {
@@ -3732,6 +4547,32 @@
     }
   ],
   "invoices": [
+    {
+      "id": "INV_1788631969598",
+      "organizationId": "org_skilleclat_01",
+      "organizationName": "Skilleclat Workspace",
+      "planId": "growth",
+      "planName": "Growth",
+      "amountKes": 999,
+      "paymentMethod": "Safaricom M-Pesa Express (STK Push)",
+      "mpesaReceiptNumber": "QAH9012345",
+      "issuedAt": "2026-09-05T18:12:49.598Z",
+      "status": "PAID",
+      "billingPeriod": "30 Days (Monthly Recurring)"
+    },
+    {
+      "id": "INV_1788630986318",
+      "organizationId": "org_skilleclat_01",
+      "organizationName": "Skilleclat Workspace",
+      "planId": "growth",
+      "planName": "Growth",
+      "amountKes": 999,
+      "paymentMethod": "Safaricom M-Pesa Express (STK Push)",
+      "mpesaReceiptNumber": "QAH9012345",
+      "issuedAt": "2026-09-05T17:56:26.318Z",
+      "status": "PAID",
+      "billingPeriod": "30 Days (Monthly Recurring)"
+    },
     {
       "id": "INV_1788563413104",
       "organizationId": "org_skilleclat_01",
@@ -3955,6 +4796,28 @@
     }
   ],
   "insights": [
+    {
+      "id": "ins_1788631964834",
+      "businessId": "prof_james_01",
+      "eventId": "evt_1788631964834",
+      "type": "friction_detected",
+      "title": "Intelligence evaluation for Prospective Client",
+      "description": "Evaluated customer_inquiry_received from whatsapp_business.",
+      "confidenceScore": 96,
+      "provenance": "SIMULATED",
+      "createdAt": "2026-09-05T18:12:44.834Z"
+    },
+    {
+      "id": "ins_1788631726854",
+      "businessId": "prof_james_01",
+      "eventId": "evt_1788631726854",
+      "type": "friction_detected",
+      "title": "Intelligence evaluation for Prospective Client",
+      "description": "Evaluated customer_inquiry_received from whatsapp_business.",
+      "confidenceScore": 96,
+      "provenance": "SIMULATED",
+      "createdAt": "2026-09-05T18:08:46.854Z"
+    },
     {
       "id": "ins_1788562722552",
       "businessId": "prof_james_01",

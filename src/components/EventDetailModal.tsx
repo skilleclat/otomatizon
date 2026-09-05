@@ -18,7 +18,8 @@ import { ActivityLog } from "@/types";
 
 interface EventDetailModalProps {
   isOpen: boolean;
-  event: ActivityLog | null;
+  event?: ActivityLog | null;
+  log?: ActivityLog | null;
   onClose: () => void;
   onNavigateToApps?: () => void;
 }
@@ -26,12 +27,14 @@ interface EventDetailModalProps {
 export const EventDetailModal: React.FC<EventDetailModalProps> = ({
   isOpen,
   event,
+  log,
   onClose,
   onNavigateToApps
 }) => {
+  const activeItem = event || log;
   const [showRawPayload, setShowRawPayload] = useState(false);
 
-  if (!isOpen || !event) return null;
+  if (!isOpen || !activeItem) return null;
 
   const getChannelIcon = (ch?: string) => {
     switch (ch) {
@@ -60,17 +63,17 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                 OPERATIONAL TELEMETRY
               </span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF] text-[#75777E] font-bold">
-                {event.provenance || "OBSERVED"}
+                {activeItem.provenance || "OBSERVED"}
               </span>
             </div>
             <h3 className="text-lg font-bold text-[#121316] tracking-tight mt-1">
-              {event.title}
+              {activeItem.title}
             </h3>
             <div className="flex items-center gap-2 text-xs text-[#75777E] font-mono">
               <Clock className="w-3 h-3" />
-              <span>{event.timestamp}</span>
+              <span>{activeItem.timestamp}</span>
               <span>&bull;</span>
-              <span>Channel: {event.channel.toUpperCase()}</span>
+              <span>Channel: {String(activeItem.channel || "SYSTEM").toUpperCase()}</span>
             </div>
           </div>
 
@@ -89,34 +92,34 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               Trigger / Inbound Context
             </div>
             <p className="text-[#121316] leading-relaxed">
-              {event.description}
+              {activeItem.description}
             </p>
-            {event.entityName && (
+            {activeItem.entityName && (
               <div className="text-[11px] font-mono text-[#15803D] pt-0.5 font-bold">
-                Associated Entity: {event.entityName}
+                Associated Entity: {activeItem.entityName}
               </div>
             )}
           </div>
 
-          {event.actionTakenByOtomatizon && (
+          {activeItem.actionTakenByOtomatizon && (
             <div className="p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-200/80 space-y-1.5">
               <div className="font-mono text-[10px] text-emerald-800 uppercase tracking-wider font-bold">
                 Otomatizon Intelligence Action
               </div>
               <p className="text-emerald-950 leading-relaxed">
-                {event.actionTakenByOtomatizon}
+                {activeItem.actionTakenByOtomatizon}
               </p>
             </div>
           )}
 
-          {event.businessResult && (
+          {activeItem.businessResult && (
             <div className="p-3.5 rounded-2xl bg-white border border-[#EAE7DF] shadow-2xs space-y-1.5">
               <div className="font-mono text-[10px] text-[#75777E] uppercase tracking-wider flex items-center gap-1.5">
                 <CheckCircle className="w-3.5 h-3.5 text-[#15803D]" />
                 <span className="font-bold text-[#121316]">Verified System Result</span>
               </div>
               <p className="text-[#4A4B50] leading-relaxed">
-                {event.businessResult}
+                {activeItem.businessResult}
               </p>
             </div>
           )}
@@ -136,14 +139,14 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
             <pre className="mt-2.5 p-3 rounded-xl bg-stone-900 text-emerald-400 font-mono text-[10px] overflow-x-auto select-all max-h-40">
               {JSON.stringify(
                 {
-                  id: event.id,
-                  type: event.type,
-                  channel: event.channel,
-                  application: event.application,
-                  entityName: event.entityName,
-                  timestamp: event.timestamp,
-                  provenance: event.provenance || "OBSERVED",
-                  idempotencyKey: `idemp_${event.id}`,
+                  id: activeItem.id,
+                  type: activeItem.type,
+                  channel: activeItem.channel,
+                  application: activeItem.application,
+                  entityName: activeItem.entityName,
+                  timestamp: activeItem.timestamp,
+                  provenance: activeItem.provenance || "OBSERVED",
+                  idempotencyKey: `idemp_${activeItem.id}`,
                   verifiedAt: new Date().toISOString()
                 },
                 null,

@@ -26,7 +26,7 @@ import { ExecutionState, DataProvenance } from "@/types";
 export interface ExecutionEventStep {
   stepIndex: number;
   timestamp: string;
-  app: "WhatsApp" | "Otomatizon" | "Google Sheets" | "Google Agenda" | "Système";
+  app: "WhatsApp" | "Otomatizon" | "Google Sheets" | "Google Agenda" | "Google Calendar" | "Système" | "System" | string;
   actionTitle: string;
   contextText: string;
   status: "COMPLETED" | "RUNNING" | "WAITING" | "QUEUED";

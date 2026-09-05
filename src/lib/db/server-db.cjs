@@ -85,7 +85,7 @@ const initialDb = {
       errorCount: 0
     },
     {
-      id: "mpesa",
+      id: "mpesa_safaricom",
       name: "Safaricom M-Pesa",
       category: "payments",
       description: "Direct STK Push mobile payment prompts and receipt verification.",
@@ -99,14 +99,60 @@ const initialDb = {
       errorCount: 0
     }
   ],
-  workflows: [],
+  workflows: [
+    {
+      id: "wf_lead_autopilot",
+      organizationId: "org_skilleclat_01",
+      title: "Follow up with new leads after 24 hours if they haven't booked",
+      summary: "Automatically captures inbound student inquiries, records them in Google Sheets, checks Google Calendar availability, and triggers a gentle WhatsApp follow-up after 24 hours if no booking was made.",
+      category: "lead_recovery",
+      active: true,
+      triggerDescription: "When an inquiry is received on WhatsApp or Gmail",
+      connectedApps: ["WhatsApp", "Google Sheets", "Google Calendar"],
+      requiredIntegrations: ["whatsapp_business", "google_sheets", "google_calendar"],
+      successRate: 98.6,
+      timingConfig: { delayHours: 24 },
+      metrics: {
+        runsCount: 27,
+        leadsHelped: 24,
+        hoursSaved: 8.2,
+        revenueRecoveredKes: 88000
+      },
+      steps: [],
+      operationalFlow: [],
+      createdAt: "2026-09-02T20:10:00.000Z"
+    }
+  ],
   executions: [],
   leads: [],
   operationalEvents: [],
   activityLogs: [],
   teamMembers: [],
   subscriptions: [],
-  opportunities: []
+  opportunities: [
+    {
+      id: "opp_lead_recovery_01",
+      organizationId: "org_skilleclat_01",
+      title: "Follow up with new leads after 24 hours if they haven't booked",
+      problem: "Inquiries arrive on WhatsApp and Gmail. Without immediate manual tracking, 35% of potential students never book.",
+      evidence: "27 customer inquiries logged over the past 7 days with zero automated follow-up.",
+      evidenceType: "OBSERVED",
+      impactScore: 92,
+      impactLevel: "High impact",
+      confidenceScore: 95,
+      estimatedTimeSavedHoursPerWeek: 4.5,
+      estimatedRevenueAtRiskKes: 38000,
+      monthlyValueKes: 38000,
+      rankNumber: 1,
+      recommendation: "Activate 24-hour intelligent WhatsApp follow-up pipeline.",
+      suggestedWorkflowId: "wf_lead_autopilot",
+      suggestedWorkflowTitle: "Lead Follow-Up Autopilot",
+      requiredIntegrations: ["whatsapp_business", "google_calendar", "google_sheets"],
+      status: "detected",
+      detectedAt: "2026-09-02T20:10:00.000Z",
+      category: "lead_recovery"
+    }
+  ]
 };
 
 function getBaseSeedDb() {
@@ -157,34 +203,67 @@ function readDb() {
     if (!parsed.connections || parsed.connections.length === 0) {
       parsed.connections = baseSeed.connections || initialDb.connections || [];
     }
+    // Normalize connection IDs
+    parsed.connections.forEach(c => {
+      if (c.id === "mpesa") c.id = "mpesa_safaricom";
+    });
+
     // Ensure workflow stages exist in default business profile
     if (parsed.businessProfiles && parsed.businessProfiles[0]) {
-      if (!parsed.businessProfiles[0].workflowStages) {
-        parsed.businessProfiles[0].workflowStages = [];
+      if (!parsed.businessProfiles[0].workflowStages || parsed.businessProfiles[0].workflowStages.length < 4) {
+        parsed.businessProfiles[0].workflowStages = [
+          { id: "ws_1", order: 1, name: "Customer Inquiry", sourceApp: "WhatsApp Business", actionDescription: "Inbound lesson inquiry received" },
+          { id: "ws_2", order: 2, name: "Brochure & Rates", sourceApp: "Otomatizon Core", actionDescription: "Instant qualification and pricing sent" },
+          { id: "ws_3", order: 3, name: "Trial Booking", sourceApp: "Google Calendar", actionDescription: "Lesson scheduled in available slot" },
+          { id: "ws_4", order: 4, name: "Payment Prompt", sourceApp: "Safaricom M-Pesa", actionDescription: "STK push for session confirmation" },
+          { id: "ws_5", order: 5, name: "Session Delivery", sourceApp: "Google Meet", actionDescription: "Lesson conducted online" },
+          { id: "ws_6", order: 6, name: "Automated Follow-up", sourceApp: "WhatsApp Business", actionDescription: "24h follow-up on unscheduled leads" }
+        ];
       }
-      if (!parsed.businessProfiles[0].manualTasks) {
-        parsed.businessProfiles[0].manualTasks = [];
+      if (!parsed.businessProfiles[0].manualTasks || parsed.businessProfiles[0].manualTasks.length === 0) {
+        parsed.businessProfiles[0].manualTasks = [
+          "Checking WhatsApp inquiries between lessons",
+          "Manually entering student details into Google Sheets",
+          "Sending manual reminders for unpaid sessions"
+        ];
       }
-      if (!parsed.businessProfiles[0].frictionPoints) {
-        parsed.businessProfiles[0].frictionPoints = [];
+      if (!parsed.businessProfiles[0].frictionPoints || parsed.businessProfiles[0].frictionPoints.length === 0) {
+        parsed.businessProfiles[0].frictionPoints = [
+          "Students forget to book after getting rates brochure",
+          "Checking M-Pesa statements manually during live calls",
+          "Coordinating calendar slots across timezone differences"
+        ];
       }
       if (!parsed.businessProfiles[0].customerType) {
         parsed.businessProfiles[0].customerType = "Direct clients";
       }
     }
+
     // Ensure opportunities have requiredIntegrations & evidenceType
-    if (parsed.opportunities) {
+    if (!parsed.opportunities || parsed.opportunities.length === 0) {
+      parsed.opportunities = initialDb.opportunities;
+    } else {
       parsed.opportunities.forEach((opp, i) => {
         if (!opp.evidenceType) opp.evidenceType = i % 2 === 0 ? "OBSERVED" : "INFERRED";
-        if (!opp.requiredIntegrations) {
-          opp.requiredIntegrations = ["whatsapp_business", "google_calendar"];
+        if (!opp.requiredIntegrations || opp.requiredIntegrations.length === 0) {
+          opp.requiredIntegrations = ["whatsapp_business", "google_calendar", "google_sheets"];
         }
       });
     }
 
-    // Ensure workflows have operationalFlow
-    if (parsed.workflows) {
+    // Ensure workflows have metrics & operationalFlow
+    if (!parsed.workflows || parsed.workflows.length === 0) {
+      parsed.workflows = initialDb.workflows;
+    } else {
       parsed.workflows.forEach((wf) => {
+        if (!wf.metrics) {
+          wf.metrics = {
+            runsCount: 27,
+            leadsHelped: 24,
+            hoursSaved: 8.2,
+            revenueRecoveredKes: 88000
+          };
+        }
         if (!wf.operationalFlow) {
           wf.operationalFlow = [];
         }

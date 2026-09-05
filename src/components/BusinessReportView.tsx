@@ -185,7 +185,7 @@ export const BusinessReportView: React.FC<BusinessReportViewProps> = ({
                 <h3 className="text-sm font-bold uppercase text-[#121316]">Executive Summary</h3>
               </div>
               <span className="text-[10px] font-mono text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]">
-                AUTHENTIC
+                OBSERVED
               </span>
             </div>
 
@@ -202,7 +202,7 @@ export const BusinessReportView: React.FC<BusinessReportViewProps> = ({
                 <h3 className="text-sm font-bold uppercase text-[#121316]">What We Understood</h3>
               </div>
               <span className="text-[10px] font-mono text-[#75777E] px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF]">
-                VERIFIED PROFILE
+                INFERRED
               </span>
             </div>
 

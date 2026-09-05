@@ -7,6 +7,7 @@ import { DataProvenance } from "@/types";
 export interface MetricDetail {
   id: string;
   title: string;
+  titleFr?: string;
   value: string;
   sublabel: string;
   formula: string;

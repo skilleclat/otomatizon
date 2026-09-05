@@ -104,7 +104,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenCheckout,
   onTriggerAuth
 }) => {
-  const { state, logout } = useOtomatizonStore();
+  const { state, logout, upgradePlan } = useOtomatizonStore();
   const [selectedScenarioIndex, setSelectedScenarioIndex] = useState(0);
   const [visitorInput, setVisitorInput] = useState(DEMO_SCENARIOS[0].input);
   const [demoState, setDemoState] = useState<"ready" | "analyzing" | "discovered">("discovered");
@@ -416,7 +416,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   <div className="flex items-center gap-1.5">
                     <span className="text-[10px] font-mono text-[#75777E] uppercase">IMPACT</span>
                     <span className="text-[10px] font-mono font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">
-                      {currentScenario.impact}
+                      {currentScenario.discovery.impact}
                     </span>
                   </div>
                 </div>
@@ -424,10 +424,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 {/* Finding & Detail */}
                 <div className="space-y-1">
                   <h3 className="text-base sm:text-lg font-bold text-[#121316]">
-                    {currentScenario.foundTitle}
+                    {currentScenario.discovery.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-[#4A4B50] leading-relaxed">
-                    {currentScenario.foundDetail}
+                    {currentScenario.discovery.description}
                   </p>
                 </div>
 

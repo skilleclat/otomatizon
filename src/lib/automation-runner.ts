@@ -5,7 +5,7 @@ export interface ExecutionStepResult {
   label: string;
   status: "success" | "delayed" | "failed" | "idempotent_duplicate_prevented";
   outputMessage: string;
-  telemetryChannel: "whatsapp" | "gmail" | "calendar" | "mpesa" | "system";
+  telemetryChannel?: "whatsapp" | "gmail" | "calendar" | "mpesa" | "system" | "sheets" | string;
   timestamp: string;
 }
 

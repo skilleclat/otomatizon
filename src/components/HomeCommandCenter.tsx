@@ -49,7 +49,7 @@ export const HomeCommandCenter: React.FC<HomeCommandCenterProps> = ({
   const currentHours = state.metrics?.hoursSaved || state.stats?.hoursSaved || 0;
   const currentRevenue = state.metrics?.revenueRecoveredKes || state.stats?.revenueKes || 0;
   const currentInquiries = state.metrics?.inquiriesProcessed || (state.leads?.length || 0);
-  const currentFollowups = state.metrics?.followUpsSent || 0;
+  const currentFollowups = state.metrics?.followupsSent || state.metrics?.followUpsSent || 0;
 
   const connectedAppsList = state.integrations.filter(i => i.connected);
   const activeWorkflowsList = state.workflows.filter(w => w.active);

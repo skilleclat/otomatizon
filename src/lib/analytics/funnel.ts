@@ -11,7 +11,8 @@ export type FunnelStage =
   | "automation_previewed"
   | "automation_activated"
   | "first_execution"
-  | "paid_subscription";
+  | "paid_subscription"
+  | "free_plan_activated";
 
 export interface FunnelEvent {
   id: string;

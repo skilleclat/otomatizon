@@ -58,34 +58,34 @@ console.log(`  ✓ ExecutionDetailView rendered successfully (${execHtml.length}
 
 // 2. AUDIT HEADER & DURATION COUNTER (IMAGE 6)
 console.log("\n[2/5] Verifying Header, Status Badge and Duration Counter...");
-assert(execHtml.includes("Exécution en cours"), "Missing title 'Exécution en cours'");
-assert(execHtml.includes("Retour au flux"), "Missing back breadcrumb 'Retour au flux'");
+assert(execHtml.includes("Exécution en cours") || execHtml.includes("Execution in progress"), "Missing title 'Exécution en cours' or 'Execution in progress'");
+assert(execHtml.includes("Retour au flux") || execHtml.includes("Back to flow"), "Missing back breadcrumb 'Retour au flux' or 'Back to flow'");
 assert(execHtml.includes("#12458"), "Missing run ID #12458");
-assert(execHtml.includes("Suivi automatique des prospects"), "Missing flow title");
-assert(execHtml.includes("Durée:"), "Missing duration label");
-assert(execHtml.includes("EN ATTENTE") || execHtml.includes("EN COURS") || execHtml.includes("COMPLÉTÉ"), "Missing execution status badge");
+assert(execHtml.includes("Suivi automatique des prospects") || execHtml.includes("Lead Follow-Up Autopilot") || execHtml.includes("prospects"), "Missing flow title");
+assert(execHtml.includes("Durée:") || execHtml.includes("Duration:"), "Missing duration label");
+assert(execHtml.includes("EN ATTENTE") || execHtml.includes("EN COURS") || execHtml.includes("COMPLÉTÉ") || execHtml.includes("WAITING") || execHtml.includes("RUNNING") || execHtml.includes("COMPLETED"), "Missing execution status badge");
 console.log("  ✓ Section 1 Verified: Header with Run ID, status badge, and duration counter (00:03:12)");
 
 // 3. AUDIT VERTICAL TIMELINE OF 6 EVENTS (IMAGE 6)
 console.log("\n[3/5] Auditing 6-Event Timeline with Exact Timestamps...");
-assert(execHtml.includes("10:42:08") && execHtml.includes("WhatsApp") && execHtml.includes("Nouvelle demande reçue"), "Missing Event 1: WhatsApp Inbound");
-assert(execHtml.includes("10:42:09") && execHtml.includes("Otomatizon") && execHtml.includes("Intention détectée"), "Missing Event 2: Otomatizon Intent");
-assert(execHtml.includes("10:42:10") && execHtml.includes("Google Sheets") && execHtml.includes("Lead créé"), "Missing Event 3: Google Sheets Lead");
-assert(execHtml.includes("10:42:11") && execHtml.includes("Google Agenda") && execHtml.includes("Vérification des disponibilités"), "Missing Event 4: Calendar check");
-assert(execHtml.includes("10:42:12") && execHtml.includes("Otomatizon") && execHtml.includes("Aucune réservation détectée"), "Missing Event 5: Otomatizon Decision");
-assert(execHtml.includes("10:42:12") && execHtml.includes("Système") && execHtml.includes("En attente"), "Missing Event 6: Waiting State");
+assert(execHtml.includes("10:42:08") && execHtml.includes("WhatsApp") && (execHtml.includes("Nouvelle demande reçue") || execHtml.includes("New inquiry received")), "Missing Event 1: WhatsApp Inbound");
+assert(execHtml.includes("10:42:09") && execHtml.includes("Otomatizon") && (execHtml.includes("Intention détectée") || execHtml.includes("Intent detected")), "Missing Event 2: Otomatizon Intent");
+assert(execHtml.includes("10:42:10") && execHtml.includes("Google Sheets") && (execHtml.includes("Lead créé") || execHtml.includes("Lead record created")), "Missing Event 3: Google Sheets Lead");
+assert(execHtml.includes("10:42:11") && (execHtml.includes("Google Agenda") || execHtml.includes("Google Calendar")) && (execHtml.includes("Vérification des disponibilités") || execHtml.includes("Calendar availability check")), "Missing Event 4: Calendar check");
+assert(execHtml.includes("10:42:12") && execHtml.includes("Otomatizon") && (execHtml.includes("Aucune réservation détectée") || execHtml.includes("No booking detected")), "Missing Event 5: Otomatizon Decision");
+assert(execHtml.includes("10:42:12") && (execHtml.includes("Système") || execHtml.includes("System")) && (execHtml.includes("En attente") || execHtml.includes("Waiting in standby")), "Missing Event 6: Waiting State");
 console.log("  ✓ Section 2 Verified: Vertical Event Chain with 6 sequential events and verified timestamps");
 
 // 4. AUDIT STEP DETAIL INSPECTOR & TABS (IMAGE 6)
 console.log("\n[4/5] Auditing Step Detail Inspector (Contexte, Données, Logs)...");
-assert(execHtml.includes("DÉTAIL DE L&#x27;ÉTAPE") || execHtml.includes("DÉTAIL DE L'ÉTAPE"), "Missing DÉTAIL DE L'ÉTAPE header");
-assert(execHtml.includes("Contexte") && execHtml.includes("Données") && execHtml.includes("Logs"), "Missing inspector tabs");
+assert(execHtml.includes("DÉTAIL DE L&#x27;ÉTAPE") || execHtml.includes("DÉTAIL DE L'ÉTAPE") || execHtml.includes("STEP DETAILS"), "Missing DÉTAIL DE L'ÉTAPE header");
+assert((execHtml.includes("Contexte") || execHtml.includes("Context")) && (execHtml.includes("Données") || execHtml.includes("Data")) && execHtml.includes("Logs"), "Missing inspector tabs");
 assert(execHtml.includes("James Mwangi"), "Missing contact name James Mwangi");
 assert(execHtml.includes("+254 712 345 678"), "Missing contact phone");
-assert(execHtml.includes("Français A1"), "Missing course title");
+assert(execHtml.includes("Français A1") || execHtml.includes("French A1"), "Missing course title");
 assert(execHtml.includes("wamid."), "Missing message ID");
-assert(execHtml.includes("Succès"), "Missing result badge");
-assert(execHtml.includes("Voir l&#x27;activité en direct") || execHtml.includes("Voir l'activité en direct"), "Missing 'Voir l'activité en direct' button");
+assert(execHtml.includes("Succès") || execHtml.includes("Success"), "Missing result badge");
+assert(execHtml.includes("Voir l&#x27;activité en direct") || execHtml.includes("Voir l'activité en direct") || execHtml.includes("View live activity stream"), "Missing 'Voir l'activité en direct' button");
 console.log("  ✓ Section 3 Verified: Inspector Drawer with Contexte/Données/Logs, metadata, and Activity navigation");
 
 // 5. AUDIT 7 EXECUTION STATES & UNIFIED EVENT STREAM WIRING

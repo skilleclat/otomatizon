@@ -1,7 +1,7 @@
 // Otomatizon Core Domain Types & Operating System Architecture
 
 export type UserRole = "owner" | "admin" | "member";
-export type TeamMemberRole = "admin" | "collaborator" | "viewer";
+export type TeamMemberRole = "owner" | "admin" | "collaborator" | "viewer";
 
 export interface TeamMember {
   id: string;
@@ -26,11 +26,12 @@ export interface Business {
   type?: string; // e.g. "Private DELF/DALF French Tutoring"
   city: string; // e.g. "Nairobi"
   country: string; // "Kenya"
-  clientType: string; // "Individual learners, executives & university candidates"
-  goals: string[];
-  currency: "KES" | "USD" | "EUR";
-  provenance: DataProvenance;
-  createdAt: string;
+  clientType?: string; // "Individual learners, executives & university candidates"
+  customerType?: string;
+  goals?: string[];
+  currency?: "KES" | "USD" | "EUR";
+  provenance?: DataProvenance;
+  createdAt?: string;
 }
 
 export interface User {
@@ -53,9 +54,9 @@ export interface UserSession {
 export interface Organization {
   id: string;
   name: string;
-  slug: string;
-  currency: "KES" | "USD" | "EUR";
-  timezone: string; // e.g. "Africa/Nairobi"
+  slug?: string;
+  currency?: "KES" | "USD" | "EUR";
+  timezone?: string; // e.g. "Africa/Nairobi"
   planId: "free" | "starter" | "growth" | "pro";
   createdAt: string;
 }
@@ -71,19 +72,23 @@ export interface WorkflowStage {
 }
 
 export interface BusinessProfile extends Business {
-  organizationId: string;
-  businessType: string;
+  organizationId?: string;
+  businessType?: string;
+  businessName?: string;
   type?: string;
-  description: string;
-  location: string;
-  services: string[];
-  primaryChannels: string[]; // e.g. ["whatsapp", "google_business", "referrals"]
+  description?: string;
+  location?: string;
+  services?: string[];
+  primaryChannels?: string[]; // e.g. ["whatsapp", "google_business", "referrals"]
+  customerChannels?: string[];
   customerAcquisitionChannels?: string[];
-  targetAudience: string;
+  targetAudience?: string;
   customerType?: string;
-  averageDealSizeKes: number;
-  toolsUsed: string[];
-  biggestRepetitiveTask: string;
+  averageDealSizeKes?: number;
+  toolsUsed?: string[];
+  tools?: string[];
+  repetitiveTasks?: string[];
+  biggestRepetitiveTask?: string;
   workflowSummary?: string;
   manualTasks?: string[];
   frictionPoints?: string[];
@@ -109,7 +114,8 @@ export type IntegrationStatus =
   | "coming_soon" 
   | "not_supported"
   | "active"
-  | "disconnected";
+  | "disconnected"
+  | string;
 
 export interface Integration {
   id: IntegrationId;
@@ -134,17 +140,22 @@ export interface Integration {
 
 export interface ConnectedApp {
   id: string;
-  businessId: string;
+  businessId?: string;
+  organizationId?: string;
   integrationId: IntegrationId;
+  appType?: string;
   name: string;
   category: "messaging" | "google" | "payments" | "storage";
   status: IntegrationStatus;
+  connectionStatus?: IntegrationStatus | string;
   accountIdentifier?: string;
-  roleInSystem: string; // e.g. "Customer communication, inquiries & document delivery"
-  scopes: string[];
-  capabilities: string[];
-  provenance: DataProvenance;
+  roleInSystem?: string; // e.g. "Customer communication, inquiries & document delivery"
+  scopes?: string[];
+  capabilities?: string[];
+  provenance?: DataProvenance;
   lastSyncAt?: string;
+  lastSyncedAt?: string;
+  connected?: boolean;
 }
 
 export interface DataSource {
@@ -185,7 +196,7 @@ export interface OperationalEvent {
   businessId: string;
   sourceAppId: string;
   dataSourceId: string;
-  eventType: "inquiry_received" | "booking_created" | "booking_cancelled" | "payment_confirmed" | "lead_recorded" | "followup_due";
+  eventType: "inquiry_received" | "booking_created" | "booking_cancelled" | "payment_confirmed" | "lead_recorded" | "followup_due" | "status_changed" | string;
   title: string;
   description: string;
   entityName?: string;
@@ -363,7 +374,7 @@ export interface AutomationStep {
   automationId?: string;
   order?: number;
   label: string; // Plain human description: e.g. "Send lesson brochure via WhatsApp"
-  actionType: "send_whatsapp" | "send_email" | "create_calendar_event" | "update_sheet" | "request_mpesa" | "wait_delay" | "condition_check";
+  actionType: "send_whatsapp" | "send_email" | "create_calendar_event" | "update_sheet" | "request_mpesa" | "wait_delay" | "condition_check" | "calendar_check" | string;
   appId?: string;
   parameters: Record<string, any>;
   icon: string;
@@ -473,11 +484,11 @@ export interface ActivityEvent {
   organizationId?: string;
   runId?: string;
   actionId?: string;
-  type: "lead_captured" | "followup_sent" | "booking_confirmed" | "payment_reminder" | "payment_received" | "workflow_executed";
+  type: "lead_captured" | "followup_sent" | "booking_confirmed" | "payment_reminder" | "payment_received" | "workflow_executed" | "system_intelligence" | "opportunity_detected" | "workflow_started" | string;
   title: string;
   description: string;
   timestamp: string;
-  channel: "whatsapp" | "gmail" | "calendar" | "mpesa" | "system" | "sheets";
+  channel?: "whatsapp" | "gmail" | "calendar" | "mpesa" | "system" | "sheets" | string;
   badgeColor?: string;
   application?: string; // e.g. "WhatsApp", "Otomatizon", "Google Sheets", "Google Calendar", "M-Pesa"
   actionTakenByOtomatizon?: string;
@@ -490,17 +501,19 @@ export interface ActivityEvent {
 export type ActivityLog = ActivityEvent;
 
 export interface OperationalMetric {
-  id: string;
+  id?: string;
   businessId?: string;
   organizationId?: string;
   inquiriesProcessed: number;
-  followupsSent: number;
+  followupsSent?: number;
+  followUpsSent?: number;
   hoursSaved: number;
   revenueRecoveredKes: number;
-  activeAutomationsCount: number;
-  successRate: number;
-  provenance: DataProvenance;
-  lastUpdated: string;
+  activeAutomationsCount?: number;
+  successRate?: number;
+  successRatePercent?: number;
+  provenance?: DataProvenance;
+  lastUpdated?: string;
 }
 
 export interface Report extends BusinessReport {

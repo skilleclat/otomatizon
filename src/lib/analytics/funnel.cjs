@@ -33,6 +33,7 @@
 
 
 
+
 const funnelEvents = [
   { id: "fe_01", stage: "visitor", timestamp: "2026-08-28T10:00:00Z" },
   { id: "fe_02", stage: "cta_clicked", timestamp: "2026-08-28T10:01:20Z" },

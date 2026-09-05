@@ -627,6 +627,19 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
   });
 
   // Module: @/lib/design-system
@@ -855,6 +868,7 @@
   // Module: @/lib/analytics/funnel
   define("@/lib/analytics/funnel", function(require, exports) {
     "use strict";Object.defineProperty(exports, "__esModule", {value: true});// Otomatizon Funnel & Early Product Analytics
+
 
 
 
@@ -5193,7 +5207,8 @@ async function syncWithServer() {
       activeWorkflow.lastRunAt = "Just now";
 
       globalState.metrics.inquiriesProcessed += 1;
-      globalState.metrics.followupsSent += 1;
+      globalState.metrics.followupsSent = (globalState.metrics.followupsSent || 0) + 1;
+      globalState.metrics.followUpsSent = globalState.metrics.followupsSent;
       globalState.metrics.hoursSaved = Number((globalState.metrics.hoursSaved + 0.3).toFixed(1));
       globalState.metrics.revenueRecoveredKes += currentLead.potentialValueKes;
       globalState.metrics.lastUpdated = "Just now";
@@ -5263,16 +5278,21 @@ async function syncWithServer() {
 
 
 ) => {
+    const leadName = _optionalChain([inbound, 'optionalAccess', _24 => _24.name]) || "David Kimani";
+    const leadPhone = _optionalChain([inbound, 'optionalAccess', _25 => _25.phone]) || "+254 722 901 234";
+    const leadService = _optionalChain([inbound, 'optionalAccess', _26 => _26.service]) || "DELF B2 Intensive Prep";
+    const leadSource = _optionalChain([inbound, 'optionalAccess', _27 => _27.source]) || "whatsapp";
+
     return dispatchOperationalEvent({
       eventType: "inquiry_received",
-      sourceAppId: inbound.source === "whatsapp" ? "app_wa_01" : "app_gmail_01",
-      entityName: inbound.name,
-      description: `Prospective student contacted via ${inbound.source} about ${inbound.service}.`,
+      sourceAppId: leadSource === "whatsapp" ? "app_wa_01" : "app_gmail_01",
+      entityName: leadName,
+      description: `Prospective student contacted via ${leadSource} about ${leadService}.`,
       payload: {
-        studentName: inbound.name,
-        phone: inbound.phone,
-        service: inbound.service,
-        source: inbound.source
+        studentName: leadName,
+        phone: leadPhone,
+        service: leadService,
+        source: leadSource
       },
       provenance: "SIMULATED"
     });
@@ -5456,7 +5476,7 @@ async function syncWithServer() {
       role: member.role,
       status: "invited",
       joinedAt: new Date().toISOString(),
-      invitedBy: _optionalChain([globalState, 'access', _24 => _24.session, 'access', _25 => _25.user, 'optionalAccess', _26 => _26.fullName]) || "James Kamau"
+      invitedBy: _optionalChain([globalState, 'access', _28 => _28.session, 'access', _29 => _29.user, 'optionalAccess', _30 => _30.fullName]) || "James Kamau"
     };
     globalState.teamMembers.push(newMember);
     globalState.activityLogs.unshift({
@@ -5669,14 +5689,16 @@ async function syncWithServer() {
 
     return {
       generatedAt: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }),
-      businessName: p.name || _optionalChain([globalState, 'access', _27 => _27.organization, 'optionalAccess', _28 => _28.name]) || "Your Business",
+      businessName: p.name || _optionalChain([globalState, 'access', _31 => _31.organization, 'optionalAccess', _32 => _32.name]) || "Your Business",
       businessType: p.businessType || "Service Business",
       city: p.city || "Nairobi",
       country: p.country || "Kenya",
       understood: {
         summary: p.description || "Business workflows and customer interactions across everyday tools.",
         customerType: p.customerType || "Direct customers & clients",
-        primaryChannels: p.customerChannels && p.customerChannels.length > 0 ? p.customerChannels : ["WhatsApp", "Google Maps", "Direct"],
+        primaryChannels: (p.primaryChannels && p.primaryChannels.length > 0) 
+          ? p.primaryChannels 
+          : (p.customerChannels && p.customerChannels.length > 0 ? p.customerChannels : ["WhatsApp", "Google Maps", "Direct"]),
         manualFrictions: p.frictionPoints && p.frictionPoints.length > 0 ? p.frictionPoints : [
           "Manual customer follow-ups taking hours",
           "Unreconciled payment receipts across channels",
@@ -7031,6 +7053,7 @@ var _lucidereact = require('lucide-react');
 
 
 
+
  const MetricExplanationModal = ({
   isOpen,
   metric,
@@ -7192,15 +7215,18 @@ var _lucidereact = require('lucide-react');
 
 
 
+
  const EventDetailModal = ({
   isOpen,
   event,
+  log,
   onClose,
   onNavigateToApps
 }) => {
+  const activeItem = event || log;
   const [showRawPayload, setShowRawPayload] = _react.useState.call(void 0, false);
 
-  if (!isOpen || !event) return null;
+  if (!isOpen || !activeItem) return null;
 
   const getChannelIcon = (ch) => {
     switch (ch) {
@@ -7229,17 +7255,17 @@ var _lucidereact = require('lucide-react');
 
               )
               , _react2.default.createElement('span', { className: "text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF] text-[#75777E] font-bold"         ,}
-                , event.provenance || "OBSERVED"
+                , activeItem.provenance || "OBSERVED"
               )
             )
             , _react2.default.createElement('h3', { className: "text-lg font-bold text-[#121316] tracking-tight mt-1"    ,}
-              , event.title
+              , activeItem.title
             )
             , _react2.default.createElement('div', { className: "flex items-center gap-2 text-xs text-[#75777E] font-mono"     ,}
               , _react2.default.createElement(_lucidereact.Clock, { className: "w-3 h-3" ,} )
-              , _react2.default.createElement('span', null, event.timestamp)
+              , _react2.default.createElement('span', null, activeItem.timestamp)
               , _react2.default.createElement('span', null, "•")
-              , _react2.default.createElement('span', null, "Channel: " , event.channel.toUpperCase())
+              , _react2.default.createElement('span', null, "Channel: " , String(activeItem.channel || "SYSTEM").toUpperCase())
             )
           )
 
@@ -7258,34 +7284,34 @@ var _lucidereact = require('lucide-react');
 
             )
             , _react2.default.createElement('p', { className: "text-[#121316] leading-relaxed" ,}
-              , event.description
+              , activeItem.description
             )
-            , event.entityName && (
+            , activeItem.entityName && (
               _react2.default.createElement('div', { className: "text-[11px] font-mono text-[#15803D] pt-0.5 font-bold"    ,}, "Associated Entity: "
-                  , event.entityName
+                  , activeItem.entityName
               )
             )
           )
 
-          , event.actionTakenByOtomatizon && (
+          , activeItem.actionTakenByOtomatizon && (
             _react2.default.createElement('div', { className: "p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-200/80 space-y-1.5"     ,}
               , _react2.default.createElement('div', { className: "font-mono text-[10px] text-emerald-800 uppercase tracking-wider font-bold"     ,}, "Otomatizon Intelligence Action"
 
               )
               , _react2.default.createElement('p', { className: "text-emerald-950 leading-relaxed" ,}
-                , event.actionTakenByOtomatizon
+                , activeItem.actionTakenByOtomatizon
               )
             )
           )
 
-          , event.businessResult && (
+          , activeItem.businessResult && (
             _react2.default.createElement('div', { className: "p-3.5 rounded-2xl bg-white border border-[#EAE7DF] shadow-2xs space-y-1.5"      ,}
               , _react2.default.createElement('div', { className: "font-mono text-[10px] text-[#75777E] uppercase tracking-wider flex items-center gap-1.5"       ,}
                 , _react2.default.createElement(_lucidereact.CheckCircle, { className: "w-3.5 h-3.5 text-[#15803D]"  ,} )
                 , _react2.default.createElement('span', { className: "font-bold text-[#121316]" ,}, "Verified System Result"  )
               )
               , _react2.default.createElement('p', { className: "text-[#4A4B50] leading-relaxed" ,}
-                , event.businessResult
+                , activeItem.businessResult
               )
             )
           )
@@ -7305,14 +7331,14 @@ var _lucidereact = require('lucide-react');
             _react2.default.createElement('pre', { className: "mt-2.5 p-3 rounded-xl bg-stone-900 text-emerald-400 font-mono text-[10px] overflow-x-auto select-all max-h-40"         ,}
               , JSON.stringify(
                 {
-                  id: event.id,
-                  type: event.type,
-                  channel: event.channel,
-                  application: event.application,
-                  entityName: event.entityName,
-                  timestamp: event.timestamp,
-                  provenance: event.provenance || "OBSERVED",
-                  idempotencyKey: `idemp_${event.id}`,
+                  id: activeItem.id,
+                  type: activeItem.type,
+                  channel: activeItem.channel,
+                  application: activeItem.application,
+                  entityName: activeItem.entityName,
+                  timestamp: activeItem.timestamp,
+                  provenance: activeItem.provenance || "OBSERVED",
+                  idempotencyKey: `idemp_${activeItem.id}`,
                   verifiedAt: new Date().toISOString()
                 },
                 null,
@@ -16498,7 +16524,7 @@ var _LiveIntelligenceRunnerModal = require('./LiveIntelligenceRunnerModal');
   const currentHours = _optionalChain([state, 'access', _11 => _11.metrics, 'optionalAccess', _12 => _12.hoursSaved]) || _optionalChain([state, 'access', _13 => _13.stats, 'optionalAccess', _14 => _14.hoursSaved]) || 0;
   const currentRevenue = _optionalChain([state, 'access', _15 => _15.metrics, 'optionalAccess', _16 => _16.revenueRecoveredKes]) || _optionalChain([state, 'access', _17 => _17.stats, 'optionalAccess', _18 => _18.revenueKes]) || 0;
   const currentInquiries = _optionalChain([state, 'access', _19 => _19.metrics, 'optionalAccess', _20 => _20.inquiriesProcessed]) || (_optionalChain([state, 'access', _21 => _21.leads, 'optionalAccess', _22 => _22.length]) || 0);
-  const currentFollowups = _optionalChain([state, 'access', _23 => _23.metrics, 'optionalAccess', _24 => _24.followUpsSent]) || 0;
+  const currentFollowups = _optionalChain([state, 'access', _23 => _23.metrics, 'optionalAccess', _24 => _24.followupsSent]) || _optionalChain([state, 'access', _25 => _25.metrics, 'optionalAccess', _26 => _26.followUpsSent]) || 0;
 
   const connectedAppsList = state.integrations.filter(i => i.connected);
   const activeWorkflowsList = state.workflows.filter(w => w.active);
@@ -16804,8 +16830,8 @@ var _LiveIntelligenceRunnerModal = require('./LiveIntelligenceRunnerModal');
       , _react2.default.createElement(_LiveIntelligenceRunnerModal.LiveIntelligenceRunnerModal, {
         isOpen: isLiveTraceOpen,
         onClose: () => setIsLiveTraceOpen(false),
-        connectedEmail: _optionalChain([state, 'access', _25 => _25.session, 'optionalAccess', _26 => _26.user, 'optionalAccess', _27 => _27.email]) || "heritiermaliyabwana1@gmail.com",
-        connectedPhone: _optionalChain([state, 'access', _28 => _28.session, 'optionalAccess', _29 => _29.user, 'optionalAccess', _30 => _30.phone]) || "+254 770 979 109",}
+        connectedEmail: _optionalChain([state, 'access', _27 => _27.session, 'optionalAccess', _28 => _28.user, 'optionalAccess', _29 => _29.email]) || "heritiermaliyabwana1@gmail.com",
+        connectedPhone: _optionalChain([state, 'access', _30 => _30.session, 'optionalAccess', _31 => _31.user, 'optionalAccess', _32 => _32.phone]) || "+254 770 979 109",}
       )
 
     )
@@ -19385,7 +19411,7 @@ var _generatereportpdf = require('@/lib/pdf/generate-report-pdf');
                 , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "01")
                 , _react2.default.createElement('h3', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "Executive Summary" )
               )
-              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}, "AUTHENTIC"
+              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#15803D] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0]"         ,}, "OBSERVED"
 
               )
             )
@@ -19402,7 +19428,7 @@ var _generatereportpdf = require('@/lib/pdf/generate-report-pdf');
                 , _react2.default.createElement('span', { className: "text-xs text-[#15803D] font-bold"  ,}, "02")
                 , _react2.default.createElement('h3', { className: "text-sm font-bold uppercase text-[#121316]"   ,}, "What We Understood"  )
               )
-              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#75777E] px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF]"        ,}, "VERIFIED PROFILE"
+              , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#75777E] px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#EAE7DF]"        ,}, "INFERRED"
 
               )
             )
@@ -19629,7 +19655,7 @@ const DEMO_SCENARIOS = [
   onOpenCheckout,
   onTriggerAuth
 }) => {
-  const { state, logout } = _store.useOtomatizonStore.call(void 0, );
+  const { state, logout, upgradePlan } = _store.useOtomatizonStore.call(void 0, );
   const [selectedScenarioIndex, setSelectedScenarioIndex] = _react.useState.call(void 0, 0);
   const [visitorInput, setVisitorInput] = _react.useState.call(void 0, DEMO_SCENARIOS[0].input);
   const [demoState, setDemoState] = _react.useState("discovered");
@@ -19941,7 +19967,7 @@ const DEMO_SCENARIOS = [
                   , _react2.default.createElement('div', { className: "flex items-center gap-1.5"  ,}
                     , _react2.default.createElement('span', { className: "text-[10px] font-mono text-[#75777E] uppercase"   ,}, "IMPACT")
                     , _react2.default.createElement('span', { className: "text-[10px] font-mono font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full"         ,}
-                      , currentScenario.impact
+                      , currentScenario.discovery.impact
                     )
                   )
                 )
@@ -19949,10 +19975,10 @@ const DEMO_SCENARIOS = [
                 /* Finding & Detail */
                 , _react2.default.createElement('div', { className: "space-y-1",}
                   , _react2.default.createElement('h3', { className: "text-base sm:text-lg font-bold text-[#121316]"   ,}
-                    , currentScenario.foundTitle
+                    , currentScenario.discovery.title
                   )
                   , _react2.default.createElement('p', { className: "text-xs sm:text-sm text-[#4A4B50] leading-relaxed"   ,}
-                    , currentScenario.foundDetail
+                    , currentScenario.discovery.description
                   )
                 )
 

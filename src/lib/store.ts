@@ -1010,7 +1010,8 @@ export function useOtomatizonStore() {
       activeWorkflow.lastRunAt = "Just now";
 
       globalState.metrics.inquiriesProcessed += 1;
-      globalState.metrics.followupsSent += 1;
+      globalState.metrics.followupsSent = (globalState.metrics.followupsSent || 0) + 1;
+      globalState.metrics.followUpsSent = globalState.metrics.followupsSent;
       globalState.metrics.hoursSaved = Number((globalState.metrics.hoursSaved + 0.3).toFixed(1));
       globalState.metrics.revenueRecoveredKes += currentLead.potentialValueKes;
       globalState.metrics.lastUpdated = "Just now";
@@ -1074,22 +1075,27 @@ export function useOtomatizonStore() {
   };
 
   // 6. INBOUND SIMULATION (CALLS UNIFIED DISPATCH CASCADE)
-  const simulateNewLead = (inbound: {
-    name: string;
-    phone: string;
-    service: string;
-    source: "whatsapp" | "gmail" | "google_business";
+  const simulateNewLead = (inbound?: {
+    name?: string;
+    phone?: string;
+    service?: string;
+    source?: "whatsapp" | "gmail" | "google_business";
   }) => {
+    const leadName = inbound?.name || "David Kimani";
+    const leadPhone = inbound?.phone || "+254 722 901 234";
+    const leadService = inbound?.service || "DELF B2 Intensive Prep";
+    const leadSource = inbound?.source || "whatsapp";
+
     return dispatchOperationalEvent({
       eventType: "inquiry_received",
-      sourceAppId: inbound.source === "whatsapp" ? "app_wa_01" : "app_gmail_01",
-      entityName: inbound.name,
-      description: `Prospective student contacted via ${inbound.source} about ${inbound.service}.`,
+      sourceAppId: leadSource === "whatsapp" ? "app_wa_01" : "app_gmail_01",
+      entityName: leadName,
+      description: `Prospective student contacted via ${leadSource} about ${leadService}.`,
       payload: {
-        studentName: inbound.name,
-        phone: inbound.phone,
-        service: inbound.service,
-        source: inbound.source
+        studentName: leadName,
+        phone: leadPhone,
+        service: leadService,
+        source: leadSource
       },
       provenance: "SIMULATED"
     });
@@ -1493,7 +1499,9 @@ export function useOtomatizonStore() {
       understood: {
         summary: p.description || "Business workflows and customer interactions across everyday tools.",
         customerType: p.customerType || "Direct customers & clients",
-        primaryChannels: p.customerChannels && p.customerChannels.length > 0 ? p.customerChannels : ["WhatsApp", "Google Maps", "Direct"],
+        primaryChannels: (p.primaryChannels && p.primaryChannels.length > 0) 
+          ? p.primaryChannels 
+          : (p.customerChannels && p.customerChannels.length > 0 ? p.customerChannels : ["WhatsApp", "Google Maps", "Direct"]),
         manualFrictions: p.frictionPoints && p.frictionPoints.length > 0 ? p.frictionPoints : [
           "Manual customer follow-ups taking hours",
           "Unreconciled payment receipts across channels",
